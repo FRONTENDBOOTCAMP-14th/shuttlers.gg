@@ -10,7 +10,7 @@ export const inputWrapper = style({
 export const input = style({
   width: '100%',
   height: 'auto',
-  padding: '24px 30px 24px 30px', // 우측 아이콘 공간
+  padding: '24px 30px 24px 30px',
   borderRadius: '8px',
   border: '1px solid var(--Brand-Linear, #37F);',
   background: 'var(--White, #FFF)',
