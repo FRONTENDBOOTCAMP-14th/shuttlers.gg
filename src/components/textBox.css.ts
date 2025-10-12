@@ -12,5 +12,5 @@ export const root = style({
   resize: 'none',
   fontSize: '14px',
   lineHeight: '1.4',
-  color: '#111827',
+  color: '#8F90A6',
 });
