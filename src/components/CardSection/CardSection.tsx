@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { ReactNode } from 'react';
 import * as styles from './CardSection.css';
 
@@ -16,14 +17,14 @@ export default function CardSection({
 }: CardSectionProps) {
   return (
     <section
-      className={[
-        styles.container,
-        background === 'primary' ? styles.primaryBg : styles.noBg,
-      ].join(' ')}
+      className={clsx(styles.container, {
+        [styles.primaryBg]: background === 'primary',
+        [styles.noBg]: background === 'none',
+      })}
     >
       <div className={styles.header}>
-        {icon && <span className={styles.icon}>{icon}</span>}
-        <span className={styles.title}>{title}</span>
+        {icon && <h3 className={styles.icon}>{icon}</h3>}
+        <h3 className={styles.title}>{title}</h3>
       </div>
       <div className={styles.content}>{children}</div>
     </section>
