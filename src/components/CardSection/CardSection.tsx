@@ -1,19 +1,19 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import * as styles from './CardSection.css';
 
-interface CardSectionProps {
+type CardSectionProps = {
   title?: string;
-  icon?: ReactNode; // 명세서에 맞게 ReactNode만 허용
+  icon?: ReactNode;
   children: ReactNode;
   background?: 'primary' | 'none';
-}
+};
 
-export const CardSection: React.FC<CardSectionProps> = ({
+export default function CardSection({
   title = '소제목',
   icon,
   children,
   background = 'primary',
-}) => {
+}: CardSectionProps) {
   return (
     <section
       className={[
@@ -28,5 +28,4 @@ export const CardSection: React.FC<CardSectionProps> = ({
       <div className={styles.content}>{children}</div>
     </section>
   );
-};
-export default CardSection;
+}

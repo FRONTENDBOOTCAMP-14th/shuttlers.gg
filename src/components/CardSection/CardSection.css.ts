@@ -47,7 +47,7 @@ export const title = style({
 export const content = style({
   width: 'auto',
   height: 'auto',
-  backgroundColor: 'var(--Brand-Subtle, #E3EDFF)', // 연한 회색 배경
+  backgroundColor: 'var(--Brand-Subtle, #E3EDFF)',
   padding: '24px 40px',
-  borderRadius: '8px', // 둥근 모서리 추가
+  borderRadius: '8px',
 });
