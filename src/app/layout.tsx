@@ -1,9 +1,13 @@
+import '@/styles/global.css';
+import { lightTheme } from '@/styles/theme.css';
+import ThemeProvider from '@/styles/ThemeProvider';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { PropsWithChildren } from 'react';
 
-const pretendard = localFont({
+export const pretendard = localFont({
   src: '../fonts/PretendardVariable.woff2',
+  variable: '--font-pretendard',
   display: 'swap',
 });
 
@@ -14,8 +18,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="ko" className={pretendard.className}>
-      <body>{children}</body>
+    <html lang="ko" className={`${pretendard.variable} ${lightTheme}`}>
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

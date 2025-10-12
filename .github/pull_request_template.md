@@ -22,38 +22,8 @@
 
 ### PR 상세
 
-<!-- 변경 내용을 구체적으로 적어주세요. -->
-
 ---
 
 ## 이슈
 
 resolves #
-
-const target = "Hello hello\nHELLO";
-
-// g
-target.match(/hello/g); 
-// ["hello"]
-
-// i
-target.match(/hello/gi);
-// ["Hello", "hello", "HELLO"]
-
-// m
-target.match(/^HELLO/m);
-// ["HELLO"]
-
-// s 
-"ab\ncd".match(/a.b/s);
-// ["ab\n"]
-
-// u 
-"👍".match(/\u{1F44D}/u);
-// ["👍"]
-
-// y
-const regex = /hello/y;
-regex.lastIndex = 6;
-target.match(regex);
-// ["hello"] (index 6부터 바로 매칭 성공)
