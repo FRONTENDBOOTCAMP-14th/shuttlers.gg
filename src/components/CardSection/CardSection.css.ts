@@ -8,7 +8,7 @@ export const container = style({
   display: 'inline-flex',
   flexDirection: 'column',
   gap: '40px',
-  background: 'var(--White, #FFF)',
+  background: 'none',
 });
 
 export const primaryBg = style({
