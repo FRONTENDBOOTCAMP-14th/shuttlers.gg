@@ -25,13 +25,6 @@ export const tokens = createThemeContract({
         dark: null,
         disabled: null,
       },
-
-      text: {
-        primary: null,
-        secondary: null,
-        dark: null,
-        disabled: null,
-      },
     },
 
     badge: {

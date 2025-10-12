@@ -27,13 +27,6 @@ export const lightTheme = createTheme(tokens, {
         dark: colors.gray[700],
         disabled: colors.gray[500],
       },
-
-      text: {
-        primary: colors.white,
-        secondary: colors.white,
-        dark: colors.white,
-        disabled: colors.white,
-      },
     },
 
     badge: {
