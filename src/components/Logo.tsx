@@ -6,8 +6,8 @@ type LogoProps = {
 
 export function Logo({ size = 'large' }: LogoProps) {
   const logoWidth = {
-    large: '370',
-    small: '185',
+    large: 370,
+    small: 185,
   };
 
   return (
