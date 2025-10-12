@@ -30,11 +30,11 @@ globalStyle('button, input, textarea, select', {
 });
 
 globalStyle('body', {
-  fontFamily: 'var(--font-pretendard)',
-  fontSize: '16px',
-  fontWeight: '400',
-  lineHeight: '150%',
-  letterSpacing: '-0.025em',
+  fontFamily: 'var(--font-family-base)',
+  fontSize: 'var(--font-size-body)',
+  fontWeight: 'var(--font-weight-regular)',
+  lineHeight: 'var(--font-lineHeight-150)',
+  letterSpacing: 'var(--font-letterSpacing-tight)',
   backgroundColor: 'var(--color-bg)',
   color: 'var(--color-text-body)',
   transition: 'background-color 0.2s ease, color 0.2s ease',
