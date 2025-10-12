@@ -22,7 +22,7 @@ export const noBg = style({
 export const header = style({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'left',
+  justifyContent: 'flex-start',
   gap: '6px',
 });
 
