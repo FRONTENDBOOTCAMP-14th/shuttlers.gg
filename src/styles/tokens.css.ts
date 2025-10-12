@@ -87,4 +87,10 @@ export const tokens = createThemeContract({
       error: null,
     },
   },
+
+  elevation: {
+    shadow: {
+      primary: null,
+    },
+  },
 });

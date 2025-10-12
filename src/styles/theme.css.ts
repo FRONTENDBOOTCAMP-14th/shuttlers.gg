@@ -1,6 +1,6 @@
 import { createTheme } from '@vanilla-extract/css';
-import { colors } from './colorPalette';
-import { tokens } from './tokens';
+import { colors } from './colorPalette.css';
+import { tokens } from './tokens.css';
 
 export const lightTheme = createTheme(tokens, {
   color: {
@@ -87,6 +87,12 @@ export const lightTheme = createTheme(tokens, {
       success: colors.green[200],
       warning: colors.yellow[200],
       error: colors.red[200],
+    },
+  },
+
+  elevation: {
+    shadow: {
+      primary: '0px 8px 24px rgba(51, 119, 255, 0.12)',
     },
   },
 });
@@ -176,6 +182,12 @@ export const darkTheme = createTheme(tokens, {
       success: colors.green[100],
       warning: colors.yellow[100],
       error: colors.red[100],
+    },
+  },
+
+  elevation: {
+    shadow: {
+      primary: '0px 8px 24px rgba(51, 119, 255, 0.12)',
     },
   },
 });
