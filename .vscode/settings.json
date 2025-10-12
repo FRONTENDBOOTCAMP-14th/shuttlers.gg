@@ -43,5 +43,13 @@
   "path-intellisense.absolutePathToWorkspace": true,
   "path-intellisense.ignoreTsConfigBaseUrl": false,
 
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/node_modules": false
+  }
 }
