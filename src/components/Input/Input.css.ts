@@ -12,7 +12,7 @@ export const input = style({
   height: 'auto',
   padding: '24px 30px', // 우측 아이콘 공간
   borderRadius: '8px',
-  border: '1px solid var(--Brand-Linear, #37F);',
+  border: '1px solid var(--Brand-Linear, #3377FF);',
   background: '#fff',
   color: '#8F90A6',
   fontSize: '22px',
