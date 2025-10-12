@@ -13,8 +13,8 @@ export const input = style({
   padding: '24px 30px 24px 30px', // 우측 아이콘 공간
   borderRadius: '8px',
   border: '1px solid var(--Brand-Linear, #37F);',
-  background: '#fff',
-  color: '#8F90A6',
+  background: 'var(--White, #FFF)',
+  color: 'var(--Dark-Dark-3, #8F90A6)',
   fontSize: '22px',
   outline: 'none',
   fontWeight: '500',
@@ -50,11 +50,11 @@ export const iconButton = style({
   width: '24px',
   cursor: 'pointer',
   zIndex: 2,
-  color: '#3a3a3c',
+  color: 'var(--Dark-Dark-2, #3A3A3C)',
   padding: 0,
   selectors: {
     '&:hover:not(:disabled)': {
-      color: '#3687FF',
+      color: 'var(--Brand-Dark, #3568D4)',
     },
     '&:disabled': {
       color: '#c3c5d0',
@@ -71,5 +71,5 @@ export const icon = style({
   display: 'flex',
   alignItems: 'center',
   pointerEvents: 'none',
-  color: '#3a3a3c',
+  color: 'var(--Dark-Dark-2, #3A3A3C)',
 });

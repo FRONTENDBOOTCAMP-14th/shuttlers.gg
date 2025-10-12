@@ -1,29 +1,28 @@
-// src/components/Input/Input.tsx
 import {
   EyeIcon,
   EyeSlashIcon,
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/solid';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import * as styles from './Input.css';
 
-interface InputProps {
+type InputProps = {
   type?: 'text' | 'password' | 'search';
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: boolean;
   disabled?: boolean;
-}
+};
 
-export const Input: React.FC<InputProps> = ({
+export default function Input({
   type = 'text',
   placeholder = 'placeholder',
   value,
   onChange,
   error = false,
   disabled = false,
-}) => {
+}: InputProps) {
   const [showPassword, setShowPassword] = useState(false);
   const inputType =
     type === 'password' ? (showPassword ? 'text' : 'password') : type;
@@ -63,6 +62,4 @@ export const Input: React.FC<InputProps> = ({
       )}
     </div>
   );
-};
-
-export default Input;
+}
