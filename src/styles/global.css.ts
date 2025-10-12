@@ -11,6 +11,13 @@ globalStyle('*, *::before, *::after', {
 globalStyle('html, body', {
   height: '100%',
   width: '100%',
+  fontFamily: 'var(--font-pretendard)',
+});
+
+globalStyle('#root, main', {
+  minHeight: '100vh',
+  display: 'flex',
+  flexDirection: 'column',
 });
 
 globalStyle('a', {
@@ -27,23 +34,6 @@ globalStyle('button, input, textarea, select', {
   background: 'none',
   border: 'none',
   outline: 'none',
-});
-
-globalStyle('body', {
-  fontFamily: 'var(--font-family-base)',
-  fontSize: 'var(--font-size-body)',
-  fontWeight: 'var(--font-weight-regular)',
-  lineHeight: 'var(--font-lineHeight-150)',
-  letterSpacing: 'var(--font-letterSpacing-tight)',
-  backgroundColor: 'var(--color-bg)',
-  color: 'var(--color-text-body)',
-  transition: 'background-color 0.2s ease, color 0.2s ease',
-});
-
-globalStyle('#root, main', {
-  minHeight: '100vh',
-  display: 'flex',
-  flexDirection: 'column',
 });
 
 globalStyle('h1, h2, h3, h4, h5, h6', {

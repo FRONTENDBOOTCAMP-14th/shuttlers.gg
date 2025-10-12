@@ -3,7 +3,7 @@ import { createGlobalTheme } from '@vanilla-extract/css';
 export const typography = createGlobalTheme(':root', {
   font: {
     family: {
-      base: 'Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      base: 'var(--font-pretendard), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     },
     weight: {
       regular: '400',
