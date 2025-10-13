@@ -16,7 +16,7 @@ type TabSectionProps = {
 
 export default function TabSection({
   tabs = [],
-  activeTab = tabs[0]?.value,
+  activeTab = tabs.length > 0 ? tabs[0].value : "",
   onTabChange,
   children,
 }: TabSectionProps) {
