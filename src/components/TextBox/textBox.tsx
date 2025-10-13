@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import React from 'react';
 import * as style from './TextBox.css.js';
 
 export type TextBoxProps = {
@@ -8,11 +7,7 @@ export type TextBoxProps = {
   className?: string;
 };
 
-export const TextBox: React.FC<TextBoxProps> = ({
-  text,
-  onChange,
-  className,
-}) => {
+export function TextBox({ text, onChange, className }: TextBoxProps) {
   return (
     <textarea
       value={text}
@@ -21,4 +16,4 @@ export const TextBox: React.FC<TextBoxProps> = ({
       placeholder="내용 입력"
     />
   );
-};
+}
