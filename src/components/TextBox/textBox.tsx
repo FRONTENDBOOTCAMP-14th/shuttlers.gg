@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
-import * as s from './TextBox.css.ts';
+import * as style from './textBox.css.js';
 
 export type TextBoxProps = {
   text: string;
@@ -17,7 +17,7 @@ export const TextBox: React.FC<TextBoxProps> = ({
     <textarea
       value={text}
       onChange={(e) => onChange?.(e.target.value)}
-      className={clsx(s.root, className)}
+      className={clsx(style.root, className)}
       placeholder="내용 입력"
     />
   );
