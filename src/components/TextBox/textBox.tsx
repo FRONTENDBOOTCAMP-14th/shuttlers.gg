@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import * as style from './TextBox.css.js';
+import * as styles from './TextBox.css.js';
 
 export type TextBoxProps = {
   text: string;
@@ -12,7 +12,7 @@ export function TextBox({ text, onChange, className }: TextBoxProps) {
     <textarea
       value={text}
       onChange={(e) => onChange?.(e.target.value)}
-      className={clsx(style.root, className)}
+      className={clsx(styles.root, className)}
       placeholder="내용 입력"
     />
   );
