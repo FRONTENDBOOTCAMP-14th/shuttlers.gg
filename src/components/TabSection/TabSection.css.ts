@@ -11,7 +11,7 @@ export const tabs = style({
   background: 'none',
 });
 
-export const button = style({
+export const tabButton = style({
   flex: '0 0 auto',
   minWidth: 'fit-content',
   border: 'none',
@@ -41,7 +41,7 @@ export const tabActive = style({
   padding: '20px 45px 20px 45px',
 });
 
-export const content = style({
+export const tabContent = style({
   height: 'auto',
   padding: '80px',
   background: 'var(--Gray-300, #EBEBF0)',

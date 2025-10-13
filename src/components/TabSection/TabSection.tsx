@@ -16,29 +16,38 @@ type TabSectionProps = {
 
 export default function TabSection({
   tabs = [],
-  activeTab = tabs[0]?.value,
+  activeTab,
   onTabChange,
   children,
 }: TabSectionProps) {
+  // activeTab이 없을 경우 첫 번째 탭을 기본값으로 사용
+  const currentActiveTab = activeTab ?? tabs[0]?.value;
+
   const handleTabClick = (value: string) => {
-    if (value !== activeTab && onTabChange) {
+    if (value !== currentActiveTab && onTabChange) {
       onTabChange(value);
     }
   };
 
-  const activeTabIndex = tabs.findIndex((tab) => tab.value === activeTab);
+  const activeTabIndex = tabs.findIndex(
+    (tab) => tab.value === currentActiveTab
+  );
   const isFirstTab = activeTabIndex === 0;
 
   return (
     <section className={styles.container}>
-      <nav className={styles.tabs}>
+      <nav className={styles.tabs} role="tablist">
         {tabs.map((tab) => (
           <button
             key={tab.value}
             type="button"
+            role="tab"
+            aria-selected={tab.value === currentActiveTab}
             className={clsx(
-              styles.button,
-              tab.value === activeTab ? styles.tabActive : styles.tabInactive
+              styles.tabButton,
+              tab.value === currentActiveTab
+                ? styles.tabActive
+                : styles.tabInactive
             )}
             onClick={() => handleTabClick(tab.value)}
           >
@@ -48,7 +57,7 @@ export default function TabSection({
       </nav>
       <div
         className={clsx(
-          styles.content,
+          styles.tabContent,
           !isFirstTab && styles.contentAllRounded
         )}
       >
