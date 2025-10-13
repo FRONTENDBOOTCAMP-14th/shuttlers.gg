@@ -49,5 +49,5 @@ export const tabContent = style({
 });
 
 export const contentAllRounded = style({
-  borderRadius: '20px 20px 20px 20px',
+  borderRadius: '20px',
 });
