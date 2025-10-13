@@ -2,34 +2,41 @@ import { ReactNode } from 'react';
 import * as styles from './Button.css';
 
 type ButtonProps = {
-  text: string;
-  icon?: ReactNode;
+  text?: string;
   type?: 'button' | 'submit' | 'reset';
+  icon?: ReactNode;
+  iconPosition?: 'left' | 'right';
   variant?: 'primary' | 'secondary' | 'dark';
   size?: 'short' | 'long';
   rounded?: boolean;
   onClick?: () => void;
   disabled?: boolean;
-};
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export default function Button({
-  text = '버튼',
-  icon,
+  text,
   type = 'button',
-  variant = 'primary',
-  size = 'short',
-  rounded = false,
+  icon = undefined,
+  iconPosition,
+  variant,
+  size,
+  rounded,
   onClick,
-  disabled = false,
+  disabled,
 }: ButtonProps) {
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
+      aria-disabled={disabled}
+      aria-label={icon && !text ? '버튼' : undefined}
       className={styles.button({ variant, size, rounded, disabled })}
     >
-      <div>{text}</div>
+      <div className={styles.buttonContent({ icon: !!icon, iconPosition })}>
+        {icon && <div className={styles.iconWrapper}>{icon}</div>}
+        {text && <span>{text}</span>}
+      </div>
     </button>
   );
 }
