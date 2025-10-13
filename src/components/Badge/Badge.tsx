@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
-import * as style from './Badge.css.ts';
+import * as styles from './Badge.css.ts';
 
 export type BadgeProps = {
   text: string;
@@ -20,9 +20,9 @@ export function Badge({
   return (
     <span
       className={clsx(
-        style.badgeBase,
-        style.themeVariant['dark'],
-        style.widthVariant[withIcon ? 'withIcon' : 'noIcon'],
+        styles.badgeBase,
+        styles.themeVariant['dark'],
+        styles.widthVariant[withIcon ? 'withIcon' : 'noIcon'],
         className
       )}
       role="status"
@@ -33,9 +33,9 @@ export function Badge({
         (icon ? (
           icon
         ) : iconSrc ? (
-          <img src={iconSrc} alt="" aria-hidden className={style.iconCls} />
+          <img src={iconSrc} alt="" aria-hidden className={styles.iconCls} />
         ) : null)}
-      <span className={style.textCls}>{text}</span>
+      <span className={styles.textCls}>{text}</span>
     </span>
   );
 }
