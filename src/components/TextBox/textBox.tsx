@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
-import * as style from './textBox.css.js';
+import * as style from './TextBox.css.js';
 
 export type TextBoxProps = {
   text: string;
