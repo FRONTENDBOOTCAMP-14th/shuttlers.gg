@@ -35,7 +35,7 @@ export default function UserCard({
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                columnGap: 12,
+                columnGap: 8,
               }}
             >
               <Badge
