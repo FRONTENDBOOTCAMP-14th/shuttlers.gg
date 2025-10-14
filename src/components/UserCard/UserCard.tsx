@@ -1,5 +1,6 @@
-import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
+import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/solid';
 import { tokens } from '../../styles/tokens.css';
+import { textStyle } from '../../styles/typography.css';
 import { Badge } from '../Badge/Badge';
 import * as styles from './UserCard.css';
 
@@ -25,41 +26,66 @@ export default function UserCard({
   return (
     <article className={styles.userCard({ variant })}>
       <div>
-        <strong>{name}</strong>
-        <div className={styles.userCardDetail({ variant })}>
+        <div style={{ ...textStyle.subtitle.bold, marginBottom: 12 }}>
+          {name}
+        </div>
+        <div>
           {variant === 'public' && (
-            // TODO: Badge 컴포넌트 수정사항 반영 후 수정
-            <>
-              <Badge text={gender === 'male' ? '남자' : '여자'} />
-              <Badge text={role === 'amateur' ? '아마추어' : '프로'} />
-            </>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                columnGap: 12,
+              }}
+            >
+              <Badge
+                text={gender === 'male' ? '남자' : '여자'}
+                variant="outline"
+                color="white"
+              />
+              <Badge
+                text={role === 'amateur' ? '아마추어' : '프로'}
+                variant="outline"
+                color="white"
+              />
+            </div>
           )}
           {variant === 'personal' && (
-            <>
-              <span>{email}</span>
-              <button onClick={onClick}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                columnGap: 10,
+              }}
+            >
+              <span style={{ ...textStyle.heading.medium }}>{email}</span>
+              <button
+                onClick={onClick}
+                className={styles.logOut}
+                aria-label="로그아웃"
+              >
                 <ArrowRightStartOnRectangleIcon
-                  width={28}
+                  width={24}
                   color={tokens.color.text.inverse}
                 />
               </button>
-            </>
+            </div>
           )}
         </div>
       </div>
       <div className={styles.userCardGrades}>
         {grade.local && (
-          <div className={styles.flexCol}>
-            <span>지역</span>
-            <div className={styles.userCardGrade({ variant })}>
-              {grade.local}
+          <div>
+            <span style={{ ...textStyle.body.semibold }}>지역</span>
+            <div>
+              <span className={styles.grade({ variant })}>{grade.local}</span>
             </div>
           </div>
         )}
-        <div className={styles.flexCol}>
-          <span>전국</span>
-          <div className={styles.userCardGrade({ variant })}>
-            {grade.national}
+        <div>
+          <span style={{ ...textStyle.body.semibold }}>전국</span>
+          <div>
+            <span className={styles.grade({ variant })}>{grade.national}</span>
           </div>
         </div>
       </div>
