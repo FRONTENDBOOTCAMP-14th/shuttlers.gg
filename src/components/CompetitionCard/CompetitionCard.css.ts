@@ -1,6 +1,6 @@
+import { colors } from '@/styles/colorPalette.css';
+import { textStyle } from '@/styles/typography.css';
 import { style } from '@vanilla-extract/css';
-import { colors } from '../../styles/colorPalette.css';
-import { textStyle } from '../../styles/typography.css';
 
 export const competitionCard = style({
   background: colors.white,

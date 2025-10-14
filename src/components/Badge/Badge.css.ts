@@ -1,6 +1,6 @@
+import { colors } from '@/styles/colorPalette.css';
+import { textStyle } from '@/styles/typography.css';
 import { style, styleVariants } from '@vanilla-extract/css';
-import { colors } from '../../styles/colorPalette.css';
-import { textStyle } from '../../styles/typography.css';
 
 const PRIMARY_SOLID = colors.brand.main;
 const PRIMARY_GRADIENT = colors.brand.linear;
