@@ -77,9 +77,14 @@ export const closeModal = style({
   position: 'absolute',
   top: 24,
   right: 24,
+  width: 24,
+  height: 24,
   color: tokens.color.text.body,
   transition: 'scale 0.2s ease',
   ':hover': {
     scale: 1.1,
+  },
+  ':focus': {
+    outline: `1px solid ${tokens.color.field.border.focus}`,
   },
 });

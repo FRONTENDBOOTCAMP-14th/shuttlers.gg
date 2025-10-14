@@ -10,6 +10,7 @@ export const button = recipe({
     height: 78,
     transition:
       'background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease',
+    ':focus': {},
   },
 
   variants: {

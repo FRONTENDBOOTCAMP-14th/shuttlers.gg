@@ -1,6 +1,7 @@
 'use client';
 
 import { XMarkIcon } from '@heroicons/react/24/solid';
+import { FocusTrap } from 'focus-trap-react';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Button from '../Button/Button';
@@ -27,31 +28,33 @@ export default function Modal({
   onCancel,
   visible = false,
 }: ModalProps) {
-  const [mounted, setMounted] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const [mounted, setMounted] = useState(false);
+  const [trapActive, setTrapActive] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
-
     const dialog = dialogRef.current;
-    if (!dialog) return;
+    if (!mounted || !dialog) return;
 
     if (visible) {
       dialog.showModal();
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          dialog.classList.add('modal-open');
-        });
-      });
     } else {
       setTimeout(() => dialog.close(), 200);
     }
   }, [mounted, visible]);
+
+  useEffect(() => {
+    if (visible) {
+      const t = setTimeout(() => setTrapActive(true), 0);
+      return () => clearTimeout(t);
+    } else {
+      setTrapActive(false);
+    }
+  }, [visible]);
 
   if (!mounted) return null;
 
@@ -59,36 +62,38 @@ export default function Modal({
   if (!modalRoot) return null;
 
   return createPortal(
-    <dialog
-      ref={dialogRef}
-      className={styles.modal({ visible })}
-      onCancel={onCancel}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onCancel?.();
-      }}
-      aria-labelledby="modal-title"
-      aria-modal="true"
-    >
-      <button
-        className={styles.closeModal}
-        onClick={onCancel}
-        aria-label="모달창 닫기"
+    <FocusTrap active={trapActive}>
+      <dialog
+        ref={dialogRef}
+        className={styles.modal({ visible })}
+        onCancel={onCancel}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) onCancel?.();
+        }}
+        aria-labelledby="modal-title"
+        aria-modal="true"
       >
-        <XMarkIcon width={24} />
-      </button>
+        <button
+          className={styles.closeModal}
+          onClick={onCancel}
+          aria-label="모달창 닫기"
+        >
+          <XMarkIcon width={24} />
+        </button>
 
-      <section className={styles.modalContent}>
-        <h2 id="modal-title">{title}</h2>
-        <div>{children}</div>
+        <section className={styles.modalContent}>
+          <h2 id="modal-title">{title}</h2>
+          <div>{children}</div>
 
-        <div className={styles.modalButtons({ variant })}>
-          {variant === 'confirm' && (
-            <Button text={cancelText} variant="dark" onClick={onCancel} />
-          )}
-          <Button text={confirmText} variant="primary" onClick={onConfirm} />
-        </div>
-      </section>
-    </dialog>,
+          <div className={styles.modalButtons({ variant })}>
+            {variant === 'confirm' && (
+              <Button text={cancelText} variant="dark" onClick={onCancel} />
+            )}
+            <Button text={confirmText} variant="primary" onClick={onConfirm} />
+          </div>
+        </section>
+      </dialog>
+    </FocusTrap>,
     modalRoot
   );
 }
