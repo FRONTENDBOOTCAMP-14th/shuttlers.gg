@@ -1,5 +1,6 @@
+import { colors } from '@/styles/colorPalette.css';
+import { textStyle } from '@/styles/typography.css';
 import { style } from '@vanilla-extract/css';
-import { colors } from '../../styles/colorPalette.css';
 
 export const userResultCard = style({
   width: '710px',
@@ -9,3 +10,5 @@ export const userResultCard = style({
   display: 'flex',
   alignItems: 'center',
 });
+
+export const userResultCardUserName = style([textStyle.heading.medium, {}]);
