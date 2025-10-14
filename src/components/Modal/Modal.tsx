@@ -42,6 +42,7 @@ export default function Modal({
 
     if (visible) {
       dialog.showModal();
+
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           dialog.classList.add('modal-open');
@@ -66,8 +67,13 @@ export default function Modal({
         if (e.target === e.currentTarget) onCancel?.();
       }}
       aria-labelledby="modal-title"
+      aria-modal="true"
     >
-      <button className={styles.closeModal} onClick={onCancel}>
+      <button
+        className={styles.closeModal}
+        onClick={onCancel}
+        aria-label="모달창 닫기"
+      >
         <XMarkIcon width={24} />
       </button>
 

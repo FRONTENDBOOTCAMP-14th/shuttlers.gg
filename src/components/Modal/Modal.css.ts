@@ -9,7 +9,6 @@ export const modal = recipe({
     top: '50%',
     left: '50%',
     margin: 0,
-    padding: 60,
     border: 'none',
     borderRadius: 16,
     background: tokens.color.surface.base,
@@ -43,6 +42,7 @@ export const modalContent = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  padding: 60,
 });
 
 globalStyle(`${modalContent} > h2`, {
