@@ -129,6 +129,7 @@ export const scoreText = style({
   ...textStyle.heading.bold,
 });
 
+// The margin value '30.5px' is chosen to precisely align the 'vs' text between score columns as per design requirements.
 export const vsText = style({
   color: tokens.color.text.body,
   margin: '0 30.5px',
