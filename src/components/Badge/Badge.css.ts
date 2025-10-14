@@ -1,44 +1,61 @@
+import { textStyle } from '@/styles/typography.css';
 import { style, styleVariants } from '@vanilla-extract/css';
+import { tokens } from '../../styles/tokens.css';
 
-export const badgeBase = style({
-  display: 'flex',
-  boxSizing: 'border-box',
+export const badgeBase = style([
+  textStyle.body.bold,
+  {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 6,
+    height: '32px',
+    padding: '6px 16px',
+    borderRadius: 9999,
+    border: '1px solid transparent',
+    userSelect: 'none',
+    marginRight: '6px',
+    backgroundColor: 'transparent',
+  },
+]);
+
+export const gradientText = style({
+  backgroundImage: tokens.color.badge.filled.bg.brand,
+  backgroundClip: 'text',
+  WebkitBackgroundClip: 'text',
+  color: 'transparent',
+  WebkitTextFillColor: 'transparent',
+});
+
+export const iconStyle = style({
+  display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  height: '32px',
-  borderRadius: '50px',
-  fontSize: '14px',
-  lineHeight: 1,
-  fontWeight: 600,
-  userSelect: 'none',
-  whiteSpace: 'nowrap',
-  gap: '6px',
 });
 
-export const themeVariant = styleVariants({
-  light: {
-    background: 'linear-gradient(-36deg, #3377FF 0%, #46E2A8 100%)',
-    color: '#ffffff',
+export const filled = styleVariants({
+  primary: {
+    background: tokens.color.badge.filled.bg.brand,
+    color: tokens.color.badge.filled.text.brand,
   },
   dark: {
-    background: '#3A3A3C',
-    color: '#ffffff',
+    background: tokens.color.badge.filled.bg.gray,
+    color: tokens.color.badge.filled.text.gray,
+  },
+  white: {
+    background: tokens.color.badge.filled.bg.white,
+    color: tokens.color.badge.filled.text.white,
   },
 });
 
-export const widthVariant = styleVariants({
-  noIcon: { width: '60px' },
-  withIcon: { width: '82px' },
-});
-
-export const iconCls = style({
-  display: 'block',
-  width: '16px',
-  height: '16px',
-  flexShrink: 0,
-});
-
-export const textCls = style({
-  display: 'block',
-  lineHeight: 1,
+export const outline = styleVariants({
+  primary: {
+    background: `linear-gradient(white, white) padding-box, ${tokens.color.badge.outline.border.brand} border-box`,
+    backgroundOrigin: 'border-box',
+    color: tokens.color.badge.outline.text.brand,
+  },
+  white: {
+    background: `linear-gradient(white, white) padding-box, ${tokens.color.badge.outline.border.white} border-box`,
+    backgroundOrigin: 'border-box',
+    color: tokens.color.badge.outline.text.white,
+  },
 });
