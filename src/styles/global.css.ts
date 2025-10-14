@@ -1,4 +1,6 @@
 import { globalStyle } from '@vanilla-extract/css';
+import { tokens } from './tokens.css';
+import { typography } from './typography.css';
 
 globalStyle('*, *::before, *::after', {
   margin: 0,
@@ -11,7 +13,8 @@ globalStyle('*, *::before, *::after', {
 globalStyle('html, body', {
   height: '100%',
   width: '100%',
-  fontFamily: 'var(--font-pretendard)',
+  fontFamily: typography.font.family.base,
+  letterSpacing: typography.font.letterSpacing.tight,
 });
 
 globalStyle('#root, main', {
@@ -37,7 +40,7 @@ globalStyle('button, input, textarea, select', {
 });
 
 globalStyle('h1, h2, h3, h4, h5, h6', {
-  color: 'var(--color-text-title)',
+  color: tokens.color.text.title,
   fontWeight: '700',
   lineHeight: '136.4%',
   letterSpacing: '-0.025em',
@@ -48,5 +51,5 @@ globalStyle('button', {
 });
 
 globalStyle('input::placeholder', {
-  color: 'var(--color-text-placeholder)',
+  color: tokens.color.text.placeholder,
 });

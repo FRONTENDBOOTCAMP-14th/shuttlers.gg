@@ -27,13 +27,6 @@ export const lightTheme = createTheme(tokens, {
         dark: colors.gray[700],
         disabled: colors.gray[500],
       },
-
-      text: {
-        primary: colors.white,
-        secondary: colors.white,
-        dark: colors.white,
-        disabled: colors.white,
-      },
     },
 
     badge: {
@@ -93,6 +86,7 @@ export const lightTheme = createTheme(tokens, {
   elevation: {
     shadow: {
       primary: '0px 8px 24px rgba(51, 119, 255, 0.12)',
+      hover: '0px 8px 40px rgba(51, 119, 255, 0.20)',
     },
   },
 });
@@ -121,13 +115,6 @@ export const darkTheme = createTheme(tokens, {
         secondary: colors.brand.main,
         dark: colors.gray[400],
         disabled: colors.gray[600],
-      },
-
-      text: {
-        primary: colors.white,
-        secondary: colors.white,
-        dark: colors.white,
-        disabled: colors.gray[400],
       },
     },
 
@@ -188,6 +175,7 @@ export const darkTheme = createTheme(tokens, {
   elevation: {
     shadow: {
       primary: '0px 8px 24px rgba(51, 119, 255, 0.12)',
+      hover: '0px 8px 40px rgba(51, 119, 255, 0.20)',
     },
   },
 });
