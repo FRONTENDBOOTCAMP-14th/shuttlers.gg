@@ -5,27 +5,36 @@ import { textStyle } from '../../styles/typography.css';
 
 export const modal = recipe({
   base: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    rowGap: 60,
-    position: 'relative',
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    margin: 0,
     padding: 60,
+    border: 'none',
+    borderRadius: 16,
     background: tokens.color.surface.base,
     boxShadow: tokens.elevation.shadow.primary,
-    border: 'none',
-    borderRadius: 20,
+    opacity: 0,
+    transform: 'translate(-50%, -50%) scale(0.95)',
+    transition: 'opacity 0.2s ease, transform 0.2s ease',
+    zIndex: 9999,
+    '::backdrop': {
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      backdropFilter: 'blur(12px)',
+      transition: 'opacity 0.2s ease',
+    },
   },
 
   variants: {
-    variant: {
-      alert: {},
-      confirm: {},
-    },
-
     visible: {
-      true: {},
-      false: {},
+      true: {
+        opacity: 1,
+        transform: 'translate(-50%, -50%) scale(1)',
+      },
+      false: {
+        opacity: 0,
+        transform: 'translate(-50%, -50%) scale(0.95)',
+      },
     },
   },
 });
@@ -33,13 +42,14 @@ export const modal = recipe({
 export const modalContent = style({
   display: 'flex',
   flexDirection: 'column',
-  rowGap: 20,
+  alignItems: 'center',
 });
 
 globalStyle(`${modalContent} > h2`, {
   ...textStyle.subtitle.bold,
   color: tokens.color.text.title,
   textAlign: 'center',
+  marginBottom: 20,
 });
 
 globalStyle(`${modalContent} > div`, {
@@ -50,6 +60,7 @@ globalStyle(`${modalContent} > div`, {
 export const modalButtons = recipe({
   base: {
     display: 'flex',
+    marginTop: 60,
   },
 
   variants: {

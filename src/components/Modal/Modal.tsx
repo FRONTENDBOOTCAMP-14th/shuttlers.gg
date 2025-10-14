@@ -1,5 +1,8 @@
+'use client';
+
 import { XMarkIcon } from '@heroicons/react/24/solid';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Button from '../Button/Button';
 import * as styles from './Modal.css';
 
@@ -24,21 +27,62 @@ export default function Modal({
   onCancel,
   visible = false,
 }: ModalProps) {
-  return (
-    <dialog className={styles.modal({ variant, visible })} open>
-      <button className={styles.closeModal}>
+  const [mounted, setMounted] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (visible) {
+      dialog.showModal();
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          dialog.classList.add('modal-open');
+        });
+      });
+    } else {
+      setTimeout(() => dialog.close(), 200);
+    }
+  }, [mounted, visible]);
+
+  if (!mounted) return null;
+
+  const modalRoot = document.getElementById('modal-root');
+  if (!modalRoot) return null;
+
+  return createPortal(
+    <dialog
+      ref={dialogRef}
+      className={styles.modal({ visible })}
+      onCancel={onCancel}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onCancel?.();
+      }}
+      aria-labelledby="modal-title"
+    >
+      <button className={styles.closeModal} onClick={onCancel}>
         <XMarkIcon width={24} />
       </button>
+
       <section className={styles.modalContent}>
-        <h2>{title}</h2>
+        <h2 id="modal-title">{title}</h2>
         <div>{children}</div>
+
+        <div className={styles.modalButtons({ variant })}>
+          {variant === 'confirm' && (
+            <Button text={cancelText} variant="dark" onClick={onCancel} />
+          )}
+          <Button text={confirmText} variant="primary" onClick={onConfirm} />
+        </div>
       </section>
-      <div className={styles.modalButtons({ variant })}>
-        {variant === 'confirm' && (
-          <Button text={cancelText} variant="dark" onClick={onCancel} />
-        )}
-        <Button text={confirmText} variant="primary" onClick={onConfirm} />
-      </div>
-    </dialog>
+    </dialog>,
+    modalRoot
   );
 }
