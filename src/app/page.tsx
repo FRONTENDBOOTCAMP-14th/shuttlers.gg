@@ -1,3 +1,10 @@
+import { TextBox } from '../components/TextBox/textBox';
+
 export default function HomePage() {
-  return <></>;
+  function handle() {}
+  return (
+    <>
+      <TextBox text="d"></TextBox>
+    </>
+  );
 }

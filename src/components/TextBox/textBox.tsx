@@ -1,18 +1,18 @@
 import clsx from 'clsx';
-import * as styles from './TextBox.css.js';
+import { useState } from 'react';
+import * as styles from './TextBox.css';
 
 export type TextBoxProps = {
-  text: string;
-  onChange?: (value: string) => void;
   className?: string;
 };
 
-export function TextBox({ text, onChange, className }: TextBoxProps) {
+export function TextBox({ className }: TextBoxProps) {
+  const [text, setText] = useState<string>('');
   return (
     <textarea
       value={text}
-      onChange={(e) => onChange?.(e.target.value)}
-      className={clsx(styles.root, className)}
+      className={clsx(styles.TextBox, className)}
+      onChange={(e) => setText(e.target.value)}
       placeholder="내용 입력"
     />
   );

@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-export const root = style({
+export const TextBox = style({
   width: '545px',
   height: '140px',
   background: '#EBEBF0',
