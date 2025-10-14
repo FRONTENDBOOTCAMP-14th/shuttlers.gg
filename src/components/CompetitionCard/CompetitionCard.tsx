@@ -1,6 +1,6 @@
+import { Badge } from '@/components/Badge/Badge.tsx';
+import * as styles from '@/components/CompetitionCard/CompetitionCard.css.ts';
 import clsx from 'clsx';
-import { Badge } from '../Badge/Badge.tsx';
-import * as styles from './CompetitionCard.css.ts';
 
 type CompetitionCardProps = {
   title: string;
