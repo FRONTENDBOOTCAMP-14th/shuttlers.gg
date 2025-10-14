@@ -5,9 +5,11 @@ import { recipe } from '@vanilla-extract/recipes';
 
 export const button = recipe({
   base: {
-    ...textStyle.subtitle.bold,
-    paddingInline: 40,
-    height: 78,
+    ...textStyle.heading.bold,
+    paddingInline: 24,
+    paddingBlock: 14,
+    height: 52,
+    lineHeight: 1,
     transition:
       'background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease',
   },
