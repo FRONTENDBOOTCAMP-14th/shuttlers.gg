@@ -11,9 +11,12 @@ export const TextBox = style([
     color: colors.gray[600],
     padding: '20px',
     boxSizing: 'border-box',
-    border: 'none',
+    border: '1px solid transparent',
     borderRadius: '8px',
     outline: 'none',
     resize: 'none',
+    selectors: {
+      '&:focus': { border: `1px solid ${colors.brand.main}` },
+    },
   },
 ]);
