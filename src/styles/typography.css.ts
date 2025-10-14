@@ -1,6 +1,6 @@
-import { createGlobalTheme, style } from '@vanilla-extract/css';
+import { createGlobalTheme } from '@vanilla-extract/css';
 
-export const vars = createGlobalTheme(':root', {
+export const typography = createGlobalTheme(':root', {
   font: {
     family: {
       base: 'var(--font-pretendard), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -29,110 +29,115 @@ export const vars = createGlobalTheme(':root', {
       caption: '12px',
     },
   },
-});
 
-export const textStyle = {
-  headline: {
-    semibold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.headline,
-      fontWeight: vars.font.weight.semibold,
-      lineHeight: vars.font.lineHeight['133'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-    bold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.headline,
-      fontWeight: vars.font.weight.bold,
-      lineHeight: vars.font.lineHeight['133'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
+  textStyle: {
+    headline: {
+      semibold: {
+        fontFamily: 'var(--font-family-base)',
+        fontSize: 'var(--font-size-headline)',
+        fontWeight: 'var(--font-weight-semibold)',
+        lineHeight: 'var(--font-lineHeight-133)',
+        letterSpacing: 'var(--font-letterSpacing-tight)',
+      },
+      bold: {
+        fontFamily: 'var(--font-family-base)',
+        fontSize: 'var(--font-size-headline)',
+        fontWeight: 'var(--font-weight-bold)',
+        lineHeight: 'var(--font-lineHeight-133)',
+        letterSpacing: 'var(--font-letterSpacing-tight)',
+      },
+    },
+
+    title: {
+      bold: {
+        fontFamily: 'var(--font-family-base)',
+        fontSize: 'var(--font-size-title)',
+        fontWeight: 'var(--font-weight-bold)',
+        lineHeight: 'var(--font-lineHeight-133)',
+        letterSpacing: 'var(--font-letterSpacing-tight)',
+      },
+      semibold: {
+        fontFamily: 'var(--font-family-base)',
+        fontSize: 'var(--font-size-title)',
+        fontWeight: 'var(--font-weight-semibold)',
+        lineHeight: 'var(--font-lineHeight-133)',
+        letterSpacing: 'var(--font-letterSpacing-tight)',
+      },
+    },
+
+    subtitle: {
+      bold: {
+        fontFamily: 'var(--font-family-base)',
+        fontSize: 'var(--font-size-subtitle)',
+        fontWeight: 'var(--font-weight-bold)',
+        lineHeight: 'var(--font-lineHeight-133)',
+        letterSpacing: 'var(--font-letterSpacing-tight)',
+      },
+      semibold: {
+        fontFamily: 'var(--font-family-base)',
+        fontSize: 'var(--font-size-subtitle)',
+        fontWeight: 'var(--font-weight-semibold)',
+        lineHeight: 'var(--font-lineHeight-133)',
+        letterSpacing: 'var(--font-letterSpacing-tight)',
+      },
+    },
+
+    heading: {
+      bold: {
+        fontFamily: 'var(--font-family-base)',
+        fontSize: 'var(--font-size-heading)',
+        fontWeight: 'var(--font-weight-bold)',
+        lineHeight: 'var(--font-lineHeight-136)',
+        letterSpacing: 'var(--font-letterSpacing-tight)',
+      },
+      semibold: {
+        fontFamily: 'var(--font-family-base)',
+        fontSize: 'var(--font-size-heading)',
+        fontWeight: 'var(--font-weight-semibold)',
+        lineHeight: 'var(--font-lineHeight-136)',
+        letterSpacing: 'var(--font-letterSpacing-tight)',
+      },
+      medium: {
+        fontFamily: 'var(--font-family-base)',
+        fontSize: 'var(--font-size-heading)',
+        fontWeight: 'var(--font-weight-medium)',
+        lineHeight: 'var(--font-lineHeight-136)',
+        letterSpacing: 'var(--font-letterSpacing-tight)',
+      },
+    },
+
+    body: {
+      bold: {
+        fontFamily: 'var(--font-family-base)',
+        fontSize: 'var(--font-size-body)',
+        fontWeight: 'var(--font-weight-bold)',
+        lineHeight: 'var(--font-lineHeight-150)',
+        letterSpacing: 'var(--font-letterSpacing-tight)',
+      },
+      semibold: {
+        fontFamily: 'var(--font-family-base)',
+        fontSize: 'var(--font-size-body)',
+        fontWeight: 'var(--font-weight-semibold)',
+        lineHeight: 'var(--font-lineHeight-150)',
+        letterSpacing: 'var(--font-letterSpacing-tight)',
+      },
+      regular: {
+        fontFamily: 'var(--font-family-base)',
+        fontSize: 'var(--font-size-body)',
+        fontWeight: 'var(--font-weight-regular)',
+        lineHeight: 'var(--font-lineHeight-150)',
+        letterSpacing: 'var(--font-letterSpacing-tight)',
+      },
+    },
+
+    caption: {
+      regular: {
+        fontFamily: 'var(--font-family-base)',
+        fontSize: 'var(--font-size-caption)',
+        fontWeight: 'var(--font-weight-regular)',
+        lineHeight: 'var(--font-lineHeight-140)',
+        letterSpacing: 'var(--font-letterSpacing-tight)',
+      },
+    },
   },
-  title: {
-    bold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.title,
-      fontWeight: vars.font.weight.bold,
-      lineHeight: vars.font.lineHeight['133'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-    semibold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.title,
-      fontWeight: vars.font.weight.semibold,
-      lineHeight: vars.font.lineHeight['133'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-  },
-  subtitle: {
-    bold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.subtitle,
-      fontWeight: vars.font.weight.bold,
-      lineHeight: vars.font.lineHeight['133'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-    semibold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.subtitle,
-      fontWeight: vars.font.weight.semibold,
-      lineHeight: vars.font.lineHeight['133'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-  },
-  heading: {
-    bold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.heading,
-      fontWeight: vars.font.weight.bold,
-      lineHeight: vars.font.lineHeight['136'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-    semibold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.heading,
-      fontWeight: vars.font.weight.semibold,
-      lineHeight: vars.font.lineHeight['136'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-    medium: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.heading,
-      fontWeight: vars.font.weight.medium,
-      lineHeight: vars.font.lineHeight['136'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-  },
-  body: {
-    bold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.body,
-      fontWeight: vars.font.weight.bold,
-      lineHeight: vars.font.lineHeight['150'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-    semibold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.body,
-      fontWeight: vars.font.weight.semibold,
-      lineHeight: vars.font.lineHeight['150'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-    regular: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.body,
-      fontWeight: vars.font.weight.regular,
-      lineHeight: vars.font.lineHeight['150'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-  },
-  caption: {
-    regular: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.caption,
-      fontWeight: vars.font.weight.regular,
-      lineHeight: vars.font.lineHeight['140'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-  },
-};
+});
