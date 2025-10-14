@@ -1,6 +1,6 @@
 import { tokens } from '@/styles/tokens.css';
-import { textStyle } from '@/styles/typography.css';
 import { style, styleVariants } from '@vanilla-extract/css';
+import { textStyle } from '../../styles/typography.css';
 
 export const scoreResultCard = style({
   background: tokens.color.surface.muted,
@@ -18,7 +18,7 @@ export const titleArea = style({
   alignItems: 'center',
   alignSelf: 'stretch',
   color: tokens.color.text.body,
-  ...textStyle.heading.bold, // 타이포그래피 스타일 스프레드
+  ...textStyle.heading.semibold,
 });
 
 export const titleRightSection = style({
@@ -29,12 +29,12 @@ export const titleRightSection = style({
 
 export const matchType = style({
   color: tokens.color.text.body,
-  ...textStyle.heading.bold, // 타이포그래피 스타일 스프레드
+  ...textStyle.heading.semibold,
 });
 
 export const resultBadgeVariants = styleVariants({
   win: {
-    background: tokens.color.surface.brand,
+    background: tokens.color.badge.outline.text.brand,
     color: tokens.color.badge.filled.text.brand,
     borderRadius: '50%',
     width: '32px',
@@ -42,18 +42,18 @@ export const resultBadgeVariants = styleVariants({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    ...textStyle.heading.bold, // 타이포그래피 스타일 스프레드
+    ...textStyle.body.bold,
   },
   lose: {
-    background: tokens.color.surface.brand,
-    color: tokens.color.action.bg.primary,
+    background: tokens.color.field.border.error,
+    color: tokens.color.badge.filled.text.brand,
     borderRadius: '50%',
     width: '32px',
     height: '32px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    ...textStyle.heading.bold, // 타이포그래피 스타일 스프레드
+    ...textStyle.body.bold,
   },
 });
 
@@ -72,7 +72,7 @@ export const scoreContainer = style({
 
 export const roundText = style({
   color: tokens.color.text.caption,
-  ...textStyle.heading.bold, // 타이포그래피 스타일 스프레드
+  ...textStyle.body.regular,
 });
 
 export const scoreMainContainer = style({
@@ -105,7 +105,7 @@ export const teamName = style({
   color: tokens.color.text.body,
   whiteSpace: 'nowrap',
   overflow: 'visible',
-  ...textStyle.heading.bold, // 타이포그래피 스타일 스프레드
+  ...textStyle.body.semibold,
 });
 
 export const teamNameLeft = style([
@@ -132,7 +132,7 @@ export const vsText = style({
   color: tokens.color.text.body,
   margin: '0 30.5px',
   flexShrink: 0,
-  ...textStyle.heading.bold, // 타이포그래피 스타일 스프레드
+  ...textStyle.body.semibold,
 });
 
 export const cardBackgroundVariants = styleVariants({

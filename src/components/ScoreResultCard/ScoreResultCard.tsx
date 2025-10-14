@@ -1,5 +1,3 @@
-import * as styles from './ScoreResultCard.css';
-
 type ScoreResultCardProps = {
   title?: string;
   round?: string;
@@ -10,6 +8,8 @@ type ScoreResultCardProps = {
   scoreB?: number;
   result?: 'win' | 'lose';
 };
+
+import * as styles from './ScoreResultCard.css';
 
 export default function ScoreResultCard({
   title = '대회명',
