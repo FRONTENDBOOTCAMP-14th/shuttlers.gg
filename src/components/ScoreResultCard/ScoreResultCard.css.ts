@@ -6,7 +6,8 @@ export const scoreResultCard = style({
   background: tokens.color.surface.muted,
   borderRadius: '8px',
   padding: '24px',
-  width: '1000px',
+  width: '100%',
+  maxWidth: '1000px',
   display: 'flex',
   flexDirection: 'column',
   gap: '12px',
@@ -131,6 +132,7 @@ export const scoreText = style({
   ...textStyle.heading.bold,
 });
 
+// The margin value '30.5px' is chosen to precisely align the 'vs' text between score columns as per design requirements.
 export const vsText = style({
   color: tokens.color.text.body,
   margin: '0 30.5px',
