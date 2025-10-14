@@ -76,17 +76,20 @@ export const roundText = style({
 });
 
 export const scoreMainContainer = style({
-  display: 'flex',
+  display: 'grid',
+  gridTemplateColumns: '1fr auto 1fr',
   alignItems: 'center',
-  justifyContent: 'center',
-  width: '100%',
-  maxWidth: '600px',
+  justifyItems: 'center',
+  gap: 20,
+  maxWidth: '100%',
+  overflow: 'hidden',
 });
 
 export const leftTeamArea = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
+  justifySelf: 'flex-end',
   gap: '20px',
   flex: '1',
   minWidth: '0',
@@ -96,6 +99,7 @@ export const rightTeamArea = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-start',
+  justifySelf: 'flex-start',
   gap: '20px',
   flex: '1',
   minWidth: '0',
@@ -104,7 +108,6 @@ export const rightTeamArea = style({
 export const teamName = style({
   color: tokens.color.text.body,
   whiteSpace: 'nowrap',
-  overflow: 'visible',
   ...textStyle.body.semibold,
 });
 
