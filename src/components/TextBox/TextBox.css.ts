@@ -2,7 +2,7 @@ import { colors } from '@/styles/colorPalette.css';
 import { textStyle } from '@/styles/typography.css';
 import { style } from '@vanilla-extract/css';
 
-export const TextBox = style([
+export const textBox = style([
   textStyle.body.regular,
   {
     width: '545px',
