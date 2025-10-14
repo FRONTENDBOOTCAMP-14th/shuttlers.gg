@@ -1,7 +1,7 @@
 'use client';
 
 import { ChangeEvent, CSSProperties, useEffect, useRef, useState } from 'react';
-import * as styles from './TexdtBox.css';
+import * as styles from './TextBox.css';
 
 export type TextBoxProps = {
   placeholder?: string;
@@ -64,7 +64,7 @@ export function TextBox({
       maxLength={maxLength}
       value={isControlled ? value : inner}
       onChange={handleChange}
-      className={[styles.TextBox, className].filter(Boolean).join(' ')}
+      className={[styles.textBox, className].filter(Boolean).join(' ')}
       style={{ minHeight, ...style }}
       aria-disabled={disabled || undefined}
       spellCheck={false}

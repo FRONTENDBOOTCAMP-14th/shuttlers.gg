@@ -10,10 +10,10 @@ type CompetitionCardProps = {
 
 export function CompetitionCard({ title, date, tags }: CompetitionCardProps) {
   return (
-    <div className={clsx(styles.CompetitionCard)}>
-      <div className={clsx(styles.CompetitionCardHeader)}>
-        <span className={clsx(styles.CompetitionCardTitle)}>{title}</span>
-        <span className={clsx(styles.CompetitionCardDate)}>{date}</span>
+    <div className={clsx(styles.competitionCard)}>
+      <div className={clsx(styles.competitionCardHeader)}>
+        <span className={clsx(styles.competitionCardTitle)}>{title}</span>
+        <span className={clsx(styles.competitionCardDate)}>{date}</span>
       </div>
       <div>
         {tags.map((tag: string) => {
