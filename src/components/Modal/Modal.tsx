@@ -87,9 +87,19 @@ export default function Modal({
 
           <div className={styles.modalButtons({ variant })}>
             {variant === 'confirm' && (
-              <Button text={cancelText} variant="dark" onClick={onCancel} />
+              <Button
+                text={cancelText}
+                variant="dark"
+                size="long"
+                onClick={onCancel}
+              />
             )}
-            <Button text={confirmText} variant="primary" onClick={onConfirm} />
+            <Button
+              text={confirmText}
+              variant="primary"
+              size="long"
+              onClick={onConfirm}
+            />
           </div>
         </section>
       </dialog>

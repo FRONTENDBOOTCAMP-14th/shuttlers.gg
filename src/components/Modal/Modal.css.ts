@@ -9,6 +9,9 @@ export const modal = recipe({
     top: '50%',
     left: '50%',
     margin: 0,
+    width: 'min(90vw, 600px)',
+    maxHeight: '80vh',
+    padding: 60,
     border: 'none',
     borderRadius: 16,
     background: tokens.color.surface.base,
@@ -42,7 +45,6 @@ export const modalContent = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  padding: 60,
 });
 
 globalStyle(`${modalContent} > h2`, {
@@ -61,6 +63,7 @@ export const modalButtons = recipe({
   base: {
     display: 'flex',
     marginTop: 60,
+    width: '100%',
   },
 
   variants: {
