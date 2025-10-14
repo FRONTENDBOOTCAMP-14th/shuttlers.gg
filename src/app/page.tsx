@@ -1,10 +1,9 @@
-import { TextBox } from '../components/TextBox/textBox';
+import { TextBox } from '../components/TextBox/TextBox';
 
 export default function HomePage() {
-  function handle() {}
   return (
     <>
-      <TextBox text="d"></TextBox>
+      <TextBox minHeight={120} maxHeight={240} autoResize />
     </>
   );
 }
