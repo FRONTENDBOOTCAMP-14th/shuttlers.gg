@@ -1,6 +1,6 @@
-import { createGlobalTheme, style } from '@vanilla-extract/css';
+import { createGlobalTheme } from '@vanilla-extract/css';
 
-export const vars = createGlobalTheme(':root', {
+export const typography = createGlobalTheme(':root', {
   font: {
     family: {
       base: 'var(--font-pretendard), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -33,106 +33,111 @@ export const vars = createGlobalTheme(':root', {
 
 export const textStyle = {
   headline: {
-    semibold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.headline,
-      fontWeight: vars.font.weight.semibold,
-      lineHeight: vars.font.lineHeight['133'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-    bold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.headline,
-      fontWeight: vars.font.weight.bold,
-      lineHeight: vars.font.lineHeight['133'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
+    semibold: {
+      fontFamily: typography.font.family.base,
+      fontSize: typography.font.size.headline,
+      fontWeight: typography.font.weight.semibold,
+      lineHeight: typography.font.lineHeight[133],
+      letterSpacing: typography.font.letterSpacing.tight,
+    },
+    bold: {
+      fontFamily: typography.font.family.base,
+      fontSize: typography.font.size.headline,
+      fontWeight: typography.font.weight.bold,
+      lineHeight: typography.font.lineHeight[133],
+      letterSpacing: typography.font.letterSpacing.tight,
+    },
   },
+
   title: {
-    bold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.title,
-      fontWeight: vars.font.weight.bold,
-      lineHeight: vars.font.lineHeight['133'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-    semibold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.title,
-      fontWeight: vars.font.weight.semibold,
-      lineHeight: vars.font.lineHeight['133'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
+    bold: {
+      fontFamily: typography.font.family.base,
+      fontSize: typography.font.size.title,
+      fontWeight: typography.font.weight.bold,
+      lineHeight: typography.font.lineHeight[133],
+      letterSpacing: typography.font.letterSpacing.tight,
+    },
+    semibold: {
+      fontFamily: typography.font.family.base,
+      fontSize: typography.font.size.title,
+      fontWeight: typography.font.weight.semibold,
+      lineHeight: typography.font.lineHeight[133],
+      letterSpacing: typography.font.letterSpacing.tight,
+    },
   },
+
   subtitle: {
-    bold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.subtitle,
-      fontWeight: vars.font.weight.bold,
-      lineHeight: vars.font.lineHeight['133'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-    semibold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.subtitle,
-      fontWeight: vars.font.weight.semibold,
-      lineHeight: vars.font.lineHeight['133'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
+    bold: {
+      fontFamily: typography.font.family.base,
+      fontSize: typography.font.size.subtitle,
+      fontWeight: typography.font.weight.bold,
+      lineHeight: typography.font.lineHeight[133],
+      letterSpacing: typography.font.letterSpacing.tight,
+    },
+    semibold: {
+      fontFamily: typography.font.family.base,
+      fontSize: typography.font.size.subtitle,
+      fontWeight: typography.font.weight.semibold,
+      lineHeight: typography.font.lineHeight[133],
+      letterSpacing: typography.font.letterSpacing.tight,
+    },
   },
+
   heading: {
-    bold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.heading,
-      fontWeight: vars.font.weight.bold,
-      lineHeight: vars.font.lineHeight['136'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-    semibold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.heading,
-      fontWeight: vars.font.weight.semibold,
-      lineHeight: vars.font.lineHeight['136'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-    medium: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.heading,
-      fontWeight: vars.font.weight.medium,
-      lineHeight: vars.font.lineHeight['136'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
+    bold: {
+      fontFamily: typography.font.family.base,
+      fontSize: typography.font.size.heading,
+      fontWeight: typography.font.weight.bold,
+      lineHeight: typography.font.lineHeight[136],
+      letterSpacing: typography.font.letterSpacing.tight,
+    },
+    semibold: {
+      fontFamily: typography.font.family.base,
+      fontSize: typography.font.size.heading,
+      fontWeight: typography.font.weight.semibold,
+      lineHeight: typography.font.lineHeight[136],
+      letterSpacing: typography.font.letterSpacing.tight,
+    },
+    medium: {
+      fontFamily: typography.font.family.base,
+      fontSize: typography.font.size.heading,
+      fontWeight: typography.font.weight.medium,
+      lineHeight: typography.font.lineHeight[136],
+      letterSpacing: typography.font.letterSpacing.tight,
+    },
   },
+
   body: {
-    bold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.body,
-      fontWeight: vars.font.weight.bold,
-      lineHeight: vars.font.lineHeight['150'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-    semibold: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.body,
-      fontWeight: vars.font.weight.semibold,
-      lineHeight: vars.font.lineHeight['150'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
-    regular: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.body,
-      fontWeight: vars.font.weight.regular,
-      lineHeight: vars.font.lineHeight['150'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
+    bold: {
+      fontFamily: typography.font.family.base,
+      fontSize: typography.font.size.body,
+      fontWeight: typography.font.weight.bold,
+      lineHeight: typography.font.lineHeight[150],
+      letterSpacing: typography.font.letterSpacing.tight,
+    },
+    semibold: {
+      fontFamily: typography.font.family.base,
+      fontSize: typography.font.size.body,
+      fontWeight: typography.font.weight.semibold,
+      lineHeight: typography.font.lineHeight[150],
+      letterSpacing: typography.font.letterSpacing.tight,
+    },
+    regular: {
+      fontFamily: typography.font.family.base,
+      fontSize: typography.font.size.body,
+      fontWeight: typography.font.weight.regular,
+      lineHeight: typography.font.lineHeight[150],
+      letterSpacing: typography.font.letterSpacing.tight,
+    },
   },
+
   caption: {
-    regular: style({
-      fontFamily: vars.font.family.base,
-      fontSize: vars.font.size.caption,
-      fontWeight: vars.font.weight.regular,
-      lineHeight: vars.font.lineHeight['140'],
-      letterSpacing: vars.font.letterSpacing.tight,
-    }),
+    regular: {
+      fontFamily: typography.font.family.base,
+      fontSize: typography.font.size.caption,
+      fontWeight: typography.font.weight.regular,
+      lineHeight: typography.font.lineHeight[140],
+      letterSpacing: typography.font.letterSpacing.tight,
+    },
   },
 };

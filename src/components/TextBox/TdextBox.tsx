@@ -1,7 +1,7 @@
 'use client';
 
 import { ChangeEvent, CSSProperties, useEffect, useRef, useState } from 'react';
-import * as styles from './TextBox.css';
+import * as styles from './TexdtBox.css';
 
 export type TextBoxProps = {
   placeholder?: string;
