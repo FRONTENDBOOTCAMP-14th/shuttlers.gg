@@ -1,11 +1,6 @@
-import { colors } from '@/styles/colorPalette.css';
 import { textStyle } from '@/styles/typography.css';
 import { style, styleVariants } from '@vanilla-extract/css';
-
-const PRIMARY_SOLID = colors.brand.main;
-const PRIMARY_GRADIENT = colors.brand.linear;
-const DARK = colors.gray[700];
-const WHITE = colors.white;
+import { tokens } from '../../styles/tokens.css';
 
 export const badgeBase = style([
   textStyle.body.bold,
@@ -24,7 +19,7 @@ export const badgeBase = style([
 ]);
 
 export const gradientText = style({
-  backgroundImage: PRIMARY_GRADIENT,
+  backgroundImage: tokens.color.badge.filled.bg.brand,
   backgroundClip: 'text',
   WebkitBackgroundClip: 'text',
   color: 'transparent',
@@ -39,38 +34,28 @@ export const iconStyle = style({
 
 export const filled = styleVariants({
   primary: {
-    background: PRIMARY_GRADIENT,
-    color: WHITE,
+    background: tokens.color.badge.filled.bg.brand,
+    color: tokens.color.badge.filled.text.brand,
   },
   dark: {
-    background: DARK,
-    color: WHITE,
+    background: tokens.color.badge.filled.bg.gray,
+    color: tokens.color.badge.filled.text.gray,
   },
   white: {
-    background: WHITE,
-    color: PRIMARY_SOLID,
+    background: tokens.color.badge.filled.bg.white,
+    color: tokens.color.badge.filled.text.white,
   },
 });
 
 export const outline = styleVariants({
   primary: {
-    background: `linear-gradient(white, white) padding-box, ${PRIMARY_GRADIENT} border-box`,
+    background: `linear-gradient(white, white) padding-box, ${tokens.color.badge.outline.border.brand} border-box`,
     backgroundOrigin: 'border-box',
-    color: 'inherit',
-  },
-  dark: {
-    background: `linear-gradient(white, white) padding-box, linear-gradient(${DARK}, ${DARK}) border-box`,
-    backgroundOrigin: 'border-box',
-    color: DARK,
+    color: tokens.color.badge.outline.text.brand,
   },
   white: {
-    background: `linear-gradient(transparent, transparent) padding-box, linear-gradient(${WHITE}, ${WHITE}) border-box`,
+    background: `linear-gradient(white, white) padding-box, ${tokens.color.badge.outline.border.white} border-box`,
     backgroundOrigin: 'border-box',
-    color: WHITE,
+    color: tokens.color.badge.outline.text.white,
   },
-});
-
-export const activeStyle = style({
-  transform: 'translateY(-1px)',
-  boxShadow: '0 4px 10px rgba(0,0,0,0.12)',
 });

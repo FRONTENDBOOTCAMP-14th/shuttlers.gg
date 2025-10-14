@@ -1,15 +1,19 @@
-import { colors } from '@/styles/colorPalette.css';
 import { textStyle } from '@/styles/typography.css';
 import { style } from '@vanilla-extract/css';
+import { tokens } from '../../styles/tokens.css';
 
 export const competitionCard = style({
-  background: colors.white,
+  background: tokens.color.surface.base,
   width: '660px',
   height: '112px',
   boxSizing: 'border-box',
+  borderRadius: '8px',
   padding: '20px',
   display: 'flex',
   flexDirection: 'column',
+  selectors: {
+    '&:hover': { boxShadow: tokens.elevation.shadow.hover },
+  },
 });
 
 export const competitionCardHeader = style({
@@ -22,7 +26,7 @@ export const competitionCardHeader = style({
 export const competitionCardTitle = style([
   textStyle.heading.semibold,
   {
-    color: colors.gray[800],
+    color: tokens.color.text.title,
     marginRight: '8px',
   },
 ]);
@@ -30,6 +34,6 @@ export const competitionCardTitle = style([
 export const competitionCardDate = style([
   textStyle.body.regular,
   {
-    color: colors.gray[700],
+    color: tokens.color.text.body,
   },
 ]);

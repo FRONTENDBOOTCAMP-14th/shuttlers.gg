@@ -1,24 +1,32 @@
 import type { ReactNode } from 'react';
 import * as styles from './Badge.css.ts';
 
-export type BadgeProps = {
-  text: string;
+type FilledColor = 'primary' | 'dark' | 'white';
+type OutlineColor = 'primary' | 'white';
+
+type BaseProps = {
+  text?: string;
   icon?: ReactNode;
-  variant: 'filled' | 'outline';
-  color: 'primary' | 'dark' | 'white';
   className?: string;
   active?: boolean;
 };
 
-export function Badge({
-  text = '태그',
-  icon,
-  variant = 'filled',
-  color = 'primary',
-  className,
-}: BadgeProps) {
+export type BadgeProps =
+  | ({ variant?: 'filled'; color?: FilledColor } & BaseProps)
+  | ({ variant: 'outline'; color?: OutlineColor } & BaseProps);
+
+export function Badge(props: BadgeProps) {
+  const { text = '태그', icon, className, active } = props;
+
+  const variant = props.variant ?? 'filled';
+  const color =
+    ('color' in props && props.color) ??
+    (variant === 'filled' ? 'primary' : 'primary');
+
   const variantClass =
-    variant === 'filled' ? styles.filled[color] : styles.outline[color];
+    variant === 'filled'
+      ? styles.filled[color as FilledColor]
+      : styles.outline[color as OutlineColor];
 
   const textClass =
     variant === 'outline' && color === 'primary'
