@@ -8,6 +8,7 @@ import {
 } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { MouseEvent, useState } from 'react';
+import { Logo } from '../Logo';
 import * as styles from './NavBar.css';
 
 type NavItem = {
@@ -23,8 +24,6 @@ type NavBarProps = {
   onToggleTheme?: () => void;
   user?: { name: string } | null;
   onUserClick?: () => void;
-  logoHref?: string;
-  logoAriaLabel?: string;
 };
 
 export default function NavBar({
@@ -35,8 +34,6 @@ export default function NavBar({
   onToggleTheme,
   user = null,
   onUserClick,
-  logoHref = '/',
-  logoAriaLabel = '홈으로 이동',
 }: NavBarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -57,34 +54,16 @@ export default function NavBar({
   return (
     <header className={styles.navBar}>
       <nav
-        className={styles.container}
+        className={styles.navBarContainer}
         aria-label="주요 탐색"
         role="navigation"
       >
-        <div className={styles.left}>
-          {onNavigate ? (
-            <a
-              href={logoHref}
-              className={styles.logo}
-              onClick={(e) => handleNavigate(e, logoHref)}
-              aria-label={logoAriaLabel}
-            >
-              Shuttlers.gg
-            </a>
-          ) : (
-            <Link
-              href={logoHref}
-              className={styles.logo}
-              aria-label={logoAriaLabel}
-            >
-              Shuttlers.gg
-            </Link>
-          )}
-
+        <div className={styles.navBarLeft}>
+          <Logo size="small" />
           <div className={styles.desktopNav}>
             <ul className={styles.navList}>
               {navItems.map((item) => (
-                <li key={item.path}>
+                <li key={item.label}>
                   {onNavigate ? (
                     <a
                       href={item.path}

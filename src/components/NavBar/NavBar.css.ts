@@ -12,7 +12,7 @@ export const navBar = style({
   backdropFilter: 'blur(8px)',
 });
 
-export const container = style({
+export const navBarContainer = style({
   maxWidth: '1200px',
   marginInline: 'auto',
   paddingBlock: '20px',
@@ -23,27 +23,11 @@ export const container = style({
   gap: '24px',
 });
 
-export const left = style({
+export const navBarLeft = style({
   display: 'flex',
   alignItems: 'center',
   gap: '48px',
 });
-
-export const logo = style([
-  textStyle.heading.bold,
-  {
-    display: 'inline-flex',
-    alignItems: 'center',
-    textDecoration: 'none',
-    color: tokens.color.text.info,
-    transition: 'opacity 0.2s ease',
-    selectors: {
-      '&:hover': {
-        opacity: 0.8,
-      },
-    },
-  },
-]);
 
 export const desktopNav = style({
   display: 'none',
@@ -58,7 +42,7 @@ export const navList = style({
   listStyle: 'none',
   display: 'flex',
   alignItems: 'center',
-  gap: '32px',
+  gap: '24px',
   margin: 0,
   padding: 0,
 });
