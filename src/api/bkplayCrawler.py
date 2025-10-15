@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 import os
 import re
 import time
@@ -116,7 +113,6 @@ def normalize_label(label: str) -> str:
     }
     if base in mapping:
         return mapping[base]
-    # 부분 일치 규칙
     if "계좌" in base: return "account"
     if "문의" in base or "연락" in base: return "contact"
     if "주최" in base: return "host"
@@ -126,7 +122,7 @@ def normalize_label(label: str) -> str:
     if "참가비" in base or "참가료" in base: return "fee"
     if "접수기간" in base or "신청기간" in base: return "apply_period"
     if "대회기간" in base or "일정" in base: return "event_period"
-    return base  # 모르는 라벨은 원문(공백 제거)으로
+    return base
 
 def parse_money(text: str) -> dict:
     digits = re.findall(r"\d[\d,]*", text or "")
@@ -286,9 +282,9 @@ def scrape_year_page(
             "endDate": end_date_str,
             "detailUrl": detail_url,
             "posterUrl": poster_url,
-            "detailRows": detail_rows,  # 원본
-            "detailKv": detail_kv,      # 정규화 맵
-            "parsed": parsed,           # 구조화 필드
+            "detailRows": detail_rows,  
+            "detailKv": detail_kv,      
+            "parsed": parsed,           
         }
         tournaments.append(tournament_item)
 
@@ -307,7 +303,6 @@ def to_row_for_db(t: dict) -> dict | None:
     parsed = t.get("parsed") or {}
     kv     = t.get("detailKv") or {}
 
-    # contacts: list -> text[]
     contacts = parsed.get("contacts") or []
     if not isinstance(contacts, list):
         contacts = []
@@ -315,12 +310,10 @@ def to_row_for_db(t: dict) -> dict | None:
     return {
         "tnmt_id":     tnmt_id,
         "title":       t.get("title"),
-        # 날짜계열
+
         "start_date":  t.get("startDate") or None,
         "end_date":    t.get("endDate") or None,
-        # start_month 는 생성 컬럼 가정 → 크롤러에서 세팅하지 않음
 
-        # 정규 디테일 컬럼
         "category":       kv.get("category"),
         "region":         kv.get("region"),
         "apply_start":    parsed.get("apply_start"),
@@ -339,11 +332,9 @@ def to_row_for_db(t: dict) -> dict | None:
         "supporter":      kv.get("supporter"),
         "sponsor":        kv.get("sponsor"),
 
-        # 링크/미디어
         "detail_url":  t.get("detailUrl"),
         "poster_url":  t.get("posterUrl"),
 
-        # JSON 보존(옵션)
         "detail_rows": t.get("detailRows") or [],
         "detail_kv":   kv,
         "parsed":      parsed,
@@ -369,10 +360,6 @@ def upsert_tournaments(rows: list[dict], batch_size: int = 500):
 
 # ===== 실행부 =====
 if __name__ == "__main__":
-    # YEAR: 기본 연도 힌트(파싱에만 사용, 실제 목록 페이지는 all)
-    # MONTH:
-    #   - 숫자("10") → 해당 월만
-    #   - "all" 또는 빈 값 → 전체
     year_env = os.getenv("YEAR", "")
     month_env = os.getenv("MONTH", "all").strip().lower()
 
@@ -383,13 +370,13 @@ if __name__ == "__main__":
         try:
             target_month = int(month_env)
         except ValueError:
-            target_month = None  # 파싱 실패 시 전체 처리
+            target_month = None
 
     include_detail_pages = os.getenv("DETAIL", "true").lower() == "true"
 
     tournament_list = scrape_year_page(
         year=target_year,
-        target_month=target_month,   # None이면 전체
+        target_month=target_month, 
         include_detail=include_detail_pages,
     )
 
@@ -398,10 +385,9 @@ if __name__ == "__main__":
     print("MONTH env    :", os.getenv("MONTH", "all"))
     print("DETAIL env   :", os.getenv("DETAIL", "true"))
     print("Resolved year:", target_year)
-    print("Resolved month(target_month):", target_month)  # None이면 전체
+    print("Resolved month(target_month):", target_month) 
     print("================")
 
-    # 콘솔 출력(검증용)
     for display_index, tournament in enumerate(tournament_list, start=1):
         print(
             f"{display_index:02d}. "
@@ -424,7 +410,6 @@ if __name__ == "__main__":
         print(f"    detail: {tournament['detailUrl']}")
     print(f"\nTOTAL: {len(tournament_list)} items")
 
-    # Supabase 업서트
     try:
         upsert_tournaments(tournament_list)
         print("✅ Supabase 업서트 완료")
