@@ -80,7 +80,6 @@ export default function Input({
         const enterEvent = new KeyboardEvent('keydown', {
           key: 'Enter',
           code: 'Enter',
-          keyCode: 13,
           bubbles: true,
         });
         inputRef.current.dispatchEvent(enterEvent);
