@@ -2,17 +2,20 @@
 
 import { Badge } from '@/components/Badge/Badge';
 import * as styles from '@/components/UserResultCard/UserResultCard.css';
+import { XMarkIcon } from '@heroicons/react/24/solid';
+import Link from 'next/link';
 
 type Grade = { national: string; local: string };
 
 export type UserResultCardProps = {
+  id: string;
   name: string;
   grade: Grade | null;
   gender?: 'male' | 'female';
   variant?: 'result' | 'history';
   onClick?: () => void;
   onRemove?: () => void;
-  searchQuery: string;
+  searchQuery?: string;
 };
 
 function formatGrade(grade: Grade | null) {
@@ -47,6 +50,7 @@ function highlightQuery(text: string, query: string) {
 }
 
 export function UserResultCard({
+  id,
   name,
   grade,
   gender = 'male',
@@ -60,7 +64,8 @@ export function UserResultCard({
   const showRemove = variant === 'history' && !!onRemove;
 
   return (
-    <div
+    <Link
+      href={`/player/${encodeURIComponent(id)}`}
       className={styles.userResultCard}
       onClick={onClick}
       aria-label={onClick ? `${name} 전적 보기` : undefined}
@@ -74,13 +79,14 @@ export function UserResultCard({
           <button
             type="button"
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
               onRemove?.();
             }}
             aria-label={`${name} 검색 이력 삭제`}
             title="삭제"
           >
-            ×
+            <XMarkIcon className={styles.icon} aria-hidden />
           </button>
         ) : (
           <>
@@ -91,6 +97,6 @@ export function UserResultCard({
           </>
         )}
       </div>
-    </div>
+    </Link>
   );
 }

@@ -28,3 +28,5 @@ export const badgeGroup = style({
 export const highlight = style({
   color: tokens.color.text.error,
 });
+
+export const icon = style({ width: 20, height: 20 });
