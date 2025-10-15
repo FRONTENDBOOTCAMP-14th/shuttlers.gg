@@ -4,7 +4,6 @@ import { tokens } from '../../styles/tokens.css';
 
 export const competitionCard = style({
   background: tokens.color.surface.base,
-  width: '660px',
   height: '112px',
   boxSizing: 'border-box',
   borderRadius: '8px',
@@ -37,3 +36,8 @@ export const competitionCardDate = style([
     color: tokens.color.text.body,
   },
 ]);
+
+export const competitionCardTagList = style({
+  display: 'flex',
+  gap: '6px',
+});

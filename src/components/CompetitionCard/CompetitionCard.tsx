@@ -15,7 +15,7 @@ export function CompetitionCard({ title, date, tags }: CompetitionCardProps) {
         <span className={clsx(styles.competitionCardTitle)}>{title}</span>
         <span className={clsx(styles.competitionCardDate)}>{date}</span>
       </div>
-      <div>
+      <div className={styles.competitionCardTagList}>
         {tags.map((tag: string) => {
           return <Badge text={tag} variant="outline" color="primary"></Badge>;
         })}

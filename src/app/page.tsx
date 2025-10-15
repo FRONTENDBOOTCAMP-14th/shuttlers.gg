@@ -1,3 +1,9 @@
+import { Calendar } from './calendar/Calendar';
+
 export default function HomePage() {
-  return <></>;
+  return (
+    <>
+      <Calendar></Calendar>
+    </>
+  );
 }

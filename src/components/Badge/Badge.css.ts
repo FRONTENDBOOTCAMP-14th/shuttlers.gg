@@ -1,6 +1,6 @@
+import { tokens } from '@/styles/tokens.css';
 import { textStyle } from '@/styles/typography.css';
 import { style, styleVariants } from '@vanilla-extract/css';
-import { tokens } from '../../styles/tokens.css';
 
 export const badgeBase = style([
   textStyle.body.bold,
