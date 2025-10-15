@@ -5,6 +5,8 @@ import {
 } from '@heroicons/react/16/solid';
 import Image from 'next/image';
 import { thumbnails } from '../../data/thumbnails';
+import { tokens } from '../../styles/tokens.css';
+import { textStyle } from '../../styles/typography.css';
 import { Badge } from '../Badge/Badge';
 import Button, { ButtonVariant } from '../Button/Button';
 import * as styles from './PartyCard.css';
@@ -15,18 +17,11 @@ type PartyStatus = 'joinable' | 'full' | 'joined' | 'readonly';
 
 export type PartyInfo = {
   title: string;
-  dateTime: string;
-  location: string;
+  schedule?: { dateTime: string; location: string };
   participants: number;
   maxParticipants: number;
-  conditions?: {
-    gender: Gender;
-    grade: Grade;
-  };
-  materials?: {
-    amount: number;
-    shuttleCock: number;
-  };
+  conditions?: { gender: Gender; grade: Grade };
+  materials?: { amount: number; shuttleCock: number };
   status: PartyStatus;
 };
 
@@ -47,69 +42,81 @@ export default function PartyCard({
 }: PartyCardProps) {
   const {
     title,
-    dateTime,
-    location,
+    schedule,
     participants,
     maxParticipants,
     conditions,
     materials,
     status,
   } = party;
-  const thumbnailImage = thumbnails[party.title.length % thumbnails.length];
 
+  const thumbnailImage = thumbnails[party.title.length % thumbnails.length];
   const buttonVariant: Record<
     PartyInfo['status'],
-    { color: ButtonVariant; text: string }
+    { color: ButtonVariant; text: string; action?: () => void }
   > = {
-    joinable: { color: 'primary', text: '참가하기' },
+    joinable: { color: 'primary', text: '참가하기', action: onJoin },
     full: { color: 'primary', text: '참여 불가' },
-    joined: { color: 'primary', text: '참가 취소' },
-    readonly: { color: 'primary', text: '상세보기' },
+    joined: { color: 'dark', text: '참가 취소', action: onCancel },
+    readonly: { color: 'primary', text: '상세보기', action: onDetail },
   };
 
   return (
-    <article className={styles.partyCard({ status, view })}>
+    <article className={styles.partyCard({ status, view })} tabIndex={0}>
       {view === 'detailed' && (
         <div className={styles.thumbnailWrapper}>
           <Image
             src={thumbnailImage}
-            alt="썸네일 이미지"
             fill
             style={{ objectFit: 'cover' }}
+            alt=""
+            role="presentation"
           />
         </div>
       )}
+
       <header
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          marginBottom: 18,
         }}
       >
-        <h3>{title}</h3>
+        <h3
+          style={{
+            ...textStyle.heading.semibold,
+            color: tokens.color.text.title,
+          }}
+        >
+          {title}
+        </h3>
         <Badge
           text={`${participants} / ${maxParticipants}`}
-          icon={<UserGroupIcon width={16} />}
+          icon={<UserGroupIcon width={16} aria-hidden />}
           variant="filled"
           color="dark"
+          aria-label={`최대 인원 ${maxParticipants}명 중 ${participants}명 참가함`}
         />
       </header>
 
-      <div className={styles.partyContent()}>
-        <div>
-          <div>
-            <ClockIcon width={16} />
-            <span>{dateTime}</span>
+      <section className={styles.partyContent}>
+        <div style={{ display: 'flex', flexDirection: 'column', rowGap: 8 }}>
+          <div className={styles.schedule}>
+            <h4 className="sr-only">모임 일시</h4>
+            <ClockIcon width={16} aria-hidden />
+            <span>{schedule?.dateTime}</span>
           </div>
-          <div>
-            <MapPinIcon width={16} />
-            <span>{location}</span>
+          <div className={styles.schedule}>
+            <h4 className="sr-only">모임 장소</h4>
+            <MapPinIcon width={16} aria-hidden />
+            <span>{schedule?.location}</span>
           </div>
         </div>
         {view === 'detailed' && (
-          <>
-            <div>
-              <span>참가 조건</span>
+          <div style={{ display: 'flex', flexDirection: 'column', rowGap: 8 }}>
+            <div className={styles.condition}>
+              <h4>참가 조건</h4>
               <ul style={{ display: 'flex', columnGap: 4 }}>
                 <li>
                   <Badge
@@ -139,8 +146,8 @@ export default function PartyCard({
                 </li>
               </ul>
             </div>
-            <div>
-              <span>준비물</span>
+            <div className={styles.condition}>
+              <h4>준비물</h4>
               <ul style={{ display: 'flex', columnGap: 4 }}>
                 <li>
                   <Badge
@@ -158,16 +165,18 @@ export default function PartyCard({
                 </li>
               </ul>
             </div>
-          </>
+          </div>
         )}
+      </section>
 
-        <Button
-          text={buttonVariant[status].text}
-          variant={buttonVariant[status].color}
-          size="long"
-          disabled={status === 'full'}
-        />
-      </div>
+      <Button
+        text={buttonVariant[status].text}
+        variant={buttonVariant[status].color}
+        size="long"
+        onClick={buttonVariant[status].action ?? undefined}
+        disabled={status === 'full'}
+        aria-label={buttonVariant[status].text}
+      />
     </article>
   );
 }

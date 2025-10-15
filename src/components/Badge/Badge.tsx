@@ -39,7 +39,11 @@ export function Badge(props: BadgeProps) {
         .filter(Boolean)
         .join(' ')}
     >
-      {icon ? <span aria-hidden>{icon}</span> : null}
+      {icon ? (
+        <span aria-hidden style={{ lineHeight: 1 }}>
+          {icon}
+        </span>
+      ) : null}
       <span className={textClass}>{text}</span>
     </span>
   );
