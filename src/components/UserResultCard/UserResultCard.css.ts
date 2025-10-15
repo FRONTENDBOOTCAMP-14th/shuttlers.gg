@@ -16,7 +16,7 @@ export const userResultCard = style({
   },
 });
 
-export const userResultCardUserName = style([textStyle.heading.medium, {}]);
+export const userResultCardUserName = style(textStyle.heading.medium);
 
 export const badgeGroup = style({
   marginLeft: 'auto',
