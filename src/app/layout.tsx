@@ -14,6 +14,12 @@ export const pretendard = localFont({
 export const metadata: Metadata = {
   title: 'Shuttlers.GG',
   description: '전국 배드민턴 대회 전적 검색 사이트',
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: 'favicon.icon', type: 'any' },
+    ],
+  },
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
