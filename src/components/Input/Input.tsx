@@ -96,9 +96,7 @@ export default function Input({
   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (e.type === 'mousedown') {
-      e.preventDefault();
-    }
+    e.preventDefault();
   };
 
   const handleKeyDown = (
