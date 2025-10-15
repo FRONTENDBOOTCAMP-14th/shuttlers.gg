@@ -45,9 +45,16 @@ def fetch(url: str, params: dict | None = None) -> requests.Response:
                 raise
             time.sleep(1.5 * (attempt_index + 1))
 
+# ===== 공통 유틸 =====
+def squish(text: str) -> str:
+    """연속 공백/개행을 한 칸으로 정리."""
+    return re.sub(r"\s+", " ", text or "").strip()
+
 # ===== 기간 파싱 =====
 def parse_period(source_text: str, default_year: int | None = None) -> tuple[str | None, str | None]:
-    """텍스트에서 'YYYY.MM.DD ~ YYYY.MM.DD' 또는 'MM.DD ~ MM.DD' 형태를 찾아 ISO 날짜로 반환한다."""
+    """
+    텍스트에서 'YYYY.MM.DD ~ YYYY.MM.DD' 또는 'MM.DD ~ MM.DD' 형태를 찾아 ISO 날짜로 반환.
+    """
     year_in_text_match = re.search(r"(\d{4})\.", source_text)
     base_year = year_in_text_match.group(1) if year_in_text_match else default_year
 
@@ -70,6 +77,10 @@ def parse_period(source_text: str, default_year: int | None = None) -> tuple[str
     end_date_str   = normalize_iso_date(end_year_str,   period_match.group(5), period_match.group(6))
     return start_date_str, end_date_str
 
+def parse_period_iso(text: str, default_year: int | None = None) -> tuple[str | None, str | None]:
+    """ 'YYYY.MM.DD ~ YYYY.MM.DD' 또는 'MM.DD ~ MM.DD' → ISO (YYYY-MM-DD) """
+    return parse_period(text, default_year)
+
 # ===== 월 필터 =====
 def month_matches(start_date_str: str | None, target_month: int | None) -> bool:
     """
@@ -82,19 +93,98 @@ def month_matches(start_date_str: str | None, target_month: int | None) -> bool:
         return False
     return int(start_date_str[5:7]) == target_month
 
-def squish(text: str) -> str:
-    """연속 공백/개행을 한 칸으로 정리."""
-    return re.sub(r"\s+", " ", text or "").strip()
+# ===== 라벨 정규화 & 값 파서 =====
+def normalize_label(label: str) -> str:
+    base = re.sub(r"\s+", "", label or "").strip()
+    mapping = {
+        "구분": "category",
+        "참가지역": "region",
+        "접수기간": "apply_period",
+        "신청기간": "apply_period",
+        "대회기간": "event_period",
+        "대회일정": "event_period",
+        "주최": "host",
+        "주관": "organizer",
+        "후원": "supporter",
+        "협찬": "sponsor",
+        "참가비": "fee",
+        "계좌번호": "account",
+        "예금주": "account_holder",
+        "문의전화": "contact",
+        "문의": "contact",
+        "연락처": "contact",
+    }
+    if base in mapping:
+        return mapping[base]
+    # 부분 일치 규칙
+    if "계좌" in base: return "account"
+    if "문의" in base or "연락" in base: return "contact"
+    if "주최" in base: return "host"
+    if "주관" in base: return "organizer"
+    if "후원" in base: return "supporter"
+    if "협찬" in base: return "sponsor"
+    if "참가비" in base or "참가료" in base: return "fee"
+    if "접수기간" in base or "신청기간" in base: return "apply_period"
+    if "대회기간" in base or "일정" in base: return "event_period"
+    return base  # 모르는 라벨은 원문(공백 제거)으로
 
-# ===== 포스터 + 상세 테이블 추출 =====
-def extract_poster_and_detail_rows(detail_soup: BeautifulSoup, base_url: str) -> tuple[str | None, list[dict]]:
+def parse_money(text: str) -> dict:
+    digits = re.findall(r"\d[\d,]*", text or "")
+    amount = None
+    if digits:
+        amount = int(re.sub(r"[^\d]", "", digits[0]))
+    return {"fee_amount": amount, "fee_raw": squish(text)}
+
+def parse_phone(text: str) -> list[str]:
+    phones = re.findall(r"(0\d{1,2}[-.\s]?\d{3,4}[-.\s]?\d{4})", text or "")
+    return list(dict.fromkeys(p.replace(" ", "").replace(".", "-") for p in phones))
+
+def parse_account(text: str) -> dict:
+    bank = None
+    account = None
+    holder = None
+
+    bank_match = re.search(r"(국민|신한|우리|부산|농협|하나|기업|대구|경남|광주|전북|SC제일|씨티|카카오|토스)은행?", text)
+    if bank_match:
+        bank = bank_match.group(0)
+
+    acct_match = re.search(r"\b\d{6,}\b(?:-\d+)*", text.replace(" ", ""))
+    if acct_match:
+        account = acct_match.group(0)
+
+    holder_match = re.search(r"예금주[:\s]*([^\s]+)", text)
+    if holder_match:
+        holder = holder_match.group(1)
+
+    return {"account_bank": bank, "account_number": account, "account_holder": holder, "account_raw": squish(text)}
+
+# ===== 포스터 + 상세 테이블 추출 (분해 포함) =====
+def extract_poster_and_detail(detail_soup: BeautifulSoup, base_url: str, default_year: int | None = None) -> tuple[str | None, list[dict], dict, dict]:
+    """
+    return: (poster_url, rows, detail_kv, parsed)
+      - rows: [{label, value}] 원본 정리
+      - detail_kv: { normalized_key: raw_value }
+      - parsed: 구조화 필드 (apply/event 기간, fee, account, contacts 등)
+    """
+    # 포스터
     poster_url: str | None = None
     poster_img = detail_soup.select_one("div.poster img")
     if poster_img and poster_img.get("src"):
         poster_url = urljoin(base_url, poster_img["src"])
 
     rows: list[dict] = []
-    table = detail_soup.select_one("table.table.detail") or detail_soup.select_one("table.detail")
+    detail_kv: dict = {}
+    parsed: dict = {
+        "apply_start": None, "apply_end": None,
+        "event_start": None, "event_end": None,
+        "fee_amount": None, "fee_raw": None,
+        "account_bank": None, "account_number": None, "account_holder": None, "account_raw": None,
+        "contacts": [],
+        "category": None, "region": None, "host": None, "organizer": None, "supporter": None, "sponsor": None,
+    }
+
+    # 테이블 느슨 탐색
+    table = detail_soup.select_one("table.table.detail") or detail_soup.select_one("table.detail") or detail_soup.select_one("table")
     if table:
         for idx, tr in enumerate(table.select("tr"), start=1):
             th = tr.find("th")
@@ -117,7 +207,27 @@ def extract_poster_and_detail_rows(detail_soup: BeautifulSoup, base_url: str) ->
 
             rows.append({"label": label_text, "value": value_text})
 
-    return poster_url, rows
+            key = normalize_label(label_text)
+            detail_kv[key] = value_text
+
+            # 분해 로직
+            if key == "apply_period":
+                s, e = parse_period_iso(value_text, default_year)
+                parsed["apply_start"], parsed["apply_end"] = s, e
+            elif key == "event_period":
+                s, e = parse_period_iso(value_text, default_year)
+                parsed["event_start"], parsed["event_end"] = s, e
+            elif key == "fee":
+                parsed.update(parse_money(value_text))
+            elif key == "account":
+                parsed.update(parse_account(value_text))
+            elif key == "contact":
+                phones = parse_phone(value_text)
+                parsed["contacts"] = list({*parsed.get("contacts", []), *phones})
+            elif key in ("category", "region", "host", "organizer", "supporter", "sponsor"):
+                parsed[key] = value_text
+
+    return poster_url, rows, detail_kv, parsed
 
 # ===== 메인 스크래핑 =====
 def scrape_year_page(
@@ -146,6 +256,8 @@ def scrape_year_page(
         start_date_str, end_date_str = parse_period(surrounding_text, default_year=year or None)
         poster_url: str | None = None
         detail_rows: list[dict] = []
+        detail_kv: dict = {}
+        parsed: dict = {}
 
         if include_detail:
             detail_response = fetch(detail_url)
@@ -156,9 +268,11 @@ def scrape_year_page(
             start_date_str = refined_start_date_str or start_date_str
             end_date_str   = refined_end_date_str   or end_date_str
 
-            poster_url, detail_rows = extract_poster_and_detail_rows(detail_soup, BASE_URL)
+            poster_url, detail_rows, detail_kv, parsed = extract_poster_and_detail(
+                detail_soup, BASE_URL, default_year=year or None
+            )
 
-        # === 여기서 월 필터 적용/무시 ===
+        # 월 필터
         if not month_matches(start_date_str, target_month):
             continue
 
@@ -172,7 +286,9 @@ def scrape_year_page(
             "endDate": end_date_str,
             "detailUrl": detail_url,
             "posterUrl": poster_url,
-            "detailRows": detail_rows,
+            "detailRows": detail_rows,  # 원본
+            "detailKv": detail_kv,      # 정규화 맵
+            "parsed": parsed,           # 구조화 필드
         }
         tournaments.append(tournament_item)
 
@@ -187,14 +303,50 @@ def to_row_for_db(t: dict) -> dict | None:
     tnmt_id = t.get("tnmtId")
     if not tnmt_id:
         return None
+
+    parsed = t.get("parsed") or {}
+    kv     = t.get("detailKv") or {}
+
+    # contacts: list -> text[]
+    contacts = parsed.get("contacts") or []
+    if not isinstance(contacts, list):
+        contacts = []
+
     return {
         "tnmt_id":     tnmt_id,
         "title":       t.get("title"),
+        # 날짜계열
         "start_date":  t.get("startDate") or None,
         "end_date":    t.get("endDate") or None,
+        # start_month 는 생성 컬럼 가정 → 크롤러에서 세팅하지 않음
+
+        # 정규 디테일 컬럼
+        "category":       kv.get("category"),
+        "region":         kv.get("region"),
+        "apply_start":    parsed.get("apply_start"),
+        "apply_end":      parsed.get("apply_end"),
+        "event_start":    parsed.get("event_start"),
+        "event_end":      parsed.get("event_end"),
+        "fee_amount":     parsed.get("fee_amount"),
+        "fee_raw":        parsed.get("fee_raw"),
+        "account_bank":   parsed.get("account_bank"),
+        "account_number": parsed.get("account_number"),
+        "account_holder": parsed.get("account_holder"),
+        "contact_primary": kv.get("contact"),
+        "contacts":       contacts,
+        "host":           kv.get("host"),
+        "organizer":      kv.get("organizer"),
+        "supporter":      kv.get("supporter"),
+        "sponsor":        kv.get("sponsor"),
+
+        # 링크/미디어
         "detail_url":  t.get("detailUrl"),
         "poster_url":  t.get("posterUrl"),
+
+        # JSON 보존(옵션)
         "detail_rows": t.get("detailRows") or [],
+        "detail_kv":   kv,
+        "parsed":      parsed,
         "raw":         t,
     }
 
@@ -212,7 +364,7 @@ def upsert_tournaments(rows: list[dict], batch_size: int = 500):
 
     for i in range(0, len(cleaned), batch_size):
         chunk = cleaned[i:i+batch_size]
-        res = sb.table("bk_tournaments").upsert(chunk, on_conflict="tnmt_id").execute()
+        sb.table("bk_tournaments").upsert(chunk, on_conflict="tnmt_id").execute()
         print(f"✅ 업서트 배치 {i//batch_size + 1}: {len(chunk)}건")
 
 # ===== 실행부 =====
@@ -221,7 +373,6 @@ if __name__ == "__main__":
     # MONTH:
     #   - 숫자("10") → 해당 월만
     #   - "all" 또는 빈 값 → 전체
-
     year_env = os.getenv("YEAR", "")
     month_env = os.getenv("MONTH", "all").strip().lower()
 
@@ -232,7 +383,7 @@ if __name__ == "__main__":
         try:
             target_month = int(month_env)
         except ValueError:
-            target_month = None  # 파싱 실패 시 안전하게 전체 처리
+            target_month = None  # 파싱 실패 시 전체 처리
 
     include_detail_pages = os.getenv("DETAIL", "true").lower() == "true"
 
@@ -263,6 +414,13 @@ if __name__ == "__main__":
         print(f"    rows: {len(rows)}개")
         for r in rows:
             print(f"      - {r.get('label','')}: {r.get('value','')}")
+        print(f"    kv: {tournament.get('detailKv', {})}")
+        p = tournament.get("parsed", {})
+        print(f"    parsed.apply: {p.get('apply_start')} ~ {p.get('apply_end')}")
+        print(f"    parsed.event: {p.get('event_start')} ~ {p.get('event_end')}")
+        print(f"    parsed.fee_amount: {p.get('fee_amount')}")
+        print(f"    parsed.account: {p.get('account_bank')} {p.get('account_number')} ({p.get('account_holder')})")
+        print(f"    parsed.contacts: {', '.join(p.get('contacts', []))}")
         print(f"    detail: {tournament['detailUrl']}")
     print(f"\nTOTAL: {len(tournament_list)} items")
 
