@@ -3,28 +3,15 @@ import {
   MapPinIcon,
   UserGroupIcon,
 } from '@heroicons/react/16/solid';
+import Image from 'next/image';
+import { thumbnails } from '../../data/thumbnails';
 import { Badge } from '../Badge/Badge';
-import Button from '../Button/Button';
+import Button, { ButtonVariant } from '../Button/Button';
 import * as styles from './PartyCard.css';
 
-const getThumbnailImages = () => {
-  function importAll(r) {
-    let images = {};
-    r.keys().forEach((key) => {
-      images[key] = r(key);
-    });
-
-    return images;
-  }
-
-  let thumbnails = importAll(
-    require.context('../assets/images'),
-    true,
-    /\.(png|jpe?g)$/
-  );
-
-  return thumbnails;
-};
+type Gender = 'male' | 'female' | 'any';
+type Grade = 'beginner' | 'D' | 'C' | 'B' | 'A' | 'any';
+type PartyStatus = 'joinable' | 'full' | 'joined' | 'readonly';
 
 export type PartyInfo = {
   title: string;
@@ -32,9 +19,15 @@ export type PartyInfo = {
   location: string;
   participants: number;
   maxParticipants: number;
-  conditions?: string[];
-  materials?: string[];
-  status: 'joinable' | 'full' | 'joined' | 'readonly';
+  conditions?: {
+    gender: Gender;
+    grade: Grade;
+  };
+  materials?: {
+    amount: number;
+    shuttleCock: number;
+  };
+  status: PartyStatus;
 };
 
 type PartyCardProps = {
@@ -62,10 +55,11 @@ export default function PartyCard({
     materials,
     status,
   } = party;
+  const thumbnailImage = thumbnails[party.title.length % thumbnails.length];
 
   const buttonVariant: Record<
     PartyInfo['status'],
-    'primary' | 'secondary' | 'dark'
+    { color: ButtonVariant; text: string }
   > = {
     joinable: { color: 'primary', text: '참가하기' },
     full: { color: 'primary', text: '참여 불가' },
@@ -75,7 +69,16 @@ export default function PartyCard({
 
   return (
     <article className={styles.partyCard({ status, view })}>
-      {view === 'detailed' && <img src="" alt="" />}
+      {view === 'detailed' && (
+        <div className={styles.thumbnailWrapper}>
+          <Image
+            src={thumbnailImage}
+            alt="썸네일 이미지"
+            fill
+            style={{ objectFit: 'cover' }}
+          />
+        </div>
+      )}
       <header
         style={{
           display: 'flex',
@@ -83,7 +86,7 @@ export default function PartyCard({
           justifyContent: 'space-between',
         }}
       >
-        <h3>{party.title}</h3>
+        <h3>{title}</h3>
         <Badge
           text={`${participants} / ${maxParticipants}`}
           icon={<UserGroupIcon width={16} />}
@@ -92,53 +95,79 @@ export default function PartyCard({
         />
       </header>
 
-      <div>
+      <div className={styles.partyContent()}>
         <div>
-          <ClockIcon width={16} />
-          <span>{dateTime}</span>
+          <div>
+            <ClockIcon width={16} />
+            <span>{dateTime}</span>
+          </div>
+          <div>
+            <MapPinIcon width={16} />
+            <span>{location}</span>
+          </div>
         </div>
-        <div>
-          <MapPinIcon width={16} />
-          <span>{location}</span>
-        </div>
-      </div>
-      <div>
-        <span>참가 조건</span>
-        <ul>
-          {conditions?.map((condition) => {
-            return (
-              <Badge
-                key={condition}
-                text="남성"
-                variant="outline"
-                color="primary"
-              />
-            );
-          })}
-        </ul>
-      </div>
-      <div>
-        <span>준비물</span>
-        <ul>
-          {materials?.map((material) => {
-            return (
-              <Badge
-                key={material}
-                text="￦ 10000"
-                variant="outline"
-                color="primary"
-              />
-            );
-          })}
-        </ul>
-      </div>
+        {view === 'detailed' && (
+          <>
+            <div>
+              <span>참가 조건</span>
+              <ul style={{ display: 'flex', columnGap: 4 }}>
+                <li>
+                  <Badge
+                    text={
+                      conditions?.gender === 'male'
+                        ? '남성'
+                        : conditions?.gender === 'female'
+                        ? '여성'
+                        : '성별무관'
+                    }
+                    variant="outline"
+                    color="primary"
+                  />
+                </li>
+                <li>
+                  <Badge
+                    text={
+                      conditions?.grade === 'any'
+                        ? '실력무관'
+                        : conditions?.grade === 'beginner'
+                        ? '초심'
+                        : `${conditions?.grade}조 이상`
+                    }
+                    variant="outline"
+                    color="primary"
+                  />
+                </li>
+              </ul>
+            </div>
+            <div>
+              <span>준비물</span>
+              <ul style={{ display: 'flex', columnGap: 4 }}>
+                <li>
+                  <Badge
+                    text={`￦ ${materials?.amount}`}
+                    variant="outline"
+                    color="primary"
+                  />
+                </li>
+                <li>
+                  <Badge
+                    text={`콕 ${materials?.shuttleCock}개`}
+                    variant="outline"
+                    color="primary"
+                  />
+                </li>
+              </ul>
+            </div>
+          </>
+        )}
 
-      <Button
-        text={buttonVariant[status].text}
-        variant={buttonVariant[status].color}
-        size="long"
-        disabled={status === 'full'}
-      />
+        <Button
+          text={buttonVariant[status].text}
+          variant={buttonVariant[status].color}
+          size="long"
+          disabled={status === 'full'}
+        />
+      </div>
     </article>
   );
 }
