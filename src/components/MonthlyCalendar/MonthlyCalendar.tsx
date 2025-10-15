@@ -1,5 +1,6 @@
 'use client';
 
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import * as styles from './MonthlyCalendar.css';
 
 type EventRange = { start: string; end: string };
@@ -8,9 +9,10 @@ type Props = {
   year: number;
   month: number;
   events?: EventRange[];
+  setMonth: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export function MonthlyCalendar({ year, month, events = [] }: Props) {
+export function MonthlyCalendar({ year, month, events = [], setMonth }: Props) {
   const first = new Date(year, month - 1, 1);
   const last = new Date(year, month, 0);
   const startWeekday = first.getDay();
@@ -35,15 +37,24 @@ export function MonthlyCalendar({ year, month, events = [] }: Props) {
           {year}년 {month}월
         </h2>
         <div className={styles.navArea}>
-          <button type="button" className={styles.navBtn} aria-label="이전 달">
-            ‹
+          <button
+            type="button"
+            className={styles.navBtn}
+            aria-label="이전 달"
+            onClick={() => setMonth(month - 1)}
+          >
+            <ChevronLeftIcon />
           </button>
-          <button type="button" className={styles.navBtn} aria-label="다음 달">
-            ›
+          <button
+            type="button"
+            className={styles.navBtn}
+            aria-label="다음 달"
+            onClick={() => setMonth(month + 1)}
+          >
+            <ChevronRightIcon />
           </button>
         </div>
       </div>
-
       <div className={styles.grid}>
         {weekLabels.map((w) => (
           <div key={w} className={styles.weekday}>

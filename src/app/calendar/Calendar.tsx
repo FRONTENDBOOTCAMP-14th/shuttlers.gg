@@ -1,8 +1,24 @@
+'use client';
+
 import * as styles from '@/app/calendar/Calendar.css.ts';
 import { CompetitionCard } from '@/components/CompetitionCard/CompetitionCard';
 import { MonthlyCalendar } from '@/components/MonthlyCalendar/MonthlyCalendar';
+import { useState } from 'react';
+import { useMonthlyTournaments } from '../../hooks/useMonthlyTournaments';
 
 export function Calendar() {
+  const [year, setYear] = useState(2025);
+  const [month, setMonth] = useState<number>(10);
+
+  const { data, events, isLoading, error, refetch } = useMonthlyTournaments(
+    year,
+    month
+  );
+
+  data.forEach((data) => {
+    console.log(data);
+  });
+
   return (
     <div className={styles.calendar}>
       <header className={styles.calendarHeader}>
@@ -13,33 +29,30 @@ export function Calendar() {
       </header>
 
       <div className={styles.calendarMain}>
-        <MonthlyCalendar year={2025} month={10}></MonthlyCalendar>
+        <MonthlyCalendar
+          year={year}
+          month={month}
+          setMonth={setMonth}
+          events={events}
+        />
       </div>
 
       <div className={styles.calendarListSection}>
-        <div className={styles.listHeader}>2025년 n월 대회 리스트</div>
+        <div className={styles.listHeader}>
+          {year}년 {month}월 대회 리스트
+        </div>
         <ul className={styles.eventList}>
-          <li>
-            <CompetitionCard
-              title="2025 수원배 전국 배드민턴 대회"
-              date="25.09.06-25.09.07"
-              tags={['전국대회', '지역대회']}
-            />
-          </li>
-          <li>
-            <CompetitionCard
-              title="2025 수원배 전국 배드민턴 대회"
-              date="25.09.06-25.09.07"
-              tags={['전국대회', '지역대회']}
-            />
-          </li>
-          <li>
-            <CompetitionCard
-              title="2025 수원배 전국 배드민턴 대회"
-              date="25.09.06-25.09.07"
-              tags={['전국대회', '지역대회']}
-            />
-          </li>
+          {data.map((data) => {
+            return (
+              <li>
+                <CompetitionCard
+                  title={data.title}
+                  date={`${data.start_date}-${data.end_date}`}
+                  tags={['전국대회', '지역대회']}
+                />
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>
