@@ -104,7 +104,7 @@ export default function Input({
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLButtonElement>,
-    callback: Function
+    callback: (e: React.KeyboardEvent<HTMLButtonElement>) => void
   ) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
