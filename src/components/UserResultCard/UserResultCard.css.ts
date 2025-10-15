@@ -24,3 +24,7 @@ export const badgeGroup = style({
   gap: '10px',
   alignItems: 'center',
 });
+
+export const highlight = style({
+  color: tokens.color.text.error,
+});
