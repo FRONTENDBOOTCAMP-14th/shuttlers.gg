@@ -20,6 +20,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="ko" className={`${pretendard.variable} ${lightTheme}`}>
       <body>
+        <h1 className="sr-only">Shuttlers</h1>
         <ThemeProvider>{children}</ThemeProvider>
         <div id="modal-root"></div>
       </body>
