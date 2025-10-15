@@ -21,6 +21,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
     <html lang="ko" className={`${pretendard.variable} ${lightTheme}`}>
       <body>
         <ThemeProvider>{children}</ThemeProvider>
+        <div id="modal-root"></div>
       </body>
     </html>
   );
