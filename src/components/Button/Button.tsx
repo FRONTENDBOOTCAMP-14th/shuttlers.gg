@@ -1,12 +1,14 @@
 import { ReactNode } from 'react';
 import * as styles from './Button.css';
 
+export type ButtonVariant = 'primary' | 'secondary' | 'dark';
+
 type ButtonProps = {
   text?: string;
   type?: 'button' | 'submit' | 'reset';
   icon?: ReactNode;
   iconPosition?: 'left' | 'right';
-  variant?: 'primary' | 'secondary' | 'dark';
+  variant?: ButtonVariant;
   size?: 'short' | 'long';
   rounded?: boolean;
   onClick?: () => void;
