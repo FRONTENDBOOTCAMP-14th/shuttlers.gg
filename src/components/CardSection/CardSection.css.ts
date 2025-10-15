@@ -1,8 +1,10 @@
+import { tokens } from '@/styles/tokens.css';
 import { style } from '@vanilla-extract/css';
+import { textStyle } from '../../styles/typography.css';
 
 export const container = style({
   borderRadius: '20px',
-  boxShadow: '0 8px 24px 0 rgba(51, 119, 255, 0.12)',
+  boxShadow: tokens.elevation.shadow.primary,
   padding: '40px',
   width: '100%',
   display: 'inline-flex',
@@ -12,7 +14,7 @@ export const container = style({
 });
 
 export const primaryBg = style({
-  background: 'var(--White, #FFF)',
+  background: tokens.color.badge.filled.bg.white,
 });
 
 export const noBg = style({
@@ -33,21 +35,18 @@ export const icon = style({
   aspectRatio: '1/1',
   alignItems: 'center',
   justifyContent: 'center',
-  color: '#37F',
+  color: tokens.color.badge.filled.text.white,
 });
 
 export const title = style({
-  fontWeight: '700',
-  fontSize: '28px',
-  color: 'var(--Gray-800, #101012)',
-  lineHeight: '133.4%',
-  letterSpacing: '-0.7px',
+  color: tokens.color.text.title,
+  ...textStyle.subtitle.bold,
 });
 
 export const content = style({
   width: 'auto',
   height: 'auto',
-  backgroundColor: 'var(--Brand-Subtle, #E3EDFF)',
+  backgroundColor: tokens.color.surface.brand,
   padding: '24px 40px',
   borderRadius: '8px',
 });
