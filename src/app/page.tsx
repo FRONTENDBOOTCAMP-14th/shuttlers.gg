@@ -1,3 +1,9 @@
+import { UserResultCard } from '../components/UserResultCard/UserResultCard';
+
 export default function HomePage() {
-  return <></>;
+  return (
+    <>
+      <UserResultCard></UserResultCard>
+    </>
+  );
 }

@@ -13,7 +13,6 @@ export const badgeBase = style([
     borderRadius: 9999,
     border: '1px solid transparent',
     userSelect: 'none',
-    marginRight: '6px',
     backgroundColor: 'transparent',
   },
 ]);
