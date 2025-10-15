@@ -12,7 +12,9 @@ export const button = recipe({
     lineHeight: 1,
     transition:
       'background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease',
-    ':focus': {},
+    ':focus': {
+      outline: `2px solid ${tokens.color.field.border.focus}`,
+    },
   },
 
   variants: {
@@ -67,7 +69,8 @@ export const button = recipe({
     {
       variants: { disabled: true },
       style: {
-        ...textStyle.subtitle.semibold,
+        ...textStyle.heading.semibold,
+        lineHeight: 1,
         background: tokens.color.action.bg.disabled,
         boxShadow: 'none',
         transform: 'none',
