@@ -53,3 +53,15 @@ globalStyle('button', {
 globalStyle('input::placeholder', {
   color: tokens.color.text.placeholder,
 });
+
+globalStyle('.sr-only', {
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  padding: 0,
+  margin: -1,
+  overflow: 'hidden',
+  clip: 'rect(0, 0, 0, 0)',
+  whiteSpace: 'nowrap',
+  border: 0,
+});
