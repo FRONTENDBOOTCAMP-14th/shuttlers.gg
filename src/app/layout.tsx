@@ -1,3 +1,4 @@
+import NavBar from '@/components/NavBar/NavBar';
 import '@/styles/global.css';
 import { lightTheme } from '@/styles/theme.css';
 import ThemeProvider from '@/styles/ThemeProvider';
@@ -27,6 +28,14 @@ export default function RootLayout({ children }: PropsWithChildren) {
     <html lang="ko" className={`${pretendard.variable} ${lightTheme}`}>
       <body>
         <h1 className="sr-only">Shuttlers</h1>
+        <NavBar
+          navItems={[
+            { label: 'Home', path: '/' },
+            { label: 'Calendar', path: '/calendar' },
+            { label: 'Ranking', path: '/ranking' },
+          ]}
+          // theme, onToggleTheme, user, onUserClick 등 필요시 주입
+        />
         <ThemeProvider>{children}</ThemeProvider>
         <div id="modal-root"></div>
       </body>
