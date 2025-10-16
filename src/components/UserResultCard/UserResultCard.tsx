@@ -1,0 +1,102 @@
+'use client';
+
+import { Badge } from '@/components/Badge/Badge';
+import * as styles from '@/components/UserResultCard/UserResultCard.css';
+import { XMarkIcon } from '@heroicons/react/24/solid';
+import Link from 'next/link';
+
+type Grade = { national: string; local: string };
+
+export type UserResultCardProps = {
+  id: string;
+  name: string;
+  grade: Grade | null;
+  gender?: 'male' | 'female';
+  variant?: 'result' | 'history';
+  onClick?: () => void;
+  onRemove?: () => void;
+  searchQuery?: string;
+};
+
+function formatGrade(grade: Grade | null) {
+  if (!grade) return null;
+  return `지역${grade.local} 전국${grade.national}`;
+}
+
+function escapeRegExp(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function highlightQuery(text: string, query: string) {
+  if (!query) return text;
+  const regex = new RegExp(escapeRegExp(query), 'gi');
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let m: RegExpExecArray | null;
+
+  while ((m = regex.exec(text))) {
+    if (m.index > lastIndex) {
+      parts.push(text.slice(lastIndex, m.index));
+    }
+    parts.push(
+      <span key={m.index} className={styles.highlight}>
+        {m[0]}
+      </span>
+    );
+    lastIndex = m.index + m[0].length;
+  }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return parts;
+}
+
+export function UserResultCard({
+  id,
+  name,
+  grade,
+  gender = 'male',
+  variant = 'result',
+  onClick,
+  onRemove,
+  searchQuery = '',
+}: UserResultCardProps) {
+  const gradeText = formatGrade(grade);
+  const genderText = gender === 'male' ? '남자' : '여자';
+  const showRemove = variant === 'history' && !!onRemove;
+
+  return (
+    <Link
+      href={`/player/${encodeURIComponent(id)}`}
+      className={styles.userResultCard}
+      onClick={onClick}
+      aria-label={onClick ? `${name} 전적 보기` : undefined}
+    >
+      <div className={styles.userResultCardUserName}>
+        {highlightQuery(name, searchQuery)}
+      </div>
+
+      <div className={styles.badgeGroup}>
+        {showRemove ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onRemove?.();
+            }}
+            aria-label={`${name} 검색 이력 삭제`}
+            title="삭제"
+          >
+            <XMarkIcon className={styles.icon} aria-hidden />
+          </button>
+        ) : (
+          <>
+            {gradeText && (
+              <Badge text={gradeText} variant="filled" color="primary" />
+            )}
+            <Badge text={genderText} variant="outline" color="primary" />
+          </>
+        )}
+      </div>
+    </Link>
+  );
+}
