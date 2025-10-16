@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { PropsWithChildren } from 'react';
 
-export const pretendard = localFont({
+const pretendard = localFont({
   src: '../fonts/PretendardVariable.woff2',
   variable: '--font-pretendard',
   display: 'swap',
