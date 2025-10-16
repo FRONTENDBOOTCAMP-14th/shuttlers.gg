@@ -3,21 +3,16 @@
 import * as styles from '@/app/calendar/Calendar.css.ts';
 import { CompetitionCard } from '@/components/CompetitionCard/CompetitionCard';
 import { MonthlyCalendar } from '@/components/MonthlyCalendar/MonthlyCalendar';
+import { useMonthlyTournaments } from '@/hooks/useMonthlyTournaments';
 import { useState } from 'react';
-import { useMonthlyTournaments } from '../../hooks/useMonthlyTournaments';
+import { extractRegionTags } from './utils/regionUtils';
+import { getTournamentStatus } from './utils/tournamentStatus';
 
 export function Calendar() {
   const [year, setYear] = useState(2025);
   const [month, setMonth] = useState<number>(10);
 
-  const { data, events, isLoading, error, refetch } = useMonthlyTournaments(
-    year,
-    month
-  );
-
-  data.forEach((data) => {
-    console.log(data);
-  });
+  const { data, events, isLoading, error } = useMonthlyTournaments(year, month);
 
   return (
     <div className={styles.calendar}>
@@ -33,6 +28,7 @@ export function Calendar() {
           year={year}
           month={month}
           setMonth={setMonth}
+          setYear={setYear}
           events={events}
         />
       </div>
@@ -41,19 +37,37 @@ export function Calendar() {
         <div className={styles.listHeader}>
           {year}년 {month}월 대회 리스트
         </div>
-        <ul className={styles.eventList}>
-          {data.map((data) => {
-            return (
-              <li>
-                <CompetitionCard
-                  title={data.title}
-                  date={`${data.start_date}-${data.end_date}`}
-                  tags={['전국대회', '지역대회']}
-                />
-              </li>
-            );
-          })}
-        </ul>
+
+        {isLoading ? (
+          <div>로딩 중...</div>
+        ) : error ? (
+          <div>오류가 발생했습니다</div>
+        ) : data.length === 0 ? (
+          <div>대회가 없습니다</div>
+        ) : (
+          <ul className={styles.eventList}>
+            {data.map((item) => {
+              const regionTags = extractRegionTags(item.region);
+              const status = getTournamentStatus(
+                item.start_date,
+                item.end_date,
+                item.apply_period
+              );
+              const tags = [...regionTags, status.label];
+
+              return (
+                <li key={item.tnmt_id}>
+                  <CompetitionCard
+                    tnmtId={item.tnmt_id}
+                    title={item.title}
+                    date={`${item.start_date} ~ ${item.end_date}`}
+                    tags={tags}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     </div>
   );

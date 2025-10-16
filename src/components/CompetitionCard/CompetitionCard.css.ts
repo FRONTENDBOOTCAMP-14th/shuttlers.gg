@@ -1,32 +1,36 @@
+import { tokens } from '@/styles/tokens.css';
 import { textStyle } from '@/styles/typography.css';
 import { style } from '@vanilla-extract/css';
-import { tokens } from '../../styles/tokens.css';
 
 export const competitionCard = style({
-  background: tokens.color.surface.base,
-  height: '112px',
+  height: 112,
+  padding: 20,
+  borderRadius: 8,
   boxSizing: 'border-box',
-  borderRadius: '8px',
-  padding: '20px',
   display: 'flex',
   flexDirection: 'column',
+  background: tokens.color.surface.base,
   selectors: {
     '&:hover': { boxShadow: tokens.elevation.shadow.hover },
   },
 });
 
 export const competitionCardHeader = style({
-  width: '660px',
+  marginBottom: 10,
   display: 'flex',
   alignItems: 'center',
-  marginBottom: '10px',
 });
 
 export const competitionCardTitle = style([
   textStyle.heading.semibold,
   {
+    maxWidth: 700,
+    marginRight: 8,
     color: tokens.color.text.title,
-    marginRight: '8px',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    wordBreak: 'break-all',
   },
 ]);
 
@@ -39,5 +43,5 @@ export const competitionCardDate = style([
 
 export const competitionCardTagList = style({
   display: 'flex',
-  gap: '6px',
+  gap: 6,
 });

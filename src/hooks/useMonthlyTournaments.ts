@@ -1,90 +1,124 @@
 'use client';
 
 import { supabase } from '@/libs/supabase/index';
-import { useEffect, useMemo, useRef, useState } from 'react';
-
-export type KnownDetailLabel =
-  | '구분'
-  | '참가지역'
-  | '접수기간'
-  | '주최'
-  | '주관'
-  | '협찬'
-  | '참가비'
-  | '계좌번호'
-  | '예금주'
-  | '문의전화';
-
-export type DetailRow = {
-  label: KnownDetailLabel | string;
-  value: string;
-};
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export type TournamentRow = {
   tnmt_id: string;
   title: string;
-  start_date: string; // 'YYYY-MM-DD'
-  end_date: string; // 'YYYY-MM-DD'
-  start_month: string; // 'YYYY-MM-01' (date)
+  start_date: string;
+  end_date: string;
   detail_url: string | null;
   poster_url: string | null;
-  detail_row: DetailRow;
+  region: string;
+  apply_period: string | null;
 };
 
 export type EventRange = { start: string; end: string };
 
-const pad2 = (n: number) => String(n).padStart(2, '0');
+type FetchState = {
+  data: TournamentRow[];
+  isLoading: boolean;
+  error: Error | null;
+};
 
-async function fetchByStartMonth(
+const TOURNAMENT_COLUMNS = [
+  'tnmt_id',
+  'title',
+  'start_date',
+  'end_date',
+  'detail_url',
+  'poster_url',
+  'region',
+  'apply_period:detail_kv->>apply_period',
+].join(',');
+
+function padNumber(num: number): string {
+  return String(num).padStart(2, '0');
+}
+
+function getMonthDateRange(
+  year: number,
+  month: number
+): { start: string; end: string } {
+  const startDate = `${year}-${padNumber(month)}-01`;
+
+  const lastDayOfMonth = new Date(year, month, 0).getDate();
+  const endDate = `${year}-${padNumber(month)}-${padNumber(lastDayOfMonth)}`;
+
+  return { start: startDate, end: endDate };
+}
+
+async function fetchTournamentsByMonth(
   year: number,
   month: number
 ): Promise<TournamentRow[]> {
-  const startMonthKey = `${year}-${pad2(month)}-01`; // ← start_month 값과 동일하게
+  const { start, end } = getMonthDateRange(year, month);
+
   const { data, error } = await supabase
     .from('bk_tournaments')
-    .select(
-      'tnmt_id,title,start_date,end_date,start_month,detail_url,poster_url,detail_row'
-    )
-    .eq('start_month', startMonthKey) // ✅ 정확 일치
-    .order('start_date', { ascending: true });
+    .select(TOURNAMENT_COLUMNS)
+    .gte('start_date', start)
+    .lte('start_date', end)
+    .order('start_date', { ascending: true })
+    .returns<TournamentRow[]>();
 
   if (error) throw error;
   return data ?? [];
 }
 
-type State = { data: TournamentRow[]; isLoading: boolean; error: Error | null };
-
 export function useMonthlyTournaments(year: number, month: number) {
-  const [state, setState] = useState<State>({
+  const [state, setState] = useState<FetchState>({
     data: [],
     isLoading: false,
     error: null,
   });
-  const runId = useRef(0);
 
-  const load = async () => {
-    const id = ++runId.current;
-    setState((s) => ({ ...s, isLoading: true, error: null }));
-    try {
-      const data = await fetchByStartMonth(year, month);
-      console.log(data);
-      if (id === runId.current)
-        setState({ data, isLoading: false, error: null });
-    } catch (e: any) {
-      if (id === runId.current)
-        setState({ data: [], isLoading: false, error: e });
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const requestIdRef = useRef(0);
+
+  const fetchData = useCallback(async () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
     }
-  };
 
-  useEffect(() => {
-    load();
-    return () => {
-      runId.current++;
-    };
+    abortControllerRef.current = new AbortController();
+    const currentRequestId = ++requestIdRef.current;
+
+    setState((prev) => ({ ...prev, isLoading: true, error: null }));
+
+    try {
+      const data = await fetchTournamentsByMonth(year, month);
+
+      if (currentRequestId === requestIdRef.current) {
+        setState({ data, isLoading: false, error: null });
+      }
+    } catch (error: any) {
+      if (error.name === 'AbortError') return;
+
+      if (currentRequestId === requestIdRef.current) {
+        setState({ data: [], isLoading: false, error });
+      }
+    }
   }, [year, month]);
 
-  const events: EventRange[] = useMemo(
-    () => state.data.map((t) => ({ start: t.start_date, end: t.end_date })),
+  useEffect(() => {
+    fetchData();
+
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      requestIdRef.current++;
+    };
+  }, [fetchData]);
+
+  const events = useMemo<EventRange[]>(
+    () =>
+      state.data.map((tournament) => ({
+        start: tournament.start_date,
+        end: tournament.end_date,
+      })),
     [state.data]
   );
 
@@ -93,6 +127,6 @@ export function useMonthlyTournaments(year: number, month: number) {
     events,
     isLoading: state.isLoading,
     error: state.error,
-    refetch: load,
+    refetch: fetchData,
   };
 }

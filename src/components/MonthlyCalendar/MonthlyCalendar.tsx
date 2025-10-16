@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
+import { useMemo } from 'react';
 import * as styles from './MonthlyCalendar.css';
 
 type EventRange = { start: string; end: string };
@@ -10,25 +11,90 @@ type Props = {
   month: number;
   events?: EventRange[];
   setMonth: React.Dispatch<React.SetStateAction<number>>;
+  setYear: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export function MonthlyCalendar({ year, month, events = [], setMonth }: Props) {
-  const first = new Date(year, month - 1, 1);
-  const last = new Date(year, month, 0);
-  const startWeekday = first.getDay();
-  const daysInMonth = last.getDate();
+const WEEK_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
+const CALENDAR_CELLS = 42;
 
-  const todayKey = toKey(new Date());
-  const hasEvent = (d: Date) => isInRanges(d, events);
+function toKey(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function parseKey(key: string): number {
+  const [year, month, day] = key.split('-').map(Number);
+  return new Date(year, month - 1, day).setHours(0, 0, 0, 0);
+}
+
+function isInRanges(date: Date, ranges: EventRange[]): boolean {
+  const targetTime = date.setHours(0, 0, 0, 0);
+  return ranges.some((range) => {
+    const startTime = parseKey(range.start);
+    const endTime = parseKey(range.end);
+    return startTime <= targetTime && targetTime <= endTime;
+  });
+}
+
+function generateCalendarCells(
+  year: number,
+  month: number
+): Array<Date | null> {
+  const firstDay = new Date(year, month - 1, 1);
+  const lastDay = new Date(year, month, 0);
+  const startWeekday = firstDay.getDay();
+  const daysInMonth = lastDay.getDate();
 
   const cells: Array<Date | null> = [];
-  for (let i = 0; i < startWeekday; i++) cells.push(null);
+
+  for (let i = 0; i < startWeekday; i++) {
+    cells.push(null);
+  }
+
   for (let day = 1; day <= daysInMonth; day++) {
     cells.push(new Date(year, month - 1, day));
   }
-  while (cells.length < 42) cells.push(null);
 
-  const weekLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  while (cells.length < CALENDAR_CELLS) {
+    cells.push(null);
+  }
+
+  return cells;
+}
+
+export function MonthlyCalendar({
+  year,
+  month,
+  events = [],
+  setMonth,
+  setYear,
+}: Props) {
+  const todayKey = useMemo(() => toKey(new Date()), []);
+
+  const cells = useMemo(
+    () => generateCalendarCells(year, month),
+    [year, month]
+  );
+
+  const handlePrevMonth = () => {
+    if (month === 1) {
+      setYear(year - 1);
+      setMonth(12);
+    } else {
+      setMonth(month - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (month === 12) {
+      setYear(year + 1);
+      setMonth(1);
+    } else {
+      setMonth(month + 1);
+    }
+  };
 
   return (
     <div className={styles.calendarCard}>
@@ -41,7 +107,7 @@ export function MonthlyCalendar({ year, month, events = [], setMonth }: Props) {
             type="button"
             className={styles.navBtn}
             aria-label="이전 달"
-            onClick={() => setMonth(month - 1)}
+            onClick={handlePrevMonth}
           >
             <ChevronLeftIcon />
           </button>
@@ -49,35 +115,36 @@ export function MonthlyCalendar({ year, month, events = [], setMonth }: Props) {
             type="button"
             className={styles.navBtn}
             aria-label="다음 달"
-            onClick={() => setMonth(month + 1)}
+            onClick={handleNextMonth}
           >
             <ChevronRightIcon />
           </button>
         </div>
       </div>
+
       <div className={styles.grid}>
-        {weekLabels.map((w) => (
-          <div key={w} className={styles.weekday}>
-            {w}
+        {WEEK_LABELS.map((label) => (
+          <div key={label} className={styles.weekday}>
+            {label}
           </div>
         ))}
 
-        {cells.map((d, i) => {
-          const key = d ? toKey(d) : `empty-${i}`;
-          const isToday = d ? key === todayKey : false;
-          const event = d ? hasEvent(d) : false;
+        {cells.map((date, index) => {
+          const key = date ? toKey(date) : `empty-${index}`;
+          const isToday = date ? key === todayKey : false;
+          const hasEvent = date ? isInRanges(date, events) : false;
 
           return (
             <div key={key} className={styles.cell}>
-              {d && (
+              {date && (
                 <>
                   <div
                     className={styles.dayNumber}
                     data-today={isToday || undefined}
                   >
-                    {d.getDate()}
+                    {date.getDate()}
                   </div>
-                  {event && <div className={styles.eventBar} />}
+                  {hasEvent && <div className={styles.eventBar} />}
                 </>
               )}
             </div>
@@ -86,25 +153,4 @@ export function MonthlyCalendar({ year, month, events = [], setMonth }: Props) {
       </div>
     </div>
   );
-}
-
-function toKey(d: Date) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
-}
-
-function isInRanges(date: Date, ranges: EventRange[]) {
-  const t = date.setHours(0, 0, 0, 0);
-  return ranges.some((r) => {
-    const s = parseKey(r.start);
-    const e = parseKey(r.end);
-    return s <= t && t <= e;
-  });
-}
-
-function parseKey(key: string) {
-  const [y, m, d] = key.split('-').map(Number);
-  return new Date(y, m - 1, d).setHours(0, 0, 0, 0);
 }
