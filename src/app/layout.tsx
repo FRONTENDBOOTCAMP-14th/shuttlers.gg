@@ -1,9 +1,11 @@
+'use client';
+
+import { useThemeStore } from '@/store/useThemeStore';
 import '@/styles/global.css';
-import { lightTheme } from '@/styles/theme.css';
-import ThemeProvider from '@/styles/ThemeProvider';
+import { darkTheme, lightTheme } from '@/styles/theme.css';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 
 export const pretendard = localFont({
   src: '../fonts/PretendardVariable.woff2',
@@ -23,11 +25,19 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
+  const { mode } = useThemeStore();
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove(lightTheme, darkTheme);
+    root.classList.add(mode === 'dark' ? darkTheme : lightTheme);
+  }, [mode]);
+
   return (
     <html lang="ko" className={`${pretendard.variable} ${lightTheme}`}>
       <body>
         <h1 className="sr-only">Shuttlers</h1>
-        <ThemeProvider>{children}</ThemeProvider>
+        {children}
         <div id="modal-root"></div>
       </body>
     </html>
