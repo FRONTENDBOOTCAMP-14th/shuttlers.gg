@@ -103,7 +103,7 @@ export default function PartyCard({
       <section className={styles.partyContent}>
         <div style={{ display: 'flex', flexDirection: 'column', rowGap: 8 }}>
           <div className={styles.schedule}>
-            <h4 className="sr-only">모임 일시bun </h4>
+            <h4 className="sr-only">모임 일시</h4>
             <ClockIcon width={16} aria-hidden />
             <span>{schedule?.dateTime}</span>
           </div>
