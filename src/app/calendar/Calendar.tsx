@@ -4,16 +4,16 @@ import * as styles from '@/app/calendar/Calendar.css.ts';
 import { CompetitionCard } from '@/components/CompetitionCard/CompetitionCard';
 import { MonthlyCalendar } from '@/components/MonthlyCalendar/MonthlyCalendar';
 import { useMonthlyTournaments } from '@/hooks/useMonthlyTournaments';
+import { extractRegionTags } from '@/utils/regionUtils';
+import { getTournamentStatus } from '@/utils/tournamentStatus';
 import { useState } from 'react';
-import { extractRegionTags } from './utils/regionUtils';
-import { getTournamentStatus } from './utils/tournamentStatus';
 
 export function Calendar() {
   const [year, setYear] = useState(2025);
   const [month, setMonth] = useState<number>(10);
 
   const { data, events, isLoading, error } = useMonthlyTournaments(year, month);
-
+  console.log(data);
   return (
     <div className={styles.calendar}>
       <header className={styles.calendarHeader}>

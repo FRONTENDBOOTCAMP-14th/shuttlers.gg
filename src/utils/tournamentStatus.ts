@@ -1,11 +1,14 @@
-import { STATUS_LABELS, UPCOMING_DAYS_BEFORE } from '../constants/tournament';
-import { TournamentStatus } from '../types/tournament.ts';
+import { UPCOMING_DAYS_BEFORE } from '@/app/calendar/constants/tournament';
+import {
+  STATUS_LABELS,
+  TournamentStatus,
+} from '@/app/calendar/types/tournament';
 import {
   addDays,
   endOfDay,
   parseApplicationDateRange,
   parseDate,
-} from './dateUtils.ts';
+} from '@/app/calendar/utils/dateUtils';
 
 export function getTournamentStatus(
   startDate: string,
@@ -13,7 +16,6 @@ export function getTournamentStatus(
   applyPeriod: string | null | undefined
 ): TournamentStatus {
   const today = new Date();
-
   const eventStart = parseDate(startDate);
   const eventEnd = parseDate(endDate);
 
@@ -22,7 +24,6 @@ export function getTournamentStatus(
   }
 
   const eventEndOfDay = endOfDay(eventEnd);
-
   const [applyStart, applyEndRaw] = parseApplicationDateRange(applyPeriod);
   const applyEnd = applyEndRaw ? endOfDay(applyEndRaw) : null;
 
@@ -32,15 +33,12 @@ export function getTournamentStatus(
 
   if (applyStart && applyEnd) {
     const upcomingFrom = addDays(applyStart, -UPCOMING_DAYS_BEFORE);
-
     if (today >= upcomingFrom && today < applyStart) {
       return { code: 'upcoming', label: STATUS_LABELS.upcoming };
     }
-
     if (today >= applyStart && today <= applyEnd) {
       return { code: 'receiving', label: STATUS_LABELS.receiving };
     }
-
     if (today > applyEnd && today <= eventEndOfDay) {
       return { code: 'ongoing', label: STATUS_LABELS.ongoing };
     }
@@ -49,6 +47,5 @@ export function getTournamentStatus(
   if (today <= eventEndOfDay) {
     return { code: 'ongoing', label: STATUS_LABELS.ongoing };
   }
-
   return { code: 'closed', label: STATUS_LABELS.closed };
 }
