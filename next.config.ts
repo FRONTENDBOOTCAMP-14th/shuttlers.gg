@@ -3,7 +3,12 @@ import type { NextConfig } from 'next';
 
 const withVanillaExtract = createVanillaExtractPlugin();
 
+/** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+  typedRoutes: false,
   reactStrictMode: true,
 };
 

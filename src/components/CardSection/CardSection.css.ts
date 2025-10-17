@@ -41,6 +41,8 @@ export const icon = style({
 export const title = style({
   color: tokens.color.text.title,
   ...textStyle.subtitle.bold,
+  margin: 0,
+  flex: 1,
 });
 
 export const content = style({

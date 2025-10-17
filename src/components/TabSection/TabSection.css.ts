@@ -29,8 +29,8 @@ export const tabButton = style({
   selectors: {
     '&:focus': {
       outline: `2px solid ${tokens.color.field.border.focus}`,
-      outlineOffset: '2px', // ✅ outline이 요소 밖으로 나가도록
-      zIndex: 10, // ✅ 다른 요소 위에 outline 표시
+      outlineOffset: '2px', 
+      zIndex: 10, 
     },
   },
 });
@@ -68,7 +68,7 @@ export const tabContent = style({
   padding: '80px',
   background: tokens.color.surface.raised,
   borderRadius: '0 20px 20px 20px',
-  marginTop: '-1px', // ✅ 탭과 컨텐츠 사이 간격 제거 (outline 고려)
+  marginTop: '-1px', 
   selectors: {
     '&:focus': {
       outline: `2px solid ${tokens.color.field.border.focus}`,

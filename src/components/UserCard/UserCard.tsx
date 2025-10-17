@@ -24,11 +24,9 @@ export default function UserCard({
   onClick,
 }: UserCardProps) {
   return (
-    <article className={styles.userCard({ variant })}>
+    <section className={styles.userCard({ variant })}>
       <div>
-        <div style={{ ...textStyle.subtitle.bold, marginBottom: 12 }}>
-          {name}
-        </div>
+        <h3 style={{ ...textStyle.subtitle.bold, marginBottom: 12 }}>{name}</h3>
         <div>
           {variant === 'public' && (
             <div
@@ -89,6 +87,6 @@ export default function UserCard({
           </div>
         </div>
       </div>
-    </article>
+    </section>
   );
 }

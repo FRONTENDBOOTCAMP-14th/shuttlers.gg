@@ -124,8 +124,8 @@ export default function PartyCard({
                       conditions?.gender === 'male'
                         ? '남성'
                         : conditions?.gender === 'female'
-                        ? '여성'
-                        : '성별무관'
+                          ? '여성'
+                          : '성별무관'
                     }
                     variant="outline"
                     color="primary"
@@ -137,8 +137,8 @@ export default function PartyCard({
                       conditions?.grade === 'any'
                         ? '실력무관'
                         : conditions?.grade === 'beginner'
-                        ? '초심'
-                        : `${conditions?.grade}조 이상`
+                          ? '초심'
+                          : `${conditions?.grade}조 이상`
                     }
                     variant="outline"
                     color="primary"
