@@ -21,7 +21,7 @@ const mockSearchResults = [
   },
   {
     id: '2',
-    name: '이셔틀콕',
+    name: '김이셔틀콕',
     email: 'lee.shuttlecock@email.com',
     gender: 'female' as const,
     grade: { local: 'B급', national: 'C급' },
@@ -29,7 +29,7 @@ const mockSearchResults = [
   },
   {
     id: '3',
-    name: '박스매시',
+    name: '김박스매시',
     email: 'park.smash@email.com',
     gender: 'male' as const,
     grade: { national: 'A급' },
@@ -37,7 +37,7 @@ const mockSearchResults = [
   },
   {
     id: '4',
-    name: '최네트샷',
+    name: '김최네트샷',
     email: 'choi.netshot@email.com',
     gender: 'female' as const,
     grade: { local: 'C급', national: 'D급' },
@@ -45,7 +45,7 @@ const mockSearchResults = [
   },
   {
     id: '5',
-    name: '정클리어',
+    name: '김정클리어',
     email: 'jung.clear@email.com',
     gender: 'male' as const,
     grade: { national: 'B급' },
@@ -162,7 +162,7 @@ export default function LandingPage() {
   return (
     <main className={styles.container}>
       {/* Header 영역 */}
-      <header className={styles.header}>
+      
         <NavBar
           navItems={[
             { label: '홈', path: '/' },
@@ -176,9 +176,8 @@ export default function LandingPage() {
           onToggleTheme={() => console.log('테마 변경')}
           onUserClick={() => console.log('사용자 클릭')}
         />
-      </header>
+      
 
-      {/* Hero 섹션 */}
       <section className={styles.mainSection}>
         {/* 로고 - 키보드 접근성 제거 */}
         <div className={styles.logoContainer}>
