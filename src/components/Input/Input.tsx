@@ -46,9 +46,6 @@ export default function Input({
 
   const handleIconFocus = () => {
     setIsInputFocused(false); 
-    if (inputRef.current) {
-      inputRef.current.blur();
-    }
   };
 
   const getInputType = () => {
