@@ -2,10 +2,6 @@ import { tokens } from '@/styles/tokens.css';
 import { textStyle } from '@/styles/typography.css';
 import { style } from '@vanilla-extract/css';
 
-export const formContainer = style({
-  width: '100%',
-});
-
 export const loginForm = style({
   display: 'flex',
   flexDirection: 'column',

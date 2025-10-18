@@ -17,11 +17,9 @@ import * as styles from './page.css';
 export default function LoginPage() {
   const router = useRouter();
   const supabase = createClient();
-  const methods = useForm<LoginForm>({
-    mode: 'onChange',
-  });
+  const methods = useForm<LoginForm>({ mode: 'onChange' });
 
-  const handleSubmit = async (formData: LoginForm) => {
+  const handleLogin = async (formData: LoginForm) => {
     const { data, error } = await supabase.auth.signInWithPassword(formData);
 
     if (error)
@@ -36,13 +34,17 @@ export default function LoginPage() {
   };
 
   return (
-    <>
+    <div
+      style={{
+        marginTop: 100,
+      }}
+    >
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
-          rowGap: 24,
           alignItems: 'center',
+          rowGap: 24,
         }}
       >
         <Logo size="medium" />
@@ -52,7 +54,7 @@ export default function LoginPage() {
             ...textStyle.heading.semibold,
             color: tokens.color.text.body,
             textAlign: 'center',
-            marginBottom: 70,
+            marginBottom: 60,
           }}
         >
           환영합니다!
@@ -61,10 +63,14 @@ export default function LoginPage() {
         </p>
       </div>
 
-      <div className={styles.formContainer}>
+      <section
+        style={{
+          width: '100%',
+        }}
+      >
         <FormProvider {...methods}>
           <form
-            onSubmit={methods.handleSubmit(handleSubmit)}
+            onSubmit={methods.handleSubmit(handleLogin)}
             autoComplete="off"
             noValidate
             className={styles.loginForm}
@@ -73,7 +79,7 @@ export default function LoginPage() {
             <Input
               name="password"
               type="password"
-              placeholder="비밀번호 입력 (8자 이상, 12자 이하)"
+              placeholder="비밀번호 입력 (8자 이상 12자 이하)"
             />
 
             <Button text="로그인" type="submit" variant="primary" size="long" />
@@ -96,7 +102,7 @@ export default function LoginPage() {
             </Link>
           </span>
         </div>
-      </div>
-    </>
+      </section>
+    </div>
   );
 }

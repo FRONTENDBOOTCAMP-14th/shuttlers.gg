@@ -1,8 +1,8 @@
 export type Profile = {
   email: string;
   name: string;
-  gender: string;
-  national_grade: string;
+  gender: 'male' | 'female';
+  national_grade: '초심' | 'D' | 'C' | 'B' | 'A';
 };
 
 export type LoginForm = {
@@ -11,3 +11,4 @@ export type LoginForm = {
 };
 
 export type RegisterForm = Profile & { password: string };
+
