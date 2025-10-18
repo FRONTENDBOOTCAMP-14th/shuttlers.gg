@@ -25,7 +25,9 @@ export default function RootLayout({ children }: PropsWithChildren) {
       <body>
         <ThemeEffect />
         <h1 className="sr-only">Shuttlers</h1>
-        {children}
+
+        {/* <NavBar navItems={[]} /> */}
+        <main>{children}</main>
         <div id="modal-root"></div>
       </body>
     </html>

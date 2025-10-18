@@ -8,16 +8,7 @@ import * as styles from './page.css';
 
 export default function LoginPage() {
   return (
-    <main
-      style={{
-        marginTop: 100,
-        marginInline: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        maxWidth: 800,
-      }}
-    >
+    <>
       <div
         style={{
           display: 'flex',
@@ -67,6 +58,6 @@ export default function LoginPage() {
           </span>
         </div>
       </div>
-    </main>
+    </>
   );
 }
