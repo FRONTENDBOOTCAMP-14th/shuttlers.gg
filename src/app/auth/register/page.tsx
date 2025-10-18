@@ -3,7 +3,7 @@
 import type { Profile, RegisterForm } from '@/@types/forms';
 import Button from '@/components/Button/Button';
 import Input from '@/components/Input/Input';
-import { createClient } from '@/libs/supabase/client';
+import { supabase } from '@/libs/supabase/client';
 import { tokens } from '@/styles/tokens.css';
 import { textStyle } from '@/styles/typography.css';
 import { useRouter } from 'next/navigation';
@@ -14,7 +14,6 @@ import * as styles from './page.css';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const supabase = createClient();
   const methods = useForm<RegisterForm>({ mode: 'onChange' });
   const [step, setStep] = useState<1 | 2>(1);
   const [gender, setGender] = useState<Profile['gender']>();
@@ -73,6 +72,7 @@ export default function RegisterPage() {
           flexDirection: 'column',
           rowGap: 24,
           alignItems: 'center',
+          marginTop: 100,
         }}
       >
         <h2 style={{ ...textStyle.subtitle.bold }}>회원가입</h2>

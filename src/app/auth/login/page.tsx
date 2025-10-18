@@ -4,7 +4,7 @@ import type { LoginForm } from '@/@types/forms';
 import Button from '@/components/Button/Button';
 import Input from '@/components/Input/Input';
 import Logo from '@/components/Logo';
-import { createClient } from '@/libs/supabase/client';
+import { supabase } from '@/libs/supabase/client';
 import { tokens } from '@/styles/tokens.css';
 import { textStyle } from '@/styles/typography.css';
 import { ArrowRightIcon } from '@heroicons/react/16/solid';
@@ -16,7 +16,6 @@ import * as styles from './page.css';
 
 export default function LoginPage() {
   const router = useRouter();
-  const supabase = createClient();
   const methods = useForm<LoginForm>({ mode: 'onChange' });
 
   const handleLogin = async (formData: LoginForm) => {

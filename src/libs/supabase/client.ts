@@ -13,6 +13,8 @@ export const createClient = () => {
   );
 };
 
+export const supabase = createClient();
+
 export type Users = Tables<'users'>;
 export type UsersInsert = TablesInsert<'users'>;
 export type UsersUpdate = TablesUpdate<'users'>;
