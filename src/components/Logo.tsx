@@ -10,7 +10,7 @@ const logoWidth = {
   small: 185,
 };
 
-export function Logo({ size = 'large' }: LogoProps) {
+export default function Logo({ size = 'large' }: LogoProps) {
   return (
     <Link href="/" aria-label="홈으로 이동">
       <svg

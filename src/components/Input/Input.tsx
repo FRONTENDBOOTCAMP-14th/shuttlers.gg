@@ -9,6 +9,7 @@ import { useRef, useState } from 'react';
 import * as styles from './Input.css';
 
 type InputProps = {
+  name: string;
   type?: 'text' | 'email' | 'password' | 'search';
   placeholder?: string;
   value?: string;
@@ -19,6 +20,7 @@ type InputProps = {
 };
 
 export default function Input({
+  name = '',
   type = 'text',
   placeholder = 'placeholder',
   value,
@@ -114,6 +116,8 @@ export default function Input({
   return (
     <div className={styles.inputWrapper} data-error={error}>
       <input
+        id={name}
+        name={name}
         ref={inputRef}
         className={styles.input}
         type={getInputType()}

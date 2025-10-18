@@ -4,6 +4,7 @@ import ThemeEffect from '@/styles/ThemeEffect';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { PropsWithChildren } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 const pretendard = localFont({
   src: '../fonts/PretendardVariable.woff2',
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <h1 className="sr-only">Shuttlers</h1>
 
         {/* <NavBar navItems={[]} /> */}
+        <Toaster />
         <main>{children}</main>
         <div id="modal-root"></div>
       </body>
