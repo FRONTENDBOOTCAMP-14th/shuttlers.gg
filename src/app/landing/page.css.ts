@@ -61,6 +61,8 @@ export const searchContainer = style({
 
 export const searchInputWrapper = style({
   width: '100%',
+  boxShadow: tokens.elevation.shadow.primary,
+  zIndex: '9999',
 });
 
 export const searchResults = style({
@@ -74,7 +76,7 @@ export const searchResults = style({
   zIndex: 5,
   height: '260px',
   overflowY: 'auto',
-
+ paddingTop: '30px',
   
 });
 
@@ -96,20 +98,7 @@ export const selected = style({
   },
 });
 
-export const noResults = style({
-  position: 'absolute',
-  top: '100%',
-  left: 0,
-  right: 0,
-  backgroundColor: '#8F90A6',
-  border: '1px solid #8F90A6',
-  borderRadius: '8px',
-  padding: '40px 20px',
-  textAlign: 'center',
-  zIndex: 10,
-  color: '#8F90A6',
-  ...textStyle.heading.semibold,
-});
+
 
 globalStyle(`${searchInputWrapper} button`, {
   pointerEvents: 'none',
