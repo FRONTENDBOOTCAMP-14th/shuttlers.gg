@@ -21,6 +21,15 @@ globalStyle('#root, main', {
   minHeight: '100vh',
   display: 'flex',
   flexDirection: 'column',
+  paddingInline: 20,
+  '@media': {
+    'screen and (min-width: 768px)': {
+      paddingInline: 24,
+    },
+    'screen and (min-width: 1024px)': {
+      paddingInline: 40,
+    },
+  },
 });
 
 globalStyle('a', {

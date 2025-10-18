@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {
   EyeIcon,
@@ -9,7 +9,7 @@ import { useRef, useState } from 'react';
 import * as styles from './Input.css';
 
 type InputProps = {
-  type?: 'text' | 'password' | 'search';
+  type?: 'text' | 'email' | 'password' | 'search';
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;

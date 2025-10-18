@@ -1,11 +1,12 @@
 import Link from 'next/link';
 
 type LogoProps = {
-  size?: 'large' | 'small';
+  size?: 'large' | 'medium' | 'small';
 };
 
 const logoWidth = {
   large: 370,
+  medium: 280,
   small: 185,
 };
 
