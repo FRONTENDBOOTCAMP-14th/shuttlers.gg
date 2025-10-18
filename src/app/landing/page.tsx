@@ -200,6 +200,7 @@ export default function LandingPage() {
               onSearchClick={undefined}
             />
           </div>
+          
 
           {/* 검색 결과 리스트 */}
           {searchKeyword.trim() !== '' && searchResults.length > 0 && (
