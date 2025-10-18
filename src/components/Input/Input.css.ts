@@ -56,9 +56,6 @@ export const input = style({
     '&:focus:not([aria-invalid="true"])': {
       border: `2px solid ${tokens.color.field.border.focus} !important`,
     },
-    ':focus-within:not(:has(button:focus)) &:focus:not([aria-invalid="true"])': {
-      border: `2px solid ${tokens.color.field.border.focus} !important`,
-    },
     '&::-webkit-search-cancel-button': {
       WebkitAppearance: 'none',
       appearance: 'none',
