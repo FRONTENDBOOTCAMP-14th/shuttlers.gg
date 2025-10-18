@@ -1,5 +1,10 @@
 import { createBrowserClient } from '@supabase/ssr';
-import { Database } from '../database.types';
+import {
+  Database,
+  Tables,
+  TablesInsert,
+  TablesUpdate,
+} from '../database.types';
 
 export const createClient = () => {
   return createBrowserClient<Database>(
@@ -7,3 +12,7 @@ export const createClient = () => {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 };
+
+export type Users = Tables<'users'>;
+export type UsersInsert = TablesInsert<'users'>;
+export type UsersUpdate = TablesUpdate<'users'>;
