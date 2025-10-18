@@ -11,6 +11,7 @@ import * as styles from './Input.css';
 type InputProps = {
   name: string;
   type?: 'text' | 'email' | 'password' | 'search';
+  label?: string;
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -22,6 +23,7 @@ type InputProps = {
 export default function Input({
   name = '',
   type = 'text',
+  label,
   placeholder = 'placeholder',
   value,
   onChange,
@@ -114,55 +116,58 @@ export default function Input({
   };
 
   return (
-    <div className={styles.inputWrapper} data-error={error}>
-      <input
-        id={name}
-        name={name}
-        ref={inputRef}
-        className={styles.input}
-        type={getInputType()}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        aria-invalid={error}
-        disabled={disabled}
-      />
-
-      {type === 'password' && (
-        <button
-          ref={iconButtonRef}
-          type="button"
-          className={styles.iconButton}
-          onClick={handleTogglePassword}
-          onKeyDown={(e) => handleKeyDown(e, handleTogglePassword)}
-          onMouseDown={handleMouseDown}
-          aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
-          tabIndex={disabled ? -1 : 0}
+    <div className={styles.inputField}>
+      {label && <label htmlFor={name}>{label}</label>}
+      <div className={styles.inputWrapper} data-error={error}>
+        <input
+          id={name}
+          name={name}
+          ref={inputRef}
+          className={styles.input}
+          type={getInputType()}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          aria-invalid={error}
           disabled={disabled}
-        >
-          {showPassword ? (
-            <EyeSlashIcon style={{ width: '24px', height: '24px' }} />
-          ) : (
-            <EyeIcon style={{ width: '24px', height: '24px' }} />
-          )}
-        </button>
-      )}
+        />
 
-      {type === 'search' && (
-        <button
-          ref={searchButtonRef}
-          type="button"
-          className={styles.searchIcon}
-          onClick={handleSearchClick}
-          onKeyDown={(e) => handleKeyDown(e, handleSearchClick)}
-          onMouseDown={handleMouseDown}
-          aria-label="검색"
-          tabIndex={disabled ? -1 : 0}
-          disabled={disabled}
-        >
-          <MagnifyingGlassIcon style={{ width: '20px', height: '20px' }} />
-        </button>
-      )}
+        {type === 'password' && (
+          <button
+            ref={iconButtonRef}
+            type="button"
+            className={styles.iconButton}
+            onClick={handleTogglePassword}
+            onKeyDown={(e) => handleKeyDown(e, handleTogglePassword)}
+            onMouseDown={handleMouseDown}
+            aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+            tabIndex={disabled ? -1 : 0}
+            disabled={disabled}
+          >
+            {showPassword ? (
+              <EyeSlashIcon style={{ width: '24px', height: '24px' }} />
+            ) : (
+              <EyeIcon style={{ width: '24px', height: '24px' }} />
+            )}
+          </button>
+        )}
+
+        {type === 'search' && (
+          <button
+            ref={searchButtonRef}
+            type="button"
+            className={styles.searchIcon}
+            onClick={handleSearchClick}
+            onKeyDown={(e) => handleKeyDown(e, handleSearchClick)}
+            onMouseDown={handleMouseDown}
+            aria-label="검색"
+            tabIndex={disabled ? -1 : 0}
+            disabled={disabled}
+          >
+            <MagnifyingGlassIcon style={{ width: '20px', height: '20px' }} />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

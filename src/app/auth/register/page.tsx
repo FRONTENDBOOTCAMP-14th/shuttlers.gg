@@ -105,7 +105,12 @@ export default function RegisterPage() {
                     columnGap: 12,
                   }}
                 >
-                  <Input type="email" name="email" placeholder="이메일 입력" />
+                  <Input
+                    type="email"
+                    name="email"
+                    label="이메일(아이디)"
+                    placeholder="이메일 입력"
+                  />
                   <Button
                     text="인증하기"
                     variant="secondary"
@@ -115,11 +120,13 @@ export default function RegisterPage() {
                 <Input
                   type="password"
                   name="password"
+                  label="비밀번호"
                   placeholder="8자 이상 12자 이하"
                 />
                 <Input
                   type="password"
                   name="password-check"
+                  label="비밀번호 확인"
                   placeholder="8자 이상 12자 이하"
                 />
                 <Button
@@ -135,60 +142,83 @@ export default function RegisterPage() {
                 <Input
                   type="text"
                   name="name"
+                  label="이름"
                   placeholder="실명을 입력해주세요."
                 />
-                <div style={{ display: 'flex', columnGap: 12 }}>
-                  <Button
-                    text="남성"
-                    variant="dark"
-                    size="long"
-                    rounded
-                    onClick={() => setGender('male')}
-                  />
-                  <Button
-                    text="여성"
-                    variant="dark"
-                    size="long"
-                    rounded
-                    onClick={() => setGender('female')}
-                  />
+                <div
+                  style={{
+                    ...textStyle.heading.semibold,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    rowGap: 12,
+                    color: tokens.color.text.body,
+                  }}
+                >
+                  <span>성별</span>
+                  <div style={{ display: 'flex', columnGap: 10 }}>
+                    <Button
+                      text="남성"
+                      variant="dark"
+                      size="long"
+                      rounded
+                      onClick={() => setGender('male')}
+                    />
+                    <Button
+                      text="여성"
+                      variant="dark"
+                      size="long"
+                      rounded
+                      onClick={() => setGender('female')}
+                    />
+                  </div>
                 </div>
-                <div style={{ display: 'flex', columnGap: 12 }}>
-                  <Button
-                    text="초심"
-                    variant="dark"
-                    size="long"
-                    rounded
-                    onClick={() => setGrade('초심')}
-                  />
-                  <Button
-                    text="D"
-                    variant="dark"
-                    size="long"
-                    rounded
-                    onClick={() => setGrade('D')}
-                  />
-                  <Button
-                    text="C"
-                    variant="dark"
-                    size="long"
-                    rounded
-                    onClick={() => setGrade('C')}
-                  />
-                  <Button
-                    text="B"
-                    variant="dark"
-                    size="long"
-                    rounded
-                    onClick={() => setGrade('B')}
-                  />
-                  <Button
-                    text="A"
-                    variant="dark"
-                    size="long"
-                    rounded
-                    onClick={() => setGrade('A')}
-                  />
+                <div
+                  style={{
+                    ...textStyle.heading.semibold,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    rowGap: 12,
+                    color: tokens.color.text.body,
+                  }}
+                >
+                  <span>급수</span>
+                  <div style={{ display: 'flex', columnGap: 10 }}>
+                    <Button
+                      text="초심"
+                      variant="dark"
+                      size="long"
+                      rounded
+                      onClick={() => setGrade('초심')}
+                    />
+                    <Button
+                      text="D"
+                      variant="dark"
+                      size="long"
+                      rounded
+                      onClick={() => setGrade('D')}
+                    />
+                    <Button
+                      text="C"
+                      variant="dark"
+                      size="long"
+                      rounded
+                      onClick={() => setGrade('C')}
+                    />
+                    <Button
+                      text="B"
+                      variant="dark"
+                      size="long"
+                      rounded
+                      onClick={() => setGrade('B')}
+                    />
+                    <Button
+                      text="A"
+                      variant="dark"
+                      size="long"
+                      rounded
+                      onClick={() => setGrade('A')}
+                    />
+                  </div>
                 </div>
 
                 <label

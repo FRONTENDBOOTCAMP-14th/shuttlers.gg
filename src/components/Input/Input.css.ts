@@ -2,6 +2,14 @@ import { tokens } from '@/styles/tokens.css';
 import { style } from '@vanilla-extract/css';
 import { textStyle } from '../../styles/typography.css';
 
+export const inputField = style({
+  ...textStyle.heading.semibold,
+  display: 'flex',
+  flexDirection: 'column',
+  rowGap: 12,
+  color: tokens.color.text.body,
+});
+
 export const inputWrapper = style({
   position: 'relative',
   display: 'flex',
