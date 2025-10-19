@@ -13,8 +13,10 @@ export const badgeBase = style([
     borderRadius: 9999,
     border: '1px solid transparent',
     userSelect: 'none',
-    marginRight: '6px',
     backgroundColor: 'transparent',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
 ]);
 
@@ -54,8 +56,7 @@ export const outline = styleVariants({
     color: tokens.color.badge.outline.text.brand,
   },
   white: {
-    background: `linear-gradient(white, white) padding-box, ${tokens.color.badge.outline.border.white} border-box`,
-    backgroundOrigin: 'border-box',
+    border: `1px solid ${tokens.color.badge.outline.border.white}`,
     color: tokens.color.badge.outline.text.white,
   },
 });
