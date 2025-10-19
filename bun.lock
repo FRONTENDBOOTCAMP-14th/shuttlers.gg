@@ -14,7 +14,11 @@
         "focus-trap-react": "^11.0.4",
         "next": "15.5.4",
         "react": "^19.2.0",
+<<<<<<< HEAD
         "react-dom": "^19.2.0",
+=======
+        "react-dom": "19.2.0",
+>>>>>>> fb9b4c0 ([chore] 내부 버전 업데이트)
         "zustand": "^5.0.8",
       },
       "devDependencies": {
