@@ -5,11 +5,13 @@ import {
   EyeSlashIcon,
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/solid';
+import clsx from 'clsx';
 import { useRef, useState } from 'react';
 import * as styles from './Input.css';
 
 type InputProps = {
   type?: 'text' | 'password' | 'search';
+  label?: string;
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -27,10 +29,24 @@ export default function Input({
   disabled = false,
   onSearchClick,
 }: InputProps) {
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const iconButtonRef = useRef<HTMLButtonElement>(null);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
+
+
+  const handleInputFocus = () => {
+    setIsInputFocused(true);
+  };
+
+  const handleInputBlur = () => {
+    setIsInputFocused(false);
+  };
+
+  const handleIconFocus = () => {
+    setIsInputFocused(false); 
+  };
 
   const getInputType = () => {
     if (type === 'password') {
@@ -112,7 +128,11 @@ export default function Input({
   };
 
   return (
-    <div className={styles.inputWrapper} data-error={error}>
+    <div 
+      className={ clsx(styles.inputWrapper) }
+      data-error={error}
+      data-input-focused={isInputFocused} 
+    >
       <input
         ref={inputRef}
         className={styles.input}
@@ -120,8 +140,11 @@ export default function Input({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur} 
         aria-invalid={error}
         disabled={disabled}
+        aria-label={label}
       />
 
       {type === 'password' && (
@@ -130,6 +153,7 @@ export default function Input({
           type="button"
           className={styles.iconButton}
           onClick={handleTogglePassword}
+          onFocus={handleIconFocus}
           onKeyDown={(e) => handleKeyDown(e, handleTogglePassword)}
           onMouseDown={handleMouseDown}
           aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
@@ -140,7 +164,7 @@ export default function Input({
             <EyeSlashIcon style={{ width: '24px', height: '24px' }} />
           ) : (
             <EyeIcon style={{ width: '24px', height: '24px' }} />
-          )}
+          )} 
         </button>
       )}
 
@@ -150,6 +174,7 @@ export default function Input({
           type="button"
           className={styles.searchIcon}
           onClick={handleSearchClick}
+          onFocus={handleIconFocus}
           onKeyDown={(e) => handleKeyDown(e, handleSearchClick)}
           onMouseDown={handleMouseDown}
           aria-label="검색"
