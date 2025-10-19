@@ -2,9 +2,9 @@
 
 import { useThemeStore } from '@/store/useThemeStore';
 import { darkTheme, lightTheme } from '@/styles/theme.css';
-import { ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 
-export default function ThemeProvider({ children }: { children: ReactNode }) {
+export default function ThemeEffect() {
   const { mode } = useThemeStore();
 
   useEffect(() => {
@@ -13,5 +13,5 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
     root.classList.add(mode === 'dark' ? darkTheme : lightTheme);
   }, [mode]);
 
-  return <>{children}</>;
+  return null;
 }

@@ -1,6 +1,6 @@
 import { tokens } from '@/styles/tokens.css';
+import { textStyle } from '@/styles/typography.css';
 import { style, styleVariants } from '@vanilla-extract/css';
-import { textStyle } from '../../styles/typography.css';
 
 export const scoreResultCard = style({
   background: tokens.color.surface.muted,
@@ -132,7 +132,6 @@ export const scoreText = style({
   ...textStyle.heading.bold,
 });
 
-// The margin value '30.5px' is chosen to precisely align the 'vs' text between score columns as per design requirements.
 export const vsText = style({
   color: tokens.color.text.body,
   margin: '0 30.5px',
@@ -147,4 +146,15 @@ export const cardBackgroundVariants = styleVariants({
   lose: {
     backgroundColor: tokens.color.surface.muted,
   },
+});
+
+
+export const matchTitle = style({
+  color: tokens.color.text.body,
+  ...textStyle.heading.semibold,
+});
+
+export const roundInfo = style({
+  display: 'flex',
+  justifyContent: 'center',
 });

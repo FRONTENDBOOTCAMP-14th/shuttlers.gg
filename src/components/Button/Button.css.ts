@@ -5,11 +5,16 @@ import { recipe } from '@vanilla-extract/recipes';
 
 export const button = recipe({
   base: {
-    ...textStyle.subtitle.bold,
-    paddingInline: 40,
-    height: 78,
+    ...textStyle.heading.bold,
+    paddingInline: 24,
+    paddingBlock: 14,
+    height: 52,
+    lineHeight: 1,
     transition:
       'background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease',
+    ':focus': {
+      outline: `2px solid ${tokens.color.field.border.focus}`,
+    },
   },
 
   variants: {
@@ -64,7 +69,8 @@ export const button = recipe({
     {
       variants: { disabled: true },
       style: {
-        ...textStyle.subtitle.semibold,
+        ...textStyle.heading.semibold,
+        lineHeight: 1,
         background: tokens.color.action.bg.disabled,
         boxShadow: 'none',
         transform: 'none',

@@ -1,4 +1,6 @@
+import { tokens } from '@/styles/tokens.css';
 import { style } from '@vanilla-extract/css';
+import { textStyle } from '../../styles/typography.css';
 
 export const container = style({
   width: '100%',
@@ -7,45 +9,72 @@ export const container = style({
 export const tabs = style({
   display: 'flex',
   alignItems: 'center',
-  overflow: 'hidden',
+  overflow: 'visible',
   background: 'none',
+  padding: '4px 0',
+  margin: '-4px 0',
 });
 
 export const tabButton = style({
-  flex: '0 0 auto',
-  minWidth: 'fit-content',
+  padding: '12px 24px',
   border: 'none',
   background: 'none',
   cursor: 'pointer',
-  height: '77px',
-  whiteSpace: 'nowrap',
+  fontSize: '16px',
+  fontWeight: '500',
+  transition: 'all 0.2s ease',
+  borderRadius: '8px 8px 0 0',
+  outline: 'none',
+  position: 'relative',
+  selectors: {
+    '&:focus': {
+      outline: `2px solid ${tokens.color.field.border.focus}`,
+      outlineOffset: '2px', 
+      zIndex: 10, 
+    },
+  },
 });
 
 export const tabInactive = style({
-  color: 'var(--Gray-600, #8F90A6)',
-  fontWeight: '600',
-  fontSize: '28px',
-  lineHeight: '133.4%',
-  letterSpacing: '-0.7px',
+  color: tokens.color.text.caption,
+  ...textStyle.title.semibold,
   padding: '20px 45px 20px 45px',
+  selectors: {
+    '&:focus': {
+      outline: `2px solid ${tokens.color.field.border.focus}`,
+      outlineOffset: '2px',
+      zIndex: 10,
+    },
+  },
 });
 
 export const tabActive = style({
-  color: 'var(--Gray-700, #3A3A3C)',
-  fontWeight: '700',
-  fontSize: '28px',
-  lineHeight: '133.4%',
-  letterSpacing: '-0.7px',
-  background: 'var(--Gray-300, #EBEBF0)',
+  color: tokens.color.text.body,
+  ...textStyle.title.semibold,
+  background: tokens.color.surface.raised,
   borderRadius: '20px 20px 0 0',
   padding: '20px 45px 20px 45px',
+  selectors: {
+    '&:focus': {
+      outline: `2px solid ${tokens.color.field.border.focus}`,
+      outlineOffset: '2px',
+      zIndex: 10,
+    },
+  },
 });
 
 export const tabContent = style({
   height: 'auto',
   padding: '80px',
-  background: 'var(--Gray-300, #EBEBF0)',
+  background: tokens.color.surface.raised,
   borderRadius: '0 20px 20px 20px',
+  marginTop: '-1px', 
+  selectors: {
+    '&:focus': {
+      outline: `2px solid ${tokens.color.field.border.focus}`,
+      outlineOffset: '2px',
+    },
+  },
 });
 
 export const contentAllRounded = style({
