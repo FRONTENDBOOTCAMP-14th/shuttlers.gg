@@ -18,6 +18,18 @@ globalStyle('html, body', {
   backgroundColor: tokens.color.bg,
 });
 
+globalStyle('body', {
+  paddingInline: 20,
+  '@media': {
+    'screen and (min-width: 768px)': {
+      paddingInline: 24,
+    },
+    'screen and (min-width: 1080px)': {
+      paddingInline: 40,
+    },
+  },
+});
+
 globalStyle('#root, main', {
   minHeight: '100vh',
   display: 'flex',
