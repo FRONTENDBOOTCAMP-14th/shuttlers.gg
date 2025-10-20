@@ -5,6 +5,7 @@ import {
   EyeSlashIcon,
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/solid';
+import clsx from 'clsx';
 import { useRef, useState } from 'react';
 import * as styles from './Input.css';
 
@@ -31,10 +32,24 @@ export default function Input({
   disabled = false,
   onSearchClick,
 }: InputProps) {
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const iconButtonRef = useRef<HTMLButtonElement>(null);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
+
+
+  const handleInputFocus = () => {
+    setIsInputFocused(true);
+  };
+
+  const handleInputBlur = () => {
+    setIsInputFocused(false);
+  };
+
+  const handleIconFocus = () => {
+    setIsInputFocused(false); 
+  };
 
   const getInputType = () => {
     if (type === 'password') {
