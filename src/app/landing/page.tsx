@@ -81,15 +81,12 @@ export default function LandingPage() {
 
     setIsSearching(true);
 
-    // NOTE: 실제로는 API 호출, 현재는 모의 데이터 필터링
-    const filteredResults = mockSearchResults.filter(
-      (user) =>
-        user.name.toLowerCase().includes(keyword.toLowerCase()) ||
-        user.email.toLowerCase().includes(keyword.toLowerCase())
-    );
+    const filteredResults = mockSearchResults.filter((user) =>
+    user.name.toLowerCase().includes(keyword.toLowerCase())
+  );
 
-    setSearchResults(filteredResults);
-  };
+  setSearchResults(filteredResults);
+};
 
   // ✅ 키보드 이벤트 핸들러
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

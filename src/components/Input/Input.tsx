@@ -144,7 +144,6 @@ export default function Input({
         onBlur={handleInputBlur} 
         aria-invalid={error}
         disabled={disabled}
-        aria-label={label}
       />
 
       {type === 'password' && (

@@ -16,9 +16,8 @@ export const mainSection = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  justifyContent: 'flex-start',
+  justifyContent: 'center',
   background: tokens.color.bg,
-  paddingTop: '230px',
 });
 
 export const logoContainer = style({
