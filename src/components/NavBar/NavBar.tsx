@@ -18,7 +18,7 @@ type Menu = {
 type NavBarProps = {
   navItems?: Menu[];
   user?: Pick<Users, 'id'>;
-  theme?: 'light' | 'dark';
+  theme: 'light' | 'dark';
   variant?: 'primary' | 'secondary' | 'minimal';
   activePath?: string;
   showSearch?: boolean;
@@ -79,10 +79,10 @@ export default function NavBar({
           )}
           <button onClick={onToggleTheme} aria-label="테마 바꾸기">
             <div className={styles.menuIcon}>
-              {theme === 'light' ? (
-                <SunIcon width={28} aria-label="다크 테마로" />
+              {theme === 'dark' ? (
+                <SunIcon width={28} aria-label="라이트 테마로" />
               ) : (
-                <MoonIcon width={28} aria-label="라이트 테마로" />
+                <MoonIcon width={28} aria-label="다크 테마로" />
               )}
             </div>
           </button>

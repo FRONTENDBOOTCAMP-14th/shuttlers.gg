@@ -1,6 +1,6 @@
+import ThemeProvider from '@/store/ThemeProvider';
+import ThemeToggler from '@/store/ThemeToggler';
 import '@/styles/global.css';
-import { lightTheme } from '@/styles/theme.css';
-import ThemeEffect from '@/styles/ThemeEffect';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { PropsWithChildren } from 'react';
@@ -22,14 +22,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="ko" className={`${pretendard.variable} ${lightTheme}`}>
+    <html lang="ko" className={pretendard.variable} suppressHydrationWarning>
       <body>
-        <ThemeEffect />
         <Toaster />
 
-        <h1 className="sr-only">Shuttlers</h1>
-        <main>{children}</main>
-        <div id="modal-root"></div>
+        <ThemeProvider>
+          <ThemeToggler>
+            <main>{children}</main>
+            <div id="modal-root"></div>
+          </ThemeToggler>
+        </ThemeProvider>
       </body>
     </html>
   );
