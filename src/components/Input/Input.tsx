@@ -14,7 +14,8 @@ type InputProps = {
   label?: string;
   placeholder?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   error?: boolean;
   disabled?: boolean;
   onSearchClick?: () => void;
@@ -25,6 +26,7 @@ export default function Input({
   placeholder = 'placeholder',
   value,
   onChange,
+  onKeyDown,
   error = false,
   disabled = false,
   onSearchClick,
@@ -140,11 +142,11 @@ export default function Input({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onKeyDown={onKeyDown}
         onFocus={handleInputFocus}
         onBlur={handleInputBlur} 
         aria-invalid={error}
         disabled={disabled}
-        aria-label={label}
       />
 
       {type === 'password' && (
