@@ -16,7 +16,7 @@ export const inputWrapper = style({
       right: 0,
       bottom: 0,
       borderRadius: '8px',
-      padding: '1px',
+      padding: '2px',
       background: tokens.color.action.bg.primary,
       mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
       maskComposite: 'xor',
@@ -24,15 +24,17 @@ export const inputWrapper = style({
         'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
       WebkitMaskComposite: 'xor',
       pointerEvents: 'none',
-      opacity: 1,
+      opacity: 1, 
       transition: 'opacity 0.2s ease',
     },
-    '&:focus-within::before': {
+    '&[data-input-focused="true"]::before': {
       opacity: 0,
     },
+ 
     '&[data-error="true"]::before': {
       opacity: 0,
     },
+    
   },
 });
 
@@ -41,7 +43,7 @@ export const input = style({
   height: 'auto',
   padding: '24px 30px 24px 30px',
   borderRadius: '8px',
-  border: '1px solid transparent',
+  border: '2px solid transparent',
   background: tokens.color.field.bg.base,
   color: tokens.color.text.body,
   outline: 'none',
@@ -49,12 +51,9 @@ export const input = style({
   ...textStyle.heading.medium,
   selectors: {
     "&[aria-invalid='true']": {
-      border: `1px solid ${tokens.color.field.border.error} !important`,
+      border: `2px solid ${tokens.color.field.border.error} !important`,
     },
     '&:focus:not([aria-invalid="true"])': {
-      border: `2px solid ${tokens.color.field.border.focus} !important`,
-    },
-    ':focus-within &:not([aria-invalid="true"])': {
       border: `2px solid ${tokens.color.field.border.focus} !important`,
     },
     '&::-webkit-search-cancel-button': {
@@ -64,6 +63,9 @@ export const input = style({
     '&::-webkit-search-decoration': {
       WebkitAppearance: 'none',
       appearance: 'none',
+    },
+    '&:not(:focus)': {
+      border: '2px solid transparent',
     },
   },
 });
