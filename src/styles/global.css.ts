@@ -15,6 +15,7 @@ globalStyle('html, body', {
   width: '100%',
   fontFamily: typography.font.family.base,
   letterSpacing: typography.font.letterSpacing.tight,
+  backgroundColor: tokens.color.bg,
 });
 
 globalStyle('#root, main', {

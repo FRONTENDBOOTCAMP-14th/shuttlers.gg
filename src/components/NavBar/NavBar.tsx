@@ -1,209 +1,93 @@
-'use client';
-
+import Input from '@/components/Input/Input';
+import { Logo } from '@/components/Logo';
+import { Users } from '@/libs/supabase/client';
 import {
-  Bars3Icon,
+  ArrowRightEndOnRectangleIcon,
   MoonIcon,
   SunIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/solid';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { MouseEvent, useState } from 'react';
-import { Logo } from '../Logo';
 import * as styles from './NavBar.css';
 
-type NavItem = {
+type Menu = {
   label: string;
   path: string;
-  variant?: 'primary' | 'secondary';
 };
 
 type NavBarProps = {
-  navItems: NavItem[];
-  activePath?: string;
-  onNavigate?: (path: string) => void;
+  navItems?: Menu[];
+  user?: Pick<Users, 'id'>;
   theme?: 'light' | 'dark';
+  variant?: 'primary' | 'secondary' | 'minimal';
+  activePath?: string;
+  showSearch?: boolean;
   onToggleTheme?: () => void;
-  user?: { name: string } | null;
-  onUserClick?: () => void;
-  variant?: 'default' | 'compact';
 };
 
 export default function NavBar({
   navItems,
-  activePath = '/',
-  onNavigate,
+  user = undefined,
   theme = 'light',
+  variant = 'primary',
+  activePath = '/',
+  showSearch = false,
   onToggleTheme,
-  user = null,
-  onUserClick,
-  variant = 'default',
 }: NavBarProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const router = useRouter();
-
-  const handleNavigate = (e: MouseEvent, path: string) => {
-    if (onNavigate) {
-      e.preventDefault();
-      onNavigate(path);
-    } else {
-      e.preventDefault();
-      router.push(path);
-    }
-    setMobileMenuOpen(false);
-  };
-
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen((prev) => !prev);
-  };
-
   return (
-    <header className={styles.navBar} data-variant={variant}>
+    <header className={styles.navBar({ variant })}>
+      {variant === 'primary' && <Logo size="small" />}
       <nav
-        className={styles.navBarContainer}
-        data-variant={variant}
-        aria-label="주요 탐색"
-        role="navigation"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
       >
-        <div className={styles.navBarLeft} data-variant={variant}>
-          <Logo size="small" />
-        </div>
+        {navItems && (
+          <ul className={styles.navItems}>
+            {navItems.map((item) => {
+              const isActive = item.path === activePath;
 
-        <div className={styles.navBarRight}>
-          {variant === 'compact' ? (
-            <div className={styles.compactNav}>
-              <ul className={styles.navList}>
-                {navItems.map((item) => (
-                  <li key={item.path}>
-                    {onNavigate ? (
-                      <a
-                        href={item.path}
-                        className={styles.navItem}
-                        aria-current={
-                          activePath === item.path ? 'page' : undefined
-                        }
-                        data-active={activePath === item.path}
-                        onClick={(e) => handleNavigate(e, item.path)}
-                      >
-                        {item.label}
-                      </a>
-                    ) : (
-                      <Link
-                        href={item.path}
-                        className={styles.navItem}
-                        aria-current={
-                          activePath === item.path ? 'page' : undefined
-                        }
-                        data-active={activePath === item.path}
-                      >
-                        {item.label}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
+              return (
+                <li
+                  key={item.label}
+                  className={isActive ? styles.activeMenu : undefined}
+                >
+                  <Link href={item.path}>{item.label}</Link>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+
+        {showSearch && <Input type="search" />}
+
+        <div style={{ display: 'flex', columnGap: 24 }}>
+          {user ? (
+            <Link href={`mypage/${user.id}`} aria-label="마이페이지">
+              <div className={styles.menuIcon}>
+                <UserCircleIcon width={28} />
+              </div>
+            </Link>
           ) : (
-            <div className={styles.desktopNav}>
-              <ul className={styles.navList}>
-                {navItems.map((item) => (
-                  <li key={item.path}>
-                    {onNavigate ? (
-                      <a
-                        href={item.path}
-                        className={styles.navItem}
-                        aria-current={
-                          activePath === item.path ? 'page' : undefined
-                        }
-                        data-active={activePath === item.path}
-                        onClick={(e) => handleNavigate(e, item.path)}
-                      >
-                        {item.label}
-                      </a>
-                    ) : (
-                      <Link
-                        href={item.path}
-                        className={styles.navItem}
-                        aria-current={
-                          activePath === item.path ? 'page' : undefined
-                        }
-                        data-active={activePath === item.path}
-                      >
-                        {item.label}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <Link href="auth/login" aria-label="로그인">
+              <div className={styles.menuIcon}>
+                <ArrowRightEndOnRectangleIcon width={28} />
+              </div>
+            </Link>
           )}
-
-          <button
-            type="button"
-            className={styles.iconButton}
-            aria-label={user ? `${user.name} 계정 열기` : '로그인 메뉴 열기'}
-            onClick={onUserClick}
-          >
-            <UserCircleIcon width={36} height={36} />
-          </button>
-
-          <button
-            type="button"
-            className={styles.iconButton}
-            aria-label={
-              theme === 'dark' ? '라이트 테마로 전환' : '다크 테마로 전환'
-            }
-            aria-pressed={theme === 'dark'}
-            onClick={onToggleTheme}
-          >
-            {theme === 'dark' ? (
-              <SunIcon width={36} height={36} />
-            ) : (
-              <MoonIcon width={36} height={36} />
-            )}
-          </button>
-
-          <button
-            type="button"
-            className={`${styles.iconButton} ${styles.hamburger}`}
-            aria-label={mobileMenuOpen ? '메뉴 닫기' : '메뉴 열기'}
-            aria-controls="mobile-nav"
-            aria-expanded={mobileMenuOpen}
-            onClick={toggleMobileMenu}
-          >
-            <Bars3Icon width={22} height={22} />
+          <button onClick={onToggleTheme} aria-label="테마 바꾸기">
+            <div className={styles.menuIcon}>
+              {theme === 'light' ? (
+                <SunIcon width={28} aria-label="다크 테마로" />
+              ) : (
+                <MoonIcon width={28} aria-label="라이트 테마로" />
+              )}
+            </div>
           </button>
         </div>
       </nav>
-
-      {mobileMenuOpen && (
-        <div id="mobile-nav" className={styles.mobilePanel}>
-          {navItems.map((item) =>
-            onNavigate ? (
-              <a
-                key={item.path}
-                href={item.path}
-                className={styles.mobileNavItem}
-                aria-current={activePath === item.path ? 'page' : undefined}
-                data-active={activePath === item.path}
-                onClick={(e) => handleNavigate(e, item.path)}
-              >
-                {item.label}
-              </a>
-            ) : (
-              <Link
-                key={item.path}
-                href={item.path}
-                className={styles.mobileNavItem}
-                aria-current={activePath === item.path ? 'page' : undefined}
-                data-active={activePath === item.path}
-              >
-                {item.label}
-              </Link>
-            )
-          )}
-        </div>
-      )}
     </header>
   );
 }
