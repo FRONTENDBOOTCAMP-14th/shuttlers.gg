@@ -49,11 +49,17 @@ export const weekday = style([
 export const cell = style({
   position: 'relative',
   aspectRatio: '1.4 / 1',
+  borderRadius: 4,
   minHeight: 72,
   display: 'flex',
   alignItems: 'flex-start',
   justifyContent: 'center',
   paddingTop: 8,
+  selectors: {
+    '&[data-selected]': {
+      background: tokens.color.action.bg.disabled,
+    },
+  },
 });
 
 export const dayNumber = style([
@@ -80,7 +86,7 @@ export const dayNumber = style([
 
 export const eventBar = style({
   position: 'absolute',
-  width: '100%',
+  width: '90%',
   height: 14,
   top: 32,
   borderRadius: 2,

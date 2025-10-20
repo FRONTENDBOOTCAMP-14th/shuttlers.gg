@@ -3,15 +3,15 @@ import { textStyle } from '@/styles/typography.css';
 import { style } from '@vanilla-extract/css';
 
 export const competitionCard = style({
-  height: 112,
   padding: 20,
   borderRadius: 8,
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   background: tokens.color.surface.base,
+  transition: 'box-shadow 0.2s ease',
   selectors: {
-    '&:hover': { boxShadow: tokens.elevation.shadow.hover },
+    '&:hover': { boxShadow: tokens.elevation.shadow.primary },
   },
 });
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { supabase } from '@/libs/supabase/index';
+import { supabase } from '@/libs/supabase/client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export type TournamentRow = {
@@ -33,28 +33,21 @@ const TOURNAMENT_COLUMNS = [
   'apply_period:detail_kv->>apply_period',
 ].join(',');
 
-function padNumber(num: number): string {
-  return String(num).padStart(2, '0');
+function pad2(n: number) {
+  return String(n).padStart(2, '0');
+}
+function ymd(d: Date) {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+function getMonthDateRange(year: number, month: number) {
+  const start = `${year}-${pad2(month)}-01`;
+  const lastDay = new Date(year, month, 0).getDate();
+  const end = `${year}-${pad2(month)}-${pad2(lastDay)}`;
+  return { start, end };
 }
 
-function getMonthDateRange(
-  year: number,
-  month: number
-): { start: string; end: string } {
-  const startDate = `${year}-${padNumber(month)}-01`;
-
-  const lastDayOfMonth = new Date(year, month, 0).getDate();
-  const endDate = `${year}-${padNumber(month)}-${padNumber(lastDayOfMonth)}`;
-
-  return { start: startDate, end: endDate };
-}
-
-async function fetchTournamentsByMonth(
-  year: number,
-  month: number
-): Promise<TournamentRow[]> {
+async function fetchTournamentsByMonth(year: number, month: number) {
   const { start, end } = getMonthDateRange(year, month);
-
   const { data, error } = await supabase
     .from('bk_tournaments')
     .select(TOURNAMENT_COLUMNS)
@@ -62,9 +55,39 @@ async function fetchTournamentsByMonth(
     .lte('start_date', end)
     .order('start_date', { ascending: true })
     .returns<TournamentRow[]>();
-
   if (error) throw error;
   return data ?? [];
+}
+
+function enumerateDaysWithinMonth(
+  startYmd: string,
+  endYmd: string,
+  year: number,
+  month: number
+) {
+  const clampStart = new Date(
+    Math.max(
+      new Date(startYmd).getTime(),
+      new Date(year, month - 1, 1).getTime()
+    )
+  );
+  const lastDay = new Date(year, month, 0).getDate();
+  const clampEnd = new Date(
+    Math.min(
+      new Date(endYmd).getTime(),
+      new Date(year, month - 1, lastDay).getTime()
+    )
+  );
+
+  const days: string[] = [];
+  for (
+    let d = new Date(clampStart);
+    d <= clampEnd;
+    d.setDate(d.getDate() + 1)
+  ) {
+    days.push(ymd(d));
+  }
+  return days;
 }
 
 export function useMonthlyTournaments(year: number, month: number) {
@@ -75,51 +98,70 @@ export function useMonthlyTournaments(year: number, month: number) {
   });
 
   const abortControllerRef = useRef<AbortController | null>(null);
-  const requestIdRef = useRef(0);
+  const reqIdRef = useRef(0);
 
   const fetchData = useCallback(async () => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
+    abortControllerRef.current?.abort();
     abortControllerRef.current = new AbortController();
-    const currentRequestId = ++requestIdRef.current;
 
-    setState((prev) => ({ ...prev, isLoading: true, error: null }));
+    const myReqId = ++reqIdRef.current;
+    setState((s) => ({ ...s, isLoading: true, error: null }));
 
     try {
       const data = await fetchTournamentsByMonth(year, month);
-
-      if (currentRequestId === requestIdRef.current) {
+      if (myReqId === reqIdRef.current) {
         setState({ data, isLoading: false, error: null });
       }
-    } catch (error: any) {
-      if (error.name === 'AbortError') return;
-
-      if (currentRequestId === requestIdRef.current) {
-        setState({ data: [], isLoading: false, error });
+    } catch (err: any) {
+      if (err?.name === 'AbortError') return;
+      if (myReqId === reqIdRef.current) {
+        setState({ data: [], isLoading: false, error: err });
       }
     }
   }, [year, month]);
 
   useEffect(() => {
     fetchData();
-
     return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-      requestIdRef.current++;
+      abortControllerRef.current?.abort();
+      reqIdRef.current++;
     };
   }, [fetchData]);
 
   const events = useMemo<EventRange[]>(
-    () =>
-      state.data.map((tournament) => ({
-        start: tournament.start_date,
-        end: tournament.end_date,
-      })),
+    () => state.data.map((t) => ({ start: t.start_date, end: t.end_date })),
     [state.data]
+  );
+
+  const dateIndex = useMemo(() => {
+    const map = new Map<string, TournamentRow[]>();
+    for (const t of state.data) {
+      const days = enumerateDaysWithinMonth(
+        t.start_date,
+        t.end_date,
+        year,
+        month
+      );
+      for (const day of days) {
+        if (!map.has(day)) map.set(day, []);
+        map.get(day)!.push(t);
+      }
+    }
+    for (const [k, arr] of map) {
+      arr.sort(
+        (a, b) =>
+          a.start_date.localeCompare(b.start_date) ||
+          a.end_date.localeCompare(b.end_date) ||
+          a.title.localeCompare(b.title)
+      );
+      map.set(k, arr);
+    }
+    return map;
+  }, [state.data, year, month]);
+
+  const getByDate = useCallback(
+    (d: Date | null) => (d ? dateIndex.get(ymd(d)) ?? [] : state.data),
+    [dateIndex, state.data]
   );
 
   return {
@@ -128,5 +170,7 @@ export function useMonthlyTournaments(year: number, month: number) {
     isLoading: state.isLoading,
     error: state.error,
     refetch: fetchData,
+    dateIndex,
+    getByDate,
   };
 }

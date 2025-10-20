@@ -9,9 +9,11 @@ type EventRange = { start: string; end: string };
 type Props = {
   year: number;
   month: number;
+  selectedDate: Date | null;
   events?: EventRange[];
   setMonth: React.Dispatch<React.SetStateAction<number>>;
   setYear: React.Dispatch<React.SetStateAction<number>>;
+  setDate: React.Dispatch<React.SetStateAction<Date | null>>;
 };
 
 const WEEK_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
@@ -67,9 +69,11 @@ function generateCalendarCells(
 export function MonthlyCalendar({
   year,
   month,
+  selectedDate,
   events = [],
   setMonth,
   setYear,
+  setDate,
 }: Props) {
   const todayKey = useMemo(() => toKey(new Date()), []);
 
@@ -95,6 +99,11 @@ export function MonthlyCalendar({
       setMonth(month + 1);
     }
   };
+
+  const selectedKey = useMemo(
+    () => (selectedDate ? toKey(selectedDate) : null),
+    [selectedDate]
+  );
 
   return (
     <div className={styles.calendarCard}>
@@ -133,9 +142,15 @@ export function MonthlyCalendar({
           const key = date ? toKey(date) : `empty-${index}`;
           const isToday = date ? key === todayKey : false;
           const hasEvent = date ? isInRanges(date, events) : false;
+          const isSelected = !!date && selectedKey === key;
 
           return (
-            <div key={key} className={styles.cell}>
+            <div
+              key={key}
+              className={styles.cell}
+              onClick={() => setDate(date)}
+              data-selected={isSelected || undefined}
+            >
               {date && (
                 <>
                   <div
