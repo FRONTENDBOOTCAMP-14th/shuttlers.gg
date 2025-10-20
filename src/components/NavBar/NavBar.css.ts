@@ -119,7 +119,7 @@ export const navItem = style([
   },
 ]);
 
-export const right = style({
+export const navBarRight = style({
   display: 'flex',
   alignItems: 'center',
   gap: '12px',

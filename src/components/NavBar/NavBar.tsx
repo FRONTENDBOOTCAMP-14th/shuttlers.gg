@@ -69,7 +69,7 @@ export default function NavBar({
           <Logo size="small" />
         </div>
 
-        <div className={styles.right}>
+        <div className={styles.navBarRight}>
           {variant === 'compact' ? (
             <div className={styles.compactNav}>
               <ul className={styles.navList}>
