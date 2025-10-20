@@ -16,6 +16,7 @@ globalStyle('html, body', {
   fontFamily: typography.font.family.base,
   letterSpacing: typography.font.letterSpacing.tight,
   backgroundColor: tokens.color.bg,
+  transition: 'background 0.2s ease',
 });
 
 globalStyle('body', {

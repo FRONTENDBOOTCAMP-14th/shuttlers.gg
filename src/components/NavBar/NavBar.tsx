@@ -10,7 +10,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/solid';
 import Link from 'next/link';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import * as styles from './NavBar.css';
 
 type Menu = {
@@ -40,6 +40,17 @@ export default function NavBar({
 }: NavBarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) setIsOpen(false);
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <header className={styles.navBar}>
       {variant === 'primary' && <Logo size="small" />}
@@ -56,7 +67,9 @@ export default function NavBar({
           <div>{showSearch && <Input type="search" />}</div>
 
           {navItems && (
-            <ul>
+            <ul
+              style={{ display: 'flex', alignItems: 'center', columnGap: 16 }}
+            >
               {navItems.map((item) => {
                 const isActive = item.path === activePath;
                 return (
@@ -93,9 +106,9 @@ export default function NavBar({
             className={styles.menuIcon}
           >
             {theme === 'dark' ? (
-              <SunIcon width={24} aria-label="라이트 테마로" />
+              <SunIcon width={24} aria-hidden />
             ) : (
-              <MoonIcon width={24} aria-label="다크 테마로" />
+              <MoonIcon width={24} aria-hidden />
             )}
           </button>
         </div>

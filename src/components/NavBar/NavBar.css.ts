@@ -10,9 +10,16 @@ export const navBar = style({
   position: 'sticky',
   top: 0,
   margin: '0 auto',
-  paddingBlock: 24,
+  paddingBlock: 20,
   maxWidth: 1080,
   background: tokens.color.bg,
+  transition: 'background 0.2s ease',
+
+  '@media': {
+    'screen and (min-width: 768px)': {
+      paddingBlock: 24,
+    },
+  },
 });
 
 export const hamburger = style({
@@ -54,9 +61,11 @@ export const navContainer = recipe({
 
 export const navMenu = recipe({
   base: {
+    display: 'none',
     overflow: 'hidden',
-    background: tokens.color.bg,
+    background: tokens.color.surface.base,
     transition: 'max-width 0.2s ease',
+    borderRadius: 8,
 
     '@media': {
       'screen and (min-width: 768px)': {
@@ -64,6 +73,7 @@ export const navMenu = recipe({
         flexDirection: 'row',
         columnGap: 16,
         maxWidth: 999,
+        background: 'none',
       },
     },
   },
@@ -84,9 +94,6 @@ export const navMenu = recipe({
       },
       false: {
         maxWidth: 0,
-        display: 'flex',
-        flexDirection: 'row',
-        columnGap: 16,
       },
     },
   },
