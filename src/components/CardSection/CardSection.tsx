@@ -22,10 +22,10 @@ export default function CardSection({
         [styles.noBg]: background === 'none',
       })}
     >
-      <div className={styles.header}>
-        {icon && <h3 className={styles.icon}>{icon}</h3>}
-        <h3 className={styles.title}>{title}</h3>
-      </div>
+      <header className={styles.header}>
+      {icon && <span className={styles.icon}>{icon}</span>} 
+        <h3 className={styles.title}>{title}</h3>              
+      </header>
       <div className={styles.content}>{children}</div>
     </section>
   );

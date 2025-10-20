@@ -1,4 +1,5 @@
 {
+  "packageManager": "bun@1.2.20",
   "name": "shuttles-gg",
   "version": "0.1.0",
   "private": true,
@@ -7,12 +8,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "gentypes": "bunx supabase gen types typescript --project-id vxelpakibetxfdwitsjs > src/libs/database.types.ts"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@supabase/ssr": "^0.7.0",
-    "@supabase/supabase-js": "^2.75.1",
+    "@supabase/supabase-js": "^2.57.4",
     "@vanilla-extract/css": "^1.17.4",
     "@vanilla-extract/next-plugin": "^2.4.14",
     "@vanilla-extract/recipes": "^0.5.7",
@@ -30,6 +32,10 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "prettier": "^3.6.2",
+    "supabase": "^2.51.0",
     "typescript": "^5"
   }
 }
