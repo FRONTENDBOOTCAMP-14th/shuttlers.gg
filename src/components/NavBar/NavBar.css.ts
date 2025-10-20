@@ -10,7 +10,9 @@ export const navBar = recipe({
     alignItems: 'center',
     position: 'sticky',
     top: 0,
-    maxWidth: 1440,
+    margin: '0 auto',
+    paddingBlock: 24,
+    maxWidth: 1080,
     background: tokens.color.bg,
   },
 
@@ -23,20 +25,28 @@ export const navBar = recipe({
   },
 });
 
-export const navItems = style({
-  ...textStyle.heading.medium,
-  color: tokens.color.text.body,
-  display: 'flex',
-  columnGap: 24,
-});
-
-export const activeMenu = style({
-  ...textStyle.heading.bold,
-  color: tokens.color.text.title,
-});
-
 export const menuIcon = style({
   display: 'grid',
   placeItems: 'center',
   color: tokens.color.text.title,
+});
+
+export const navItem = recipe({
+  base: {
+    ...textStyle.heading.medium,
+    color: tokens.color.text.body,
+    transition: 'all 0.2s ease',
+    ':hover': {
+      ...textStyle.heading.bold,
+      color: tokens.color.text.title,
+    },
+  },
+  variants: {
+    isActive: {
+      true: {
+        ...textStyle.heading.bold,
+        color: tokens.color.text.title,
+      },
+    },
+  },
 });

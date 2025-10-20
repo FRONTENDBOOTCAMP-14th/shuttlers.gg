@@ -8,10 +8,12 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/24/solid';
 import Link from 'next/link';
+import { ReactNode } from 'react';
 import * as styles from './NavBar.css';
 
 type Menu = {
   label: string;
+  icon?: ReactNode;
   path: string;
 };
 
@@ -41,19 +43,17 @@ export default function NavBar({
         style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: `${variant === 'primary' ? 'flex-end' : 'space-between'}`,
+          columnGap: 24,
+          width: '100%',
         }}
       >
         {navItems && (
-          <ul className={styles.navItems}>
+          <ul style={{ display: 'flex', columnGap: 16 }}>
             {navItems.map((item) => {
               const isActive = item.path === activePath;
-
               return (
-                <li
-                  key={item.label}
-                  className={isActive ? styles.activeMenu : undefined}
-                >
+                <li key={item.label} className={styles.navItem({ isActive })}>
                   <Link href={item.path}>{item.label}</Link>
                 </li>
               );
@@ -61,31 +61,39 @@ export default function NavBar({
           </ul>
         )}
 
-        {showSearch && <Input type="search" />}
-
         <div style={{ display: 'flex', columnGap: 24 }}>
-          {user ? (
-            <Link href={`mypage/${user.id}`} aria-label="마이페이지">
-              <div className={styles.menuIcon}>
+          {showSearch && <Input type="search" />}
+
+          <div style={{ display: 'flex', columnGap: 16 }}>
+            {user ? (
+              <Link
+                href={`mypage/${user.id}`}
+                aria-label="마이페이지"
+                className={styles.menuIcon}
+              >
                 <UserCircleIcon width={28} />
-              </div>
-            </Link>
-          ) : (
-            <Link href="auth/login" aria-label="로그인">
-              <div className={styles.menuIcon}>
+              </Link>
+            ) : (
+              <Link
+                href="auth/login"
+                aria-label="로그인"
+                className={styles.menuIcon}
+              >
                 <ArrowRightEndOnRectangleIcon width={28} />
-              </div>
-            </Link>
-          )}
-          <button onClick={onToggleTheme} aria-label="테마 바꾸기">
-            <div className={styles.menuIcon}>
+              </Link>
+            )}
+            <button
+              onClick={onToggleTheme}
+              aria-label="테마 바꾸기"
+              className={styles.menuIcon}
+            >
               {theme === 'dark' ? (
                 <SunIcon width={28} aria-label="라이트 테마로" />
               ) : (
                 <MoonIcon width={28} aria-label="다크 테마로" />
               )}
-            </div>
-          </button>
+            </button>
+          </div>
         </div>
       </nav>
     </header>

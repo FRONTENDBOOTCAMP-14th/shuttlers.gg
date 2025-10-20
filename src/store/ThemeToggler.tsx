@@ -9,7 +9,7 @@ export default function ThemeToggler({ children }: PropsWithChildren) {
 
   const menus = [
     { label: '대회일정', path: '/calendar' },
-    { label: '모임찾기', path: '/' },
+    { label: '모임찾기', path: '/party' },
   ];
 
   return (
