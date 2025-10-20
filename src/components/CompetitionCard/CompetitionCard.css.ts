@@ -3,7 +3,6 @@ import { textStyle } from '@/styles/typography.css';
 import { style } from '@vanilla-extract/css';
 
 export const competitionCard = style({
-  height: 112,
   padding: 20,
   borderRadius: 8,
   boxSizing: 'border-box',

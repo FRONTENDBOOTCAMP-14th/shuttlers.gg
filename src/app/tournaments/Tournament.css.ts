@@ -4,7 +4,7 @@ import { colors } from '../../styles/colorPalette.css';
 import { tokens } from '../../styles/tokens.css';
 import { textStyle } from '../../styles/typography.css';
 
-export const tournament = style({ width: 1080, margin: 'auto', marginTop: 80 });
+export const tournament = style({ maxWidth: 1080, margin: 'auto', marginTop: 80 });
 
 export const tournamentHeader = style({
   display: 'flex',
