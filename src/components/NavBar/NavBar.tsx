@@ -3,12 +3,14 @@ import { Logo } from '@/components/Logo';
 import { Users } from '@/libs/supabase/client';
 import {
   ArrowRightEndOnRectangleIcon,
+  Bars3Icon,
   MoonIcon,
   SunIcon,
   UserCircleIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/solid';
 import Link from 'next/link';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import * as styles from './NavBar.css';
 
 type Menu = {
@@ -36,64 +38,66 @@ export default function NavBar({
   showSearch = false,
   onToggleTheme,
 }: NavBarProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <header className={styles.navBar}>
       {variant === 'primary' && <Logo size="small" />}
-      <nav
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: `${variant === 'primary' ? 'flex-end' : 'space-between'}`,
-          columnGap: 24,
-          width: '100%',
-        }}
-      >
-        {navItems && (
-          <ul style={{ display: 'flex', columnGap: 16 }}>
-            {navItems.map((item) => {
-              const isActive = item.path === activePath;
-              return (
-                <li key={item.label} className={styles.navItem({ isActive })}>
-                  <Link href={item.path}>{item.label}</Link>
-                </li>
-              );
-            })}
-          </ul>
-        )}
+      <nav className={styles.navContainer({ variant })}>
+        <button
+          onClick={() => setIsOpen((prev) => !prev)}
+          aria-label={isOpen ? '메뉴 닫기' : '메뉴 펼치기'}
+          className={styles.hamburger}
+        >
+          {isOpen ? <XMarkIcon width={24} /> : <Bars3Icon width={24} />}
+        </button>
 
-        <div style={{ display: 'flex', columnGap: 24 }}>
-          {showSearch && <Input type="search" />}
+        <div className={styles.navMenu({ isOpen })}>
+          <div>{showSearch && <Input type="search" />}</div>
 
-          <div style={{ display: 'flex', columnGap: 16 }}>
-            {user ? (
-              <Link
-                href={`mypage/${user.id}`}
-                aria-label="마이페이지"
-                className={styles.menuIcon}
-              >
-                <UserCircleIcon width={28} />
-              </Link>
-            ) : (
-              <Link
-                href="auth/login"
-                aria-label="로그인"
-                className={styles.menuIcon}
-              >
-                <ArrowRightEndOnRectangleIcon width={28} />
-              </Link>
-            )}
-            <button
-              onClick={onToggleTheme}
-              aria-label="테마 바꾸기"
+          {navItems && (
+            <ul>
+              {navItems.map((item) => {
+                const isActive = item.path === activePath;
+                return (
+                  <li key={item.label} className={styles.navItem({ isActive })}>
+                    <Link href={item.path}>{item.label}</Link>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+
+        <div style={{ display: 'flex', columnGap: 16 }}>
+          {user ? (
+            <Link
+              href={`mypage/${user.id}`}
+              aria-label="마이페이지"
               className={styles.menuIcon}
             >
-              {theme === 'dark' ? (
-                <SunIcon width={28} aria-label="라이트 테마로" />
-              ) : (
-                <MoonIcon width={28} aria-label="다크 테마로" />
-              )}
-            </button>
-          </div>
+              <UserCircleIcon width={24} />
+            </Link>
+          ) : (
+            <Link
+              href="auth/login"
+              aria-label="로그인"
+              className={styles.menuIcon}
+            >
+              <ArrowRightEndOnRectangleIcon width={24} />
+            </Link>
+          )}
+          <button
+            onClick={onToggleTheme}
+            aria-label="테마 바꾸기"
+            className={styles.menuIcon}
+          >
+            {theme === 'dark' ? (
+              <SunIcon width={24} aria-label="라이트 테마로" />
+            ) : (
+              <MoonIcon width={24} aria-label="다크 테마로" />
+            )}
+          </button>
         </div>
       </nav>
     </header>
