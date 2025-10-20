@@ -37,7 +37,7 @@ export default function NavBar({
   onToggleTheme,
 }: NavBarProps) {
   return (
-    <header className={styles.navBar({ variant })}>
+    <header className={styles.navBar}>
       {variant === 'primary' && <Logo size="small" />}
       <nav
         style={{

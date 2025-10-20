@@ -3,26 +3,16 @@ import { textStyle } from '@/styles/typography.css';
 import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
-export const navBar = recipe({
-  base: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    position: 'sticky',
-    top: 0,
-    margin: '0 auto',
-    paddingBlock: 24,
-    maxWidth: 1080,
-    background: tokens.color.bg,
-  },
-
-  variants: {
-    variant: {
-      primary: {},
-      secondary: {},
-      minimal: {},
-    },
-  },
+export const navBar = style({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  position: 'sticky',
+  top: 0,
+  margin: '0 auto',
+  paddingBlock: 24,
+  maxWidth: 1080,
+  background: tokens.color.bg,
 });
 
 export const menuIcon = style({
