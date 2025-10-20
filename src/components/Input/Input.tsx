@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {
   EyeIcon,
@@ -27,6 +27,7 @@ export default function Input({
   onChange,
   error = false,
   disabled = false,
+  label,
   onSearchClick,
 }: InputProps) {
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -34,7 +35,6 @@ export default function Input({
   const inputRef = useRef<HTMLInputElement>(null);
   const iconButtonRef = useRef<HTMLButtonElement>(null);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
-
 
   const handleInputFocus = () => {
     setIsInputFocused(true);
@@ -45,7 +45,7 @@ export default function Input({
   };
 
   const handleIconFocus = () => {
-    setIsInputFocused(false); 
+    setIsInputFocused(false);
   };
 
   const getInputType = () => {
@@ -128,10 +128,10 @@ export default function Input({
   };
 
   return (
-    <div 
-      className={ clsx(styles.inputWrapper) }
+    <div
+      className={clsx(styles.inputWrapper)}
       data-error={error}
-      data-input-focused={isInputFocused} 
+      data-input-focused={isInputFocused}
     >
       <input
         ref={inputRef}
@@ -141,7 +141,7 @@ export default function Input({
         value={value}
         onChange={onChange}
         onFocus={handleInputFocus}
-        onBlur={handleInputBlur} 
+        onBlur={handleInputBlur}
         aria-invalid={error}
         disabled={disabled}
         aria-label={label}
@@ -164,7 +164,7 @@ export default function Input({
             <EyeSlashIcon style={{ width: '24px', height: '24px' }} />
           ) : (
             <EyeIcon style={{ width: '24px', height: '24px' }} />
-          )} 
+          )}
         </button>
       )}
 
