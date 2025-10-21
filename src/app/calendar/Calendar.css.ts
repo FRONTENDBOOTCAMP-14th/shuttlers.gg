@@ -5,8 +5,9 @@ import { style } from '@vanilla-extract/css';
 
 export const calendar = style({
   maxWidth: 1080,
+  width: 1080,
   margin: 'auto',
-  padding: '80px 0',
+  paddingBlock: '80px 0',
 });
 
 export const calendarHeader = style({

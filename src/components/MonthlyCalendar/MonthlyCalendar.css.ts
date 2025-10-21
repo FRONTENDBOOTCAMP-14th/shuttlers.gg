@@ -55,8 +55,12 @@ export const cell = style({
   alignItems: 'flex-start',
   justifyContent: 'center',
   paddingTop: 8,
+  cursor: 'pointer',
   selectors: {
     '&[data-selected]': {
+      background: tokens.color.action.bg.disabled,
+    },
+    '&:hover': {
       background: tokens.color.action.bg.disabled,
     },
   },
@@ -86,7 +90,8 @@ export const dayNumber = style([
 
 export const eventBar = style({
   position: 'absolute',
-  width: '90%',
+  left: '5%',
+  right: '5%',
   height: 14,
   top: 32,
   borderRadius: 2,
