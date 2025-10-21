@@ -1,9 +1,10 @@
+import ThemeProvider from '@/store/ThemeProvider';
+import ThemeToggler from '@/store/ThemeToggler';
 import '@/styles/global.css';
-import { lightTheme } from '@/styles/theme.css';
-import ThemeEffect from '@/styles/ThemeEffect';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { PropsWithChildren } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 const pretendard = localFont({
   src: '../fonts/PretendardVariable.woff2',
@@ -21,12 +22,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="ko" className={`${pretendard.variable} ${lightTheme}`}>
+    <html lang="ko" className={pretendard.variable} suppressHydrationWarning>
       <body>
-        <ThemeEffect />
-        <h1 className="sr-only">Shuttlers</h1>
-        {children}
-        <div id="modal-root"></div>
+        <Toaster />
+
+        <ThemeProvider>
+          <ThemeToggler>
+            <main>{children}</main>
+            <div id="modal-root"></div>
+          </ThemeToggler>
+        </ThemeProvider>
       </body>
     </html>
   );
