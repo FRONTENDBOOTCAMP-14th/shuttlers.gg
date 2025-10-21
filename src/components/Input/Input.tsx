@@ -19,6 +19,7 @@ type InputProps = {
   error?: boolean;
   disabled?: boolean;
   onSearchClick?: () => void;
+  variant?: 'primary' | 'secondary';
 };
 
 export default function Input({
@@ -31,13 +32,13 @@ export default function Input({
   error = false,
   disabled = false,
   onSearchClick,
+  variant = 'primary',
 }: InputProps) {
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const iconButtonRef = useRef<HTMLButtonElement>(null);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
-
 
   const handleInputFocus = () => {
     setIsInputFocused(true);
@@ -48,7 +49,7 @@ export default function Input({
   };
 
   const handleIconFocus = () => {
-    setIsInputFocused(false); 
+    setIsInputFocused(false);
   };
 
   const getInputType = () => {
@@ -131,58 +132,67 @@ export default function Input({
   };
 
   return (
-    <div className={styles.inputField}>
-      {label && <label htmlFor={name}>{label}</label>}
-      <div className={styles.inputWrapper} data-error={error}>
-        <input
-          id={name}
-          name={name}
-          ref={inputRef}
-          className={styles.input}
-          type={getInputType()}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          aria-invalid={error}
+    <div
+      className={clsx(styles.inputWrapper)}
+      data-error={error}
+      data-input-focused={isInputFocused}
+      data-variant={variant}
+    >
+      <input
+        ref={inputRef}
+        className={clsx(
+          type === 'search'
+            ? variant === 'secondary'
+              ? styles.inputSecondary
+              : styles.input
+            : styles.input
+        )}
+        type={type === 'password' ? (showPassword ? 'text' : 'password') : type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        onFocus={() => setIsInputFocused(true)}
+        onBlur={() => setIsInputFocused(false)}
+        aria-invalid={error}
+        disabled={disabled}
+      />
+
+      {type === 'password' && (
+        <button
+          ref={iconButtonRef}
+          type="button"
+          className={styles.iconButton}
+          onClick={handleTogglePassword}
+          onFocus={() => setIsInputFocused(false)}
+          onKeyDown={(e) => handleKeyDown(e, handleTogglePassword)}
+          onMouseDown={handleMouseDown}
+          aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+          tabIndex={disabled ? -1 : 0}
           disabled={disabled}
-        />
+        >
+          {showPassword ? (
+            <EyeSlashIcon style={{ width: '24px', height: '24px' }} />
+          ) : (
+            <EyeIcon style={{ width: '24px', height: '24px' }} />
+          )}
+        </button>
+      )}
 
-        {type === 'password' && (
-          <button
-            ref={iconButtonRef}
-            type="button"
-            className={styles.iconButton}
-            onClick={handleTogglePassword}
-            onKeyDown={(e) => handleKeyDown(e, handleTogglePassword)}
-            onMouseDown={handleMouseDown}
-            aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
-            tabIndex={disabled ? -1 : 0}
-            disabled={disabled}
-          >
-            {showPassword ? (
-              <EyeSlashIcon style={{ width: '24px', height: '24px' }} />
-            ) : (
-              <EyeIcon style={{ width: '24px', height: '24px' }} />
-            )}
-          </button>
-        )}
-
-        {type === 'search' && (
-          <button
-            ref={searchButtonRef}
-            type="button"
-            className={styles.searchIcon}
-            onClick={handleSearchClick}
-            onKeyDown={(e) => handleKeyDown(e, handleSearchClick)}
-            onMouseDown={handleMouseDown}
-            aria-label="검색"
-            tabIndex={disabled ? -1 : 0}
-            disabled={disabled}
-          >
-            <MagnifyingGlassIcon style={{ width: '20px', height: '20px' }} />
-          </button>
-        )}
-      </div>
+      {type === 'search' && (
+        <button
+          type="button"
+          className={styles.searchIcon}
+          onClick={handleSearchClick}
+          onFocus={() => setIsInputFocused(false)}
+          onKeyDown={(e) => handleKeyDown(e, handleSearchClick)}
+          onMouseDown={handleMouseDown}
+          aria-label="검색"
+          tabIndex={disabled ? -1 : 0}
+          disabled={disabled}
+        >
+          <MagnifyingGlassIcon style={{ width: 20, height: 20 }} />
+        </button>
+      )}
     </div>
   );
 }

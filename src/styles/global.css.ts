@@ -15,6 +15,20 @@ globalStyle('html, body', {
   width: '100%',
   fontFamily: typography.font.family.base,
   letterSpacing: typography.font.letterSpacing.tight,
+  backgroundColor: tokens.color.bg,
+  transition: 'background 0.2s ease',
+});
+
+globalStyle('body', {
+  paddingInline: 20,
+  '@media': {
+    'screen and (min-width: 768px)': {
+      paddingInline: 24,
+    },
+    'screen and (min-width: 1080px)': {
+      paddingInline: 40,
+    },
+  },
 });
 
 globalStyle('#root, main', {
