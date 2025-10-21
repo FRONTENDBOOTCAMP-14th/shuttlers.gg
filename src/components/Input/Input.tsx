@@ -22,6 +22,7 @@ type InputProps = {
 
 export default function Input({
   type = 'text',
+  label,
   placeholder = 'placeholder',
   value,
   onChange,
@@ -144,7 +145,6 @@ export default function Input({
         onBlur={handleInputBlur}
         aria-invalid={error}
         disabled={disabled}
-        aria-label={label}
       />
 
       {type === 'password' && (
