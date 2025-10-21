@@ -1,5 +1,5 @@
 import Input from '@/components/Input/Input';
-import Logo from '@/components/Logo';
+import Logo from '@/components/Logo/Logo';
 import { Users } from '@/libs/supabase/client';
 import {
   ArrowLeftIcon,

@@ -3,7 +3,7 @@
 import type { LoginForm } from '@/@types/forms';
 import Button from '@/components/Button/Button';
 import Input from '@/components/Input/Input';
-import Logo from '@/components/Logo';
+import Logo from '@/components/Logo/Logo';
 import { supabase } from '@/libs/supabase/client';
 import { tokens } from '@/styles/tokens.css';
 import { textStyle } from '@/styles/typography.css';
