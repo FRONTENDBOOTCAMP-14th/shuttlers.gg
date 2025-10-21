@@ -1,23 +1,43 @@
+import { colors } from '@/styles/colorPalette.css';
+import { tokens } from '@/styles/tokens.css';
+import { textStyle } from '@/styles/typography.css';
 import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
-import { colors } from '../../styles/colorPalette.css';
-import { tokens } from '../../styles/tokens.css';
-import { textStyle } from '../../styles/typography.css';
 
-export const tournament = style({ maxWidth: 1080, margin: 'auto', marginTop: 80 });
+export const tournament = style({
+  maxWidth: 1080,
+  margin: 'auto',
+  marginTop: 80,
+});
 
 export const tournamentHeader = style({
   display: 'flex',
   justifyContent: 'space-between',
+  alignItems: 'center',
 });
 
 export const tournamentHeaderTitle = style([textStyle.title.bold]);
 
-export const tournamentTitle = style(textStyle.subtitle.bold);
+export const tournamentTitle = style([
+  textStyle.subtitle.bold,
+  {
+    color: tokens.color.text.inverse,
+  },
+]);
 
 export const tournamentInfoHeader = style({
   display: 'flex',
-  justifyContent: 'space-between',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  gap: 12,
+
+  '@media': {
+    'screen and (min-width: 768px)': {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+  },
 });
 
 export const tournamentInfoTag = style({ display: 'flex', gap: 6 });

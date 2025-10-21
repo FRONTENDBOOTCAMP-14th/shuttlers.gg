@@ -1,6 +1,6 @@
 'use client';
 
-import { Tournament } from '@/app/tournaments/Tournament';
+import { Tournament } from '@/app/tournament/Tournament';
 import { useTournament } from '@/hooks/useTournament';
 import { useParams } from 'next/navigation';
 
