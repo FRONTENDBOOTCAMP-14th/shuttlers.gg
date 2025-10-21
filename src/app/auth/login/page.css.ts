@@ -26,6 +26,7 @@ export const optionLink = style({
   alignItems: 'center',
   columnGap: 6,
   ':hover': {
+    ...textStyle.body.bold,
     color: tokens.color.action.hover.secondary,
   },
 });

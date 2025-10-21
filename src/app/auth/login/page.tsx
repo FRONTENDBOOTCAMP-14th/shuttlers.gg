@@ -86,13 +86,21 @@ export default function LoginPage() {
         </FormProvider>
 
         <div className={styles.loginOptions}>
-          <label
-            htmlFor="keep-loggedin"
-            style={{ display: 'flex', columnGap: 10 }}
-          >
-            <input type="checkbox" id="keep-loggedin" />
-            로그인 유지
-          </label>
+          {
+            // TODO: 차후 시간 남으면 로그인유지도 구현
+            /* <label
+              htmlFor="keep-loggedin"
+              style={{ display: 'flex', columnGap: 10 }}
+              >
+                <input type="checkbox" id="keep-loggedin" />
+                로그인 유지
+              </label> */
+          }
+
+          <Link href="#" className={styles.optionLink}>
+            비밀번호 찾기
+            <ArrowRightIcon width={16} />
+          </Link>
           <span style={{ display: 'flex', columnGap: 10 }}>
             셔틀러스 회원이 아니신가요?
             <Link href="./register" className={styles.optionLink}>
