@@ -1,13 +1,10 @@
 'use client';
 
-import type { LoginForm } from '@/@types/forms';
-import Button from '@/components/Button/Button';
-import Input from '@/components/Input/Input';
+import { LoginFormValues } from '@/@types/forms';
+import LoginForm from '@/app/auth/login/LoginForm';
 import Logo from '@/components/Logo/Logo';
 import { supabase } from '@/libs/supabase/client';
-import { tokens } from '@/styles/tokens.css';
-import { textStyle } from '@/styles/typography.css';
-import { ArrowRightIcon } from '@heroicons/react/16/solid';
+import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -16,69 +13,48 @@ import * as styles from './page.css';
 
 export default function LoginPage() {
   const router = useRouter();
-  const methods = useForm<LoginForm>({ mode: 'onChange' });
+  const methods = useForm<LoginFormValues>({
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+    defaultValues: { email: '', password: '' },
+  });
 
-  const handleLogin = async (formData: LoginForm) => {
+  const handleLogin = async (formData: LoginFormValues) => {
     const { data, error } = await supabase.auth.signInWithPassword(formData);
 
     if (error)
-      return toast.error(`로그인 실패!\n ${error.status}: ${error.message}`);
+      return toast.error(
+        <>
+          <b>로그인 실패!</b>
+          <br />
+          {error.status}: {error.message}
+        </>
+      );
 
     if (!data.user) return toast.error('확인되지 않은 사용자입니다.');
 
-    const name = data.user.user_metadata?.name;
+    const username = data.user.user_metadata?.username;
 
-    toast.success(`어서 오세요, ${name}님!`);
+    toast.success(`어서 오세요, ${username}님!`);
+
     router.push('/');
   };
 
   return (
     <div className={styles.loginPage}>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          rowGap: 24,
-        }}
-      >
+      <div className={styles.loginHeader}>
         <Logo size="medium" />
         <h2 className="sr-only">로그인</h2>
-        <p
-          style={{
-            ...textStyle.heading.semibold,
-            color: tokens.color.text.body,
-            textAlign: 'center',
-            marginBottom: 48,
-          }}
-        >
+        <p>
           환영합니다!
           <br />
           로그인 후 이용해주세요.
         </p>
       </div>
 
-      <section
-        style={{
-          width: '100%',
-        }}
-      >
+      <section>
         <FormProvider {...methods}>
-          <form
-            onSubmit={methods.handleSubmit(handleLogin)}
-            autoComplete="off"
-            noValidate
-            className={styles.loginForm}
-          >
-            <Input name="email" type="email" placeholder="이메일 입력" />
-            <Input
-              name="password"
-              type="password"
-              placeholder="비밀번호 입력 (8자 이상 12자 이하)"
-            />
-
-            <Button text="로그인" type="submit" variant="primary" size="long" />
-          </form>
+          <LoginForm onSubmitAction={handleLogin} />
         </FormProvider>
 
         <div className={styles.loginOptions}>

@@ -1,6 +1,6 @@
 import { tokens } from '@/styles/tokens.css';
 import { textStyle } from '@/styles/typography.css';
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 
 export const loginPage = style({
   display: 'flex',
@@ -18,17 +18,22 @@ export const loginPage = style({
   },
 });
 
-export const loginForm = style({
+globalStyle(`${loginPage} > section`, {
+  width: '100%',
+});
+
+export const loginHeader = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  rowGap: 30,
+  rowGap: 24,
+});
 
-  '@media': {
-    'screen and (min-width: 768px)': {
-      rowGap: 40,
-    },
-  },
+globalStyle(`${loginHeader} > p`, {
+  ...textStyle.heading.semibold,
+  color: tokens.color.text.body,
+  textAlign: 'center',
+  marginBottom: 48,
 });
 
 export const loginOptions = style({
