@@ -1,157 +1,146 @@
-'use client';
-
+import Input from '@/components/Input/Input';
+import Logo from '@/components/Logo';
+import { Users } from '@/libs/supabase/client';
 import {
+  ArrowLeftIcon,
+  ArrowRightEndOnRectangleIcon,
   Bars3Icon,
   MoonIcon,
   SunIcon,
   UserCircleIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/solid';
 import Link from 'next/link';
-import { MouseEvent, useState } from 'react';
-import { Logo } from '../Logo';
+import { useRouter } from 'next/navigation';
+import { ReactNode, useEffect, useState } from 'react';
 import * as styles from './NavBar.css';
 
-type NavItem = {
+type Menu = {
   label: string;
+  icon?: ReactNode;
   path: string;
 };
 
 type NavBarProps = {
-  navItems: NavItem[];
+  navItems?: Menu[];
+  user?: Pick<Users, 'id'>;
+  theme: 'light' | 'dark';
+  variant?: 'primary' | 'secondary' | 'minimal';
   activePath?: string;
-  onNavigate?: (path: string) => void;
-  theme?: 'light' | 'dark';
+  showSearch?: boolean;
   onToggleTheme?: () => void;
-  user?: { name: string } | null;
-  onUserClick?: () => void;
 };
 
 export default function NavBar({
   navItems,
-  activePath = '/',
-  onNavigate,
+  user = undefined,
   theme = 'light',
+  variant = 'primary',
+  activePath = '/',
+  showSearch = false,
   onToggleTheme,
-  user = null,
-  onUserClick,
 }: NavBarProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
-  const handleNavigate = (e: MouseEvent, path: string) => {
-    e.preventDefault();
-    if (onNavigate) {
-      onNavigate(path);
-    } else {
-      window.location.assign(path);
-    }
-    setMobileMenuOpen(false);
-  };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) setIsOpen(false);
+    };
+    window.addEventListener('resize', handleResize);
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen((prev) => !prev);
-  };
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
     <header className={styles.navBar}>
-      <nav
-        className={styles.navBarContainer}
-        aria-label="주요 탐색"
-        role="navigation"
-      >
-        <div className={styles.navBarLeft}>
-          <Logo size="small" />
-          <div className={styles.desktopNav}>
-            <ul className={styles.navList}>
-              {navItems.map((item) => (
-                <li key={item.label}>
-                  {onNavigate ? (
-                    <a
-                      href={item.path}
-                      className={styles.navItem}
-                      data-active={activePath === item.path}
-                      onClick={(e) => handleNavigate(e, item.path)}
-                    >
-                      {item.label}
-                    </a>
-                  ) : (
-                    <Link
-                      href={item.path}
-                      className={styles.navItem}
-                      data-active={activePath === item.path}
-                    >
-                      {item.label}
-                    </Link>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+      {variant === 'primary' && <Logo size="small" />}
+      <nav className={styles.navContainer({ variant })}>
+        {variant === 'minimal' ? (
+          <>
+            <button
+              onClick={() => router.back()}
+              className={styles.navItem({})}
+            >
+              <div
+                style={{ display: 'flex', alignItems: 'center', columnGap: 8 }}
+              >
+                <ArrowLeftIcon width={24} aria-hidden />
+                이전으로
+              </div>
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() => setIsOpen((prev) => !prev)}
+              aria-label={isOpen ? '메뉴 닫기' : '메뉴 펼치기'}
+              className={styles.hamburger}
+            >
+              {isOpen ? <XMarkIcon width={24} /> : <Bars3Icon width={24} />}
+            </button>
 
-        <div className={styles.right}>
-          <button
-            type="button"
-            className={styles.iconButton}
-            aria-label={user ? `${user.name} 계정 열기` : '로그인 메뉴 열기'}
-            onClick={onUserClick}
-          >
-            <UserCircleIcon width={20} height={20} />
-          </button>
+            <div className={styles.navMenu({ isOpen })}>
+              <div>{showSearch && <Input name="search" type="search" />}</div>
 
-          <button
-            type="button"
-            className={styles.iconButton}
-            aria-label={
-              theme === 'dark' ? '라이트 테마로 전환' : '다크 테마로 전환'
-            }
-            onClick={onToggleTheme}
-          >
-            {theme === 'dark' ? (
-              <SunIcon width={20} height={20} />
-            ) : (
-              <MoonIcon width={20} height={20} />
-            )}
-          </button>
+              {navItems && (
+                <ul
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    columnGap: 16,
+                  }}
+                >
+                  {navItems.map((item) => {
+                    const isActive = item.path === activePath;
+                    return (
+                      <li
+                        key={item.label}
+                        className={styles.navItem({ isActive })}
+                      >
+                        <Link href={item.path}>{item.label}</Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
 
-          <button
-            type="button"
-            className={`${styles.iconButton} ${styles.hamburger}`}
-            aria-label={mobileMenuOpen ? '메뉴 닫기' : '메뉴 열기'}
-            aria-controls="mobile-nav"
-            aria-expanded={mobileMenuOpen}
-            onClick={toggleMobileMenu}
-          >
-            <Bars3Icon width={22} height={22} />
-          </button>
-        </div>
+            <div style={{ display: 'flex', columnGap: 16 }}>
+              {user ? (
+                <Link
+                  href={`mypage/${user.id}`}
+                  aria-label="마이페이지"
+                  className={styles.menuIcon}
+                >
+                  <UserCircleIcon width={24} />
+                </Link>
+              ) : (
+                <Link
+                  href="auth/login"
+                  aria-label="로그인"
+                  className={styles.menuIcon}
+                >
+                  <ArrowRightEndOnRectangleIcon width={24} />
+                </Link>
+              )}
+              <button
+                onClick={onToggleTheme}
+                aria-label="테마 바꾸기"
+                className={styles.menuIcon}
+              >
+                {theme === 'dark' ? (
+                  <SunIcon width={24} aria-hidden />
+                ) : (
+                  <MoonIcon width={24} aria-hidden />
+                )}
+              </button>
+            </div>
+          </>
+        )}
       </nav>
-
-      {mobileMenuOpen && (
-        <div id="mobile-nav" className={styles.mobilePanel}>
-          {navItems.map((item) =>
-            onNavigate ? (
-              <a
-                key={item.path}
-                href={item.path}
-                className={styles.mobileNavItem}
-                data-active={activePath === item.path}
-                onClick={(e) => handleNavigate(e, item.path)}
-              >
-                {item.label}
-              </a>
-            ) : (
-              <Link
-                key={item.path}
-                href={item.path}
-                className={styles.mobileNavItem}
-                data-active={activePath === item.path}
-              >
-                {item.label}
-              </Link>
-            )
-          )}
-        </div>
-      )}
     </header>
   );
 }
