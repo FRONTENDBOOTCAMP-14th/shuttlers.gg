@@ -33,11 +33,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div
-      style={{
-        marginTop: 100,
-      }}
-    >
+    <div className={styles.loginPage}>
       <div
         style={{
           display: 'flex',
@@ -53,7 +49,7 @@ export default function LoginPage() {
             ...textStyle.heading.semibold,
             color: tokens.color.text.body,
             textAlign: 'center',
-            marginBottom: 60,
+            marginBottom: 48,
           }}
         >
           환영합니다!

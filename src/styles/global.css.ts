@@ -31,21 +31,6 @@ globalStyle('body', {
   },
 });
 
-globalStyle('#root, main', {
-  display: 'flex',
-  flexDirection: 'column',
-  paddingInline: 20,
-
-  '@media': {
-    'screen and (min-width: 768px)': {
-      paddingInline: 24,
-    },
-    'screen and (min-width: 1024px)': {
-      paddingInline: 40,
-    },
-  },
-});
-
 globalStyle('a', {
   color: 'inherit',
   textDecoration: 'none',

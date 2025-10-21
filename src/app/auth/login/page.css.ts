@@ -2,11 +2,33 @@ import { tokens } from '@/styles/tokens.css';
 import { textStyle } from '@/styles/typography.css';
 import { style } from '@vanilla-extract/css';
 
+export const loginPage = style({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  height: 'calc(100vh - 56px)',
+  width: '100%',
+  maxWidth: 700,
+  marginInline: 'auto',
+
+  '@media': {
+    'screen and (min-width: 768px)': {
+      height: 'calc(100vh - 72px)',
+    },
+  },
+});
+
 export const loginForm = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  rowGap: 40,
+  rowGap: 30,
+
+  '@media': {
+    'screen and (min-width: 768px)': {
+      rowGap: 40,
+    },
+  },
 });
 
 export const loginOptions = style({
