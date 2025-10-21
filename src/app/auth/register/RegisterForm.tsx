@@ -8,7 +8,7 @@ import useModal from '@/hooks/useModal';
 import { supabase } from '@/libs/supabase/client';
 import { tokens } from '@/styles/tokens.css';
 import { textStyle } from '@/styles/typography.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as styles from './RegisterForm.css';
@@ -27,6 +27,7 @@ const GENDER_OPTIONS: {
   { value: 'female', label: '여성' },
 ];
 const GRADE_OPTIONS: Profile['national_grade'][] = ['초심', 'D', 'C', 'B', 'A'];
+const VERIFY_TIME = 300;
 
 export default function RegisterForm({
   step,
@@ -39,8 +40,26 @@ export default function RegisterForm({
   const [gender, setGender] = useState<Profile['gender']>();
   const [grade, setGrade] = useState<Profile['national_grade']>();
   const [status, setStatus] = useState<Status>('idle');
+  const [remainingTime, setRemainingTime] = useState<number>(VERIFY_TIME);
   const [checked, setChecked] = useState<Boolean>(false);
   const modal = useModal();
+
+  useEffect(() => {
+    if (status === 'pending') {
+      const timer = setInterval(() => {
+        setRemainingTime((prevTime) => {
+          if (prevTime <= 0) {
+            clearInterval('timer');
+            setStatus('idle');
+            toast('인증 시간이 만료되었습니다. 다시 인증해 주세요.');
+          }
+          return prevTime - 1;
+        });
+
+        return () => clearInterval(timer);
+      }, 1000);
+    }
+  }, [status]);
 
   const handleSendOtp = async () => {
     const { error } = await supabase.auth.signInWithOtp({
@@ -91,6 +110,7 @@ export default function RegisterForm({
               placeholder="이메일 입력"
               register={register('email', { required: true })}
               status={status}
+              remainingTime={remainingTime}
               buttonType="send"
               buttonAction={handleSendOtp}
             />

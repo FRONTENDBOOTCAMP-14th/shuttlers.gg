@@ -12,8 +12,6 @@ type CheckInputProps = {
   label?: string;
   placeholder?: string;
   value?: string;
-  error?: boolean;
-  disabled?: boolean;
   register?: UseFormRegisterReturn;
   status?: Status;
   remainingTime?: number;
@@ -22,11 +20,14 @@ type CheckInputProps = {
 };
 
 const formatRemainingTime = (time: number) => {
-  if (time <= 0) {
-    return '만료됨';
-  }
+  if (time <= 0) return '만료됨';
 
-  return `${Math.floor(time / 60)}:${time % 60}`.toString().padStart(2, '0');
+  const min = Math.floor(time / 60)
+    .toString()
+    .padStart(2, '0');
+  const sec = (time % 60).toString().padStart(2, '0');
+
+  return `${min}:${sec}`;
 };
 
 export default function CheckInput({
@@ -35,8 +36,6 @@ export default function CheckInput({
   label,
   placeholder = 'placeholder',
   value,
-  error = false,
-  disabled = false,
   register,
   status = 'idle',
   remainingTime = 300,
@@ -53,16 +52,16 @@ export default function CheckInput({
           ? '완료'
           : '인증 요청'
       : status === 'pending'
-        ? '확인'
+        ? '인증확인'
         : status === 'resolved'
           ? '완료'
-          : '확인';
+          : '인증확인';
 
   return (
     <div className={styles.inputField}>
       {label && <label htmlFor={name}>{label}</label>}
       <div className={styles.checkInput}>
-        <div className={styles.inputWrapper} data-error={error}>
+        <div className={styles.inputWrapper}>
           <input
             id={name}
             name={name}
@@ -71,15 +70,18 @@ export default function CheckInput({
             type={type}
             placeholder={placeholder}
             value={register ? undefined : value}
-            aria-invalid={error}
-            disabled={disabled}
+            disabled={status === 'resolved'}
             {...((register as any) ?? {})}
           />
         </div>
         <Button
           text={buttonText}
           variant={buttonType === 'send' ? 'secondary' : 'primary'}
-          disabled={status === 'resolved'}
+          disabled={
+            status === 'resolved' ||
+            (buttonType === 'send' && status === 'pending')
+          }
+          size="long"
           onClick={buttonAction}
         />
       </div>

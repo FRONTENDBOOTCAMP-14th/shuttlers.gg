@@ -1,5 +1,5 @@
 import { tokens } from '@/styles/tokens.css';
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { textStyle } from '../../styles/typography.css';
 
 export const inputField = style({
@@ -15,6 +15,10 @@ export const checkInput = style({
   display: 'flex',
   flexDirection: 'row',
   columnGap: 12,
+});
+
+globalStyle(`${checkInput} > button`, {
+  width: '200px',
 });
 
 export const inputWrapper = style({
