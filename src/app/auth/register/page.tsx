@@ -17,24 +17,11 @@ export default function RegisterPage() {
   const [step, setStep] = useState<1 | 2>(1);
 
   const handleRegister = async (formData: RegisterFormValues) => {
-    const { data, error } = await supabase.auth.signUp({
-      email: formData.email,
-      password: formData.password,
-      options: {
-        data: {
-          name: formData.name,
-          gender: formData.gender,
-          grade: formData.national_grade,
-        },
-      },
-    });
-
-    if (error)
-      return toast.error(`인증 오류 발생\n ${error.status}: ${error.message}`);
-    if (!data.user) return;
+    const user = (await supabase.auth.getUser()).data.user;
+    if (!user) return toast.error('이메일 인증이 완료되지 않았습니다.');
 
     const { error: registerError } = await supabase.from('users').insert({
-      id: data.user.id,
+      id: user.id,
       email: formData.email,
       name: formData.name,
       gender: formData.gender,
