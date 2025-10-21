@@ -49,9 +49,10 @@ export default function RegisterForm({
       const timer = setInterval(() => {
         setRemainingTime((prevTime) => {
           if (prevTime <= 0) {
-            clearInterval('timer');
+            clearInterval(timer);
             setStatus('idle');
             toast('인증 시간이 만료되었습니다. 다시 인증해 주세요.');
+            return VERIFY_TIME;
           }
           return prevTime - 1;
         });
