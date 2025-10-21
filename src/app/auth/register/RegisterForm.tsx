@@ -8,6 +8,12 @@ import useModal from '@/hooks/useModal';
 import { supabase } from '@/libs/supabase/client';
 import { tokens } from '@/styles/tokens.css';
 import { textStyle } from '@/styles/typography.css';
+import {
+  emailRules,
+  nameRules,
+  passwordCheck,
+  passwordRules,
+} from '@/utils/authValidation';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -34,7 +40,7 @@ export default function RegisterForm({
   onClickNext,
   onSubmitAction,
 }: RegisterFormProps) {
-  const { handleSubmit, register, setValue, watch } =
+  const { handleSubmit, register, setValue, trigger, watch } =
     useFormContext<RegisterFormValues>();
 
   const [gender, setGender] = useState<Profile['gender']>();
@@ -43,6 +49,11 @@ export default function RegisterForm({
   const [remainingTime, setRemainingTime] = useState<number>(VERIFY_TIME);
   const [checked, setChecked] = useState<Boolean>(false);
   const modal = useModal();
+
+  useEffect(() => {
+    register('gender', { required: '성별을 선택해주세요.' });
+    register('national_grade', { required: '급수를 선택해주세요.' });
+  }, [register]);
 
   useEffect(() => {
     if (status === 'pending') {
@@ -109,7 +120,7 @@ export default function RegisterForm({
               type="email"
               label="이메일"
               placeholder="이메일 입력"
-              register={register('email', { required: true })}
+              register={register('email', emailRules)}
               status={status}
               remainingTime={remainingTime}
               buttonType="send"
@@ -127,14 +138,15 @@ export default function RegisterForm({
               />
             )}
             <Input
-              {...(register('password'), { required: true })}
+              {...(register('password'), passwordRules)}
               name="password"
               type="password"
               label="비밀번호"
               placeholder="8자 이상 12자 이하"
             />
             <Input
-              {...(register('password_check'), { required: true })}
+              {...(register('password_check'),
+              passwordCheck(watch('password'), watch('password_check')))}
               name="password_check"
               type="password"
               label="비밀번호 확인"
@@ -145,14 +157,24 @@ export default function RegisterForm({
               text="다음으로"
               variant="primary"
               size="long"
-              onClick={onClickNext}
+              onClick={async () => {
+                const isValid = await trigger([
+                  'email',
+                  'verify_code',
+                  'password',
+                  'password_check',
+                ]);
+                if (!isValid) return;
+
+                onClickNext();
+              }}
             />
           </>
         )}
         {step === 2 && (
           <>
             <Input
-              {...(register('name'), { required: true })}
+              {...(register('name'), nameRules)}
               name="name"
               type="text"
               label="이름"
@@ -183,6 +205,7 @@ export default function RegisterForm({
                         onClick={() => {
                           setGender(option.value);
                           setValue('gender', option.value);
+                          trigger('gender');
                         }}
                       />
                     </li>
@@ -215,6 +238,7 @@ export default function RegisterForm({
                         onClick={() => {
                           setGrade(option);
                           setValue('national_grade', option);
+                          trigger('national_grade');
                         }}
                       />
                     </li>
