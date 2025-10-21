@@ -17,48 +17,39 @@ export default function RegisterPage() {
   const [step, setStep] = useState<1 | 2>(1);
 
   const handleRegister = async (formData: RegisterFormValues) => {
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-          data: {
-            name: formData.name,
-            gender: formData.gender,
-            grade: formData.national_grade,
-          },
+    const { data, error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: {
+          name: formData.name,
+          gender: formData.gender,
+          grade: formData.national_grade,
         },
-      });
+      },
+    });
 
-      if (error)
-        return toast.error(
-          `인증 오류 발생\n ${error.status}: ${error.message}`
-        );
-      if (!data.user) return;
+    if (error)
+      return toast.error(`인증 오류 발생\n ${error.status}: ${error.message}`);
+    if (!data.user) return;
 
-      const { error: registerError } = await supabase.from('users').insert({
-        id: data.user.id,
-        email: formData.email,
-        name: formData.name,
-        gender: formData.gender,
-        national_grade: formData.national_grade,
-        created_at: new Date().toISOString(),
-      });
+    const { error: registerError } = await supabase.from('users').insert({
+      id: data.user.id,
+      email: formData.email,
+      name: formData.name,
+      gender: formData.gender,
+      national_grade: formData.national_grade,
+      created_at: new Date().toISOString(),
+    });
 
-      if (registerError)
-        return toast.error(
-          `회원가입 요청에 실패했습니다.\n ${registerError.code}: ${registerError.message}`
-        );
+    if (registerError)
+      return toast.error(
+        `회원가입 요청에 실패했습니다.\n ${registerError.code}: ${registerError.message}`
+      );
 
-      toast.success('회원가입 성공!\n로그인 화면으로 이동합니다.');
-      router.push('./login');
-    } catch (err) {
-      console.error(err);
-      toast.error('알 수 없는 오류가 발생했습니다.');
-    }
+    toast.success('회원가입 성공!\n로그인 화면으로 이동합니다.');
+    router.push('./login');
   };
-
-  const handleEmailAuth = () => {};
 
   return (
     <div className={styles.registerPage}>

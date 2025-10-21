@@ -3,7 +3,7 @@ import * as styles from './Button.css';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'dark';
 
-type ButtonProps = {
+export type ButtonProps = {
   text?: string;
   type?: 'button' | 'submit' | 'reset';
   icon?: ReactNode;

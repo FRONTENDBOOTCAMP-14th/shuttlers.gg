@@ -6,6 +6,7 @@ import {
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/solid';
 import { useRef, useState } from 'react';
+import { UseFormRegisterReturn } from 'react-hook-form';
 import * as styles from './Input.css';
 
 type InputProps = {
@@ -18,6 +19,7 @@ type InputProps = {
   error?: boolean;
   disabled?: boolean;
   onSearchClick?: () => void;
+  register?: UseFormRegisterReturn;
 };
 
 export default function Input({
@@ -30,6 +32,7 @@ export default function Input({
   error = false,
   disabled = false,
   onSearchClick,
+  register,
 }: InputProps) {
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -135,14 +138,15 @@ export default function Input({
         <input
           id={name}
           name={name}
-          ref={inputRef}
+          ref={register ? undefined : inputRef}
           className={styles.input}
           type={getInputType()}
           placeholder={placeholder}
-          value={value}
-          onChange={onChange}
+          value={register ? undefined : value}
+          onChange={register ? undefined : onChange}
           aria-invalid={error}
           disabled={disabled}
+          {...((register as any) ?? {})}
         />
 
         {type === 'password' && (
