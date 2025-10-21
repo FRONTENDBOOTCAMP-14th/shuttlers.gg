@@ -8,12 +8,12 @@ export const inputField = style({
   flexDirection: 'column',
   rowGap: 12,
   color: tokens.color.text.body,
+  width: '100%',
 });
 
 export const inputWrapper = style({
   position: 'relative',
   display: 'flex',
-  width: '100%',
   alignItems: 'center',
   selectors: {
     '&::before': {
@@ -32,17 +32,16 @@ export const inputWrapper = style({
         'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
       WebkitMaskComposite: 'xor',
       pointerEvents: 'none',
-      opacity: 1, 
+      opacity: 1,
       transition: 'opacity 0.2s ease',
     },
     '&[data-input-focused="true"]::before': {
       opacity: 0,
     },
- 
+
     '&[data-error="true"]::before': {
       opacity: 0,
     },
-    
   },
 });
 
