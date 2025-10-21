@@ -5,7 +5,7 @@ import { style } from '@vanilla-extract/css';
 
 export const calendar = style({
   maxWidth: 1080,
-  width: 1080,
+  width: '100%',
   margin: 'auto',
   paddingBlock: '80px 0',
 });
