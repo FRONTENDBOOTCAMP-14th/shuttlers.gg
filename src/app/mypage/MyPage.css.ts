@@ -5,6 +5,7 @@ import { style } from '@vanilla-extract/css';
 export const MyPage = style({
   margin: 'auto',
   maxWidth: 1080,
+  width: '100%',
   marginTop: 80,
   display: 'flex',
   flexDirection: 'column',
@@ -20,7 +21,7 @@ export const HeaderTitle = style([textStyle.title.bold, {}]);
 export const HeaderDescription = style([textStyle.subtitle.semibold]);
 
 export const Form = style({
-  borderRadius: 20,
+  borderRadius: '0px 20px 20px 20px',
   background: tokens.color.surface.raised,
   maxWidth: 1080,
   padding: 80,

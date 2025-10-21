@@ -18,7 +18,6 @@ export default function MyPageTabs({
   value,
   onChange,
   className,
-  panelClassName,
   children,
 }: Props) {
   const listId = useId();
@@ -61,32 +60,23 @@ export default function MyPageTabs({
         id={listId}
         onKeyDown={handleKeyDown}
       >
-        {tabs.map((t) => {
-          const selected = t.value === value;
+        {tabs.map((tab) => {
+          const selected = tab.value === value;
           return (
             <button
-              key={t.value}
+              key={tab.value}
               role="tab"
               aria-selected={selected}
-              aria-controls={`${listId}-${t.value}-panel`}
-              id={`${listId}-${t.value}-tab`}
               tabIndex={selected ? 0 : -1}
               className={styles.tab({ selected })}
-              onClick={() => onChange(t.value)}
+              onClick={() => onChange(tab.value)}
             >
-              {t.label}
+              {tab.label}
             </button>
           );
         })}
       </div>
-
-      <div
-        role="tabpanel"
-        id={`${listId}-${value}-panel`}
-        aria-labelledby={`${listId}-${value}-tab`}
-      >
-        {children}
-      </div>
+      {children}
     </div>
   );
 }

@@ -22,7 +22,6 @@ type InputProps = {
 
 export default function Input({
   type = 'text',
-  label,
   placeholder = 'placeholder',
   value,
   onChange,
