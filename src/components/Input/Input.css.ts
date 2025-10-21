@@ -42,6 +42,9 @@ export const inputWrapper = style({
     '&[data-error="true"]::before': {
       opacity: 0,
     },
+    '&[data-variant="secondary"]::before': {
+      opacity: 0,
+    },
   },
 });
 
@@ -77,9 +80,19 @@ export const input = style({
   },
 });
 
+export const inputSecondary = style([
+  input,
+  {
+    padding: '12px 30px',
+    background: tokens.color.surface.raised,
+    color: 'tokens.color.text.body',
+    borderRadius: '50px',
+  },
+]);
+
 export const iconButton = style({
   position: 'absolute',
-  right: '16px',
+  right: '30px',
   display: 'flex',
   background: 'none',
   border: 'none',
@@ -110,39 +123,11 @@ export const iconButton = style({
   },
 });
 
-export const icon = style({
-  width: '24px',
-  height: '24px',
-  position: 'absolute',
-  right: '16px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  pointerEvents: 'none',
-  color: tokens.color.badge.filled.bg.gray,
-  borderRadius: '4px',
-  transition: 'all 0.2s ease',
-  zIndex: 2,
-
-  selectors: {
-    '&:hover': {
-      color: tokens.color.field.border.focus,
-    },
-    '&:active': {
-      color: tokens.color.field.border.focus,
-    },
-    '&:focus': {
-      outline: `2px solid ${tokens.color.field.border.focus}`,
-      outlineOffset: '2px',
-    },
-  },
-});
-
 export const searchIcon = style({
   width: '24px',
   height: '24px',
   position: 'absolute',
-  right: '16px',
+  right: '30px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
