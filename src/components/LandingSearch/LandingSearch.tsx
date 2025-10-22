@@ -1,11 +1,14 @@
 'use client';
 
 import Input from '@/components/Input/Input';
-import { UserResultCard, UserResultCardProps } from '@/components/UserResultCard/UserResultCard';
+import {
+  UserResultCard,
+  UserResultCardProps,
+} from '@/components/UserResultCard/UserResultCard';
 import { useEffect, useRef, useState } from 'react';
 import * as styles from './LandingSearch.css';
 
-type User = {
+export type User = {
   id: string;
   name: string;
   grade: UserResultCardProps['grade'];
@@ -13,10 +16,30 @@ type User = {
 };
 
 const mockUsers: User[] = [
-  { id: '1', name: '김배드민턴', grade: { local: 'A급', national: 'B급' }, gender: 'male' },
-  { id: '2', name: '이셔틀콕', grade: { local: 'B급', national: 'C급' }, gender: 'female' },
-  { id: '3', name: '박스매시김배드', grade: { national: 'A급' }, gender: 'male' },
-  { id: '4', name: '최네트샷', grade: { local: 'C급', national: 'D급' }, gender: 'female' },
+  {
+    id: '1',
+    name: '김배드민턴',
+    grade: { local: 'A급', national: 'B급' },
+    gender: 'male',
+  },
+  {
+    id: '2',
+    name: '이셔틀콕',
+    grade: { local: 'B급', national: 'C급' },
+    gender: 'female',
+  },
+  {
+    id: '3',
+    name: '박스매시김배드',
+    grade: { national: 'A급' },
+    gender: 'male',
+  },
+  {
+    id: '4',
+    name: '최네트샷',
+    grade: { local: 'C급', national: 'D급' },
+    gender: 'female',
+  },
   { id: '5', name: '정클리어', grade: { national: 'B급' }, gender: 'male' },
 ];
 
@@ -27,7 +50,7 @@ type LandingSearchProps = {
 
 export default function LandingSearch({
   onUserSelect,
-  placeholder = "누구의 전적이 궁금하신가요?"
+  placeholder = '누구의 전적이 궁금하신가요?',
 }: LandingSearchProps) {
   const inputWrapperRef = useRef<HTMLDivElement>(null);
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -40,14 +63,16 @@ export default function LandingSearch({
 
   useEffect(() => {
     if (inputWrapperRef.current) {
-      const searchBtn = inputWrapperRef.current.querySelector('button[type="button"]');
+      const searchBtn = inputWrapperRef.current.querySelector(
+        'button[type="button"]'
+      );
       if (searchBtn instanceof HTMLElement) {
         searchBtn.setAttribute('tabindex', '-1');
         searchBtn.setAttribute('aria-hidden', 'true');
         searchBtn.style.pointerEvents = 'none';
         searchBtn.style.cursor = 'default';
-        searchBtn.onmouseenter = e => e.preventDefault();
-        searchBtn.onmouseover = e => e.preventDefault();
+        searchBtn.onmouseenter = (e) => e.preventDefault();
+        searchBtn.onmouseover = (e) => e.preventDefault();
         const icon = searchBtn.querySelector('svg');
         if (icon instanceof SVGElement) {
           icon.setAttribute('tabindex', '-1');
@@ -79,7 +104,7 @@ export default function LandingSearch({
     }
 
     const filteredResults = mockUsers
-      .filter(user =>
+      .filter((user) =>
         user.name.toLowerCase().includes(searchKeyword.toLowerCase())
       )
       .sort((a, b) => {
@@ -95,7 +120,6 @@ export default function LandingSearch({
     setSelectedIndex(-1);
   }, [searchKeyword]);
 
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const container = document.querySelector(`.${styles.container}`);
@@ -109,8 +133,8 @@ export default function LandingSearch({
   }, []);
 
   const saveToHistory = (user: User) => {
-    setSearchHistory(prev => {
-      const filtered = prev.filter(item => item.id !== user.id);
+    setSearchHistory((prev) => {
+      const filtered = prev.filter((item) => item.id !== user.id);
       const updated = [user, ...filtered].slice(0, 10);
       try {
         localStorage.setItem('user-search-history', JSON.stringify(updated));
@@ -122,8 +146,8 @@ export default function LandingSearch({
   };
 
   const removeFromHistory = (userId: string) => {
-    setSearchHistory(prev => {
-      const updated = prev.filter(item => item.id !== userId);
+    setSearchHistory((prev) => {
+      const updated = prev.filter((item) => item.id !== userId);
       try {
         localStorage.setItem('user-search-history', JSON.stringify(updated));
       } catch (error) {
@@ -134,12 +158,13 @@ export default function LandingSearch({
   };
 
   useEffect(() => {
-  const cards = document.querySelectorAll('[data-search-item]');
-  cards.forEach(card => {
-    card.querySelectorAll('button, [href], input, select, textarea, [tabindex]')
-      .forEach(el => el.setAttribute('tabindex', '-1'));
-  });
-}, [searchResults]);
+    const cards = document.querySelectorAll('[data-search-item]');
+    cards.forEach((card) => {
+      card
+        .querySelectorAll('button, [href], input, select, textarea, [tabindex]')
+        .forEach((el) => el.setAttribute('tabindex', '-1'));
+    });
+  }, [searchResults]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
@@ -165,21 +190,36 @@ export default function LandingSearch({
     setIsFocused(true);
   };
 
-  const handleInputWrapperBlur = (e: React.FocusEvent) => {
-    if (searchResultsRef.current && searchResultsRef.current.contains(e.relatedTarget as Node)) {
-      return;
-    }
-    setTimeout(() => {
-      setIsFocused(false);
-      setSelectedIndex(-1);
-    }, 200);
+  const handleInputWrapperBlur = () => {
+    setIsFocused(false);
+    setSelectedIndex(-1);
   };
 
   const currentResults = searchKeyword.trim() ? searchResults : searchHistory;
-  const shouldShowResults = isFocused && (
-    (searchKeyword.trim() && searchResults.length > 0) ||
-    (!searchKeyword.trim() && searchHistory.length > 0)
-  );
+  const shouldShowResults =
+    isFocused &&
+    ((searchKeyword.trim() && searchResults.length > 0) ||
+      (!searchKeyword.trim() && searchHistory.length > 0));
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!shouldShowResults || currentResults.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedIndex((prev) =>
+        prev < currentResults.length - 1 ? prev + 1 : 0
+      );
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedIndex((prev) =>
+        prev > 0 ? prev - 1 : currentResults.length - 1
+      );
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      if (selectedIndex >= 0 && selectedIndex < currentResults.length) {
+        handleUserClick(currentResults[selectedIndex]);
+      }
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -195,6 +235,8 @@ export default function LandingSearch({
           value={searchKeyword}
           onChange={handleInputChange}
           onSearchClick={undefined}
+          onKeyDown={handleInputKeyDown}
+          ref={inputRef}
         />
       </div>
 
@@ -203,9 +245,9 @@ export default function LandingSearch({
           ref={searchResultsRef}
           className={styles.resultsContainer}
           role="listbox"
-          aria-label={searchKeyword.trim() ? "검색 결과" : "최근 검색한 사용자"}
+          aria-label={searchKeyword.trim() ? '검색 결과' : '최근 검색한 사용자'}
           onMouseLeave={() => setSelectedIndex(-1)}
-          onMouseDown={e => e.preventDefault()}
+          onMouseDown={(e) => e.preventDefault()}
           tabIndex={0}
         >
           {currentResults.map((user, index) => (
@@ -216,16 +258,21 @@ export default function LandingSearch({
               role="option"
               aria-selected={index === selectedIndex}
               data-search-item
-              tabIndex={0 }
+              tabIndex={-1} // ✅ 이거만 남기고 ref/focus 관련 코드 없음
+              onClick={() => handleUserClick(user)}
             >
               <UserResultCard
                 id={user.id}
                 name={user.name}
                 grade={user.grade}
                 gender={user.gender}
-                variant={searchKeyword.trim() ? "result" : "history"}
+                variant={searchKeyword.trim() ? 'result' : 'history'}
                 onClick={() => handleUserClick(user)}
-                onRemove={!searchKeyword.trim() ? () => removeFromHistory(user.id) : undefined}
+                onRemove={
+                  !searchKeyword.trim()
+                    ? () => removeFromHistory(user.id)
+                    : undefined
+                }
                 searchQuery={searchKeyword}
               />
             </div>
