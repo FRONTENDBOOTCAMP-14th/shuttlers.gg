@@ -57,12 +57,16 @@ globalStyle(`${modalContent} > h2`, {
 globalStyle(`${modalContent} > div`, {
   ...textStyle.heading.semibold,
   color: tokens.color.text.body,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: '100%',
 });
 
 export const modalButtons = recipe({
   base: {
     display: 'flex',
-    marginTop: 60,
+    marginTop: 50,
     width: '100%',
   },
 

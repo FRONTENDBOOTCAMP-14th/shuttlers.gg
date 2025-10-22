@@ -62,3 +62,16 @@ export const optionLink = style({
     borderRadius: 2,
   },
 });
+
+export const resetForm = style({
+  display: 'flex',
+  flexDirection: 'column',
+  rowGap: 30,
+  width: '90%',
+});
+
+globalStyle(`${resetForm} > p`, {
+  ...textStyle.heading.medium,
+  lineHeight: 1.5,
+  textAlign: 'center',
+});
