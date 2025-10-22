@@ -31,6 +31,15 @@ globalStyle('body', {
   },
 });
 
+globalStyle('main', {
+  height: 'calc(100vh - 56px)',
+  '@media': {
+    'screen and (min-width: 768px)': {
+      height: 'calc(100vh - 72px)',
+    },
+  },
+});
+
 globalStyle('a', {
   color: 'inherit',
   textDecoration: 'none',
