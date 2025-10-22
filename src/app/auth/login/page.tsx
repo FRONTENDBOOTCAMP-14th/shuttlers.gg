@@ -19,7 +19,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as styles from './page.css';
 
-type ResetFormValues = {
+type SendFormValues = {
   email: string;
 };
 
@@ -32,7 +32,7 @@ export default function LoginPage() {
     reValidateMode: 'onChange',
     defaultValues: { email: '', password: '' },
   });
-  const resetMethods = useForm<ResetFormValues>({
+  const sendMethods = useForm<SendFormValues>({
     mode: 'onSubmit',
     reValidateMode: 'onSubmit',
   });
@@ -58,7 +58,7 @@ export default function LoginPage() {
     router.push('/');
   };
 
-  const handleSendReset = async (formData: ResetFormValues) => {
+  const handleSendLink = async (formData: SendFormValues) => {
     const { data: userData, error: userError } = await supabase.auth.getUser(
       formData.email
     );
@@ -121,7 +121,7 @@ export default function LoginPage() {
         </div>
       </section>
 
-      <form onSubmit={resetMethods.handleSubmit(handleSendReset)}>
+      <form onSubmit={sendMethods.handleSubmit(handleSendLink)}>
         <Modal
           title={
             step === 1 ? '비밀번호를 잊으셨나요?🥲' : '이메일 전송 완료 ✅'
@@ -130,9 +130,7 @@ export default function LoginPage() {
           variant="alert"
           confirmText={step === 1 ? '링크 요청' : '확인'}
           onConfirm={
-            step === 1
-              ? resetMethods.handleSubmit(handleSendReset)
-              : modal.close
+            step === 1 ? sendMethods.handleSubmit(handleSendLink) : modal.close
           }
           onCancel={modal.close}
         >
@@ -145,7 +143,7 @@ export default function LoginPage() {
                   비밀번호 재설정 링크를 보내드립니다.
                 </p>
                 <Input
-                  {...resetMethods.register('email', emailRules)}
+                  {...sendMethods.register('email', emailRules)}
                   name="email"
                   placeholder="이메일 입력"
                 />
@@ -153,7 +151,7 @@ export default function LoginPage() {
             ) : (
               <>
                 <p>
-                  {resetMethods.watch('email') ?? '입력한 주소'}로 이메일을
+                  {sendMethods.watch('email') ?? '입력한 주소'}로 이메일을
                   보냈습니다.
                   <br />
                   도착한 링크를 클릭해 비밀번호를 재설정해 주세요!
