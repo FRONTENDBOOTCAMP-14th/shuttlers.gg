@@ -73,3 +73,9 @@ globalStyle('.sr-only', {
   whiteSpace: 'nowrap',
   border: 0,
 });
+
+globalStyle(':focus-visible', {
+  outline: `2px solid ${tokens.color.field.border.focus}`,
+  outlineOffset: 1,
+  borderRadius: 2,
+});
