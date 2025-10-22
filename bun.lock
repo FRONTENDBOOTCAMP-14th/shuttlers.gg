@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "shuttles-gg",
+      "name": "shuttles.gg",
       "dependencies": {
         "@heroicons/react": "^2.2.0",
         "@supabase/ssr": "^0.7.0",

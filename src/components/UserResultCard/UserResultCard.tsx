@@ -1,3 +1,4 @@
+// UserResultCard.tsx 수정
 'use client';
 
 import { Badge } from '@/components/Badge/Badge';
@@ -21,22 +22,21 @@ export type UserResultCardProps = {
   searchQuery?: string;
 };
 
+// ✅ formatGrade 함수 수정
 function formatGrade(grade: Grade | null) {
-  if (!grade) return null; 
+  if (!grade) return null;
 
-  const parts = []; 
+  const parts = [];
 
   if (grade.local) {
-    
     parts.push(`지역${grade.local}`);
   }
 
   if (grade.national) {
-   
     parts.push(`전국${grade.national}`);
   }
 
-  return parts.join(' '); 
+  return parts.join(' ');
 }
 
 function escapeRegExp(s: string) {
