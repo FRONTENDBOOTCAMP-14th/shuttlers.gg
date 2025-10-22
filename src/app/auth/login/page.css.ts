@@ -52,8 +52,13 @@ export const optionLink = style({
   flexDirection: 'row',
   alignItems: 'center',
   columnGap: 6,
+
   ':hover': {
-    ...textStyle.body.bold,
     color: tokens.color.action.hover.secondary,
+  },
+  ':focus-visible': {
+    outline: `2px solid ${tokens.color.field.border.focus}`,
+    outlineOffset: 1,
+    borderRadius: 2,
   },
 });

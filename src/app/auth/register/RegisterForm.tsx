@@ -76,7 +76,7 @@ export default function RegisterForm({
   const handleSendOtp = async () => {
     const { error } = await supabase.auth.signInWithOtp({
       email: watch('email'),
-      options: { shouldCreateUser: true },
+      options: { shouldCreateUser: false },
     });
 
     if (error) {
@@ -247,29 +247,30 @@ export default function RegisterForm({
               </ul>
             </div>
 
-            <label
-              htmlFor="agree"
+            <div
               style={{
                 ...textStyle.body.regular,
                 color: tokens.color.text.caption,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'flex-end',
-                columnGap: 10,
+                columnGap: 4,
                 marginTop: 16,
               }}
             >
               <input
                 type="checkbox"
                 id="agree"
+                name="agree"
                 checked={checked}
                 onChange={() => setChecked((prev) => !prev)}
+                className={styles.checkBox}
               />
               <button className={styles.optionLink} onClick={modal.open}>
                 개인정보 수집 및 이용 약관
               </button>
               에 동의합니다.
-            </label>
+            </div>
 
             <Button
               type="submit"

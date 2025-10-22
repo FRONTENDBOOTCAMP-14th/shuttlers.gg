@@ -9,6 +9,14 @@ export const registerForm = style({
   justifyContent: 'space-between',
 });
 
+export const checkBox = style({
+  ':focus-visible': {
+    outline: `2px solid ${tokens.color.field.border.focus}`,
+    outlineOffset: 1,
+    borderRadius: 2,
+  },
+});
+
 export const optionLink = style({
   ...textStyle.body.semibold,
   color: tokens.color.text.info,
@@ -16,7 +24,13 @@ export const optionLink = style({
   flexDirection: 'row',
   alignItems: 'center',
   columnGap: 6,
+  
   ':hover': {
     color: tokens.color.action.hover.secondary,
+  },
+  ':focus-visible': {
+    outline: `2px solid ${tokens.color.field.border.focus}`,
+    outlineOffset: 1,
+    borderRadius: 2,
   },
 });
