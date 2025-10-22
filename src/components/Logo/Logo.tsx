@@ -1,17 +1,19 @@
 import Link from 'next/link';
+import * as styles from './Logo.css';
 
 type LogoProps = {
-  size?: 'large' | 'small';
+  size?: 'large' | 'medium' | 'small';
 };
 
 const logoWidth = {
   large: 370,
+  medium: 280,
   small: 185,
 };
 
-export function Logo({ size = 'large' }: LogoProps) {
+export default function Logo({ size = 'large' }: LogoProps) {
   return (
-    <Link href="/" aria-label="홈으로 이동">
+    <Link href="/" aria-label="홈으로 이동" className={styles.logo}>
       <svg
         width={logoWidth[size]}
         height="auto"
