@@ -8,17 +8,15 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import * as styles from './LandingSearch.css';
 
-export type User = {
+export type Player = {
   id: string;
   name: string;
   grade: UserResultCardProps['grade'];
   gender: NonNullable<UserResultCardProps['gender']>;
 };
 
-const mockUsers: User[] = [];
-
 type LandingSearchProps = {
-  onUserSelect?: (user: User) => void;
+  onUserSelect?: (player: Player) => void;
   placeholder?: string;
 };
 
@@ -28,8 +26,8 @@ export default function LandingSearch({
 }: LandingSearchProps) {
   const inputWrapperRef = useRef<HTMLDivElement>(null);
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [searchResults, setSearchResults] = useState<User[]>([]);
-  const [searchHistory, setSearchHistory] = useState<User[]>([]);
+  const [searchResults, setSearchResults] = useState<Player[]>([]);
+  const [searchHistory, setSearchHistory] = useState<Player[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isFocused, setIsFocused] = useState(false);
   const searchResultsRef = useRef<HTMLDivElement>(null);
@@ -59,7 +57,7 @@ export default function LandingSearch({
   }, []);
 
   useEffect(() => {
-    const savedHistory = localStorage.getItem('user-search-history');
+    const savedHistory = localStorage.getItem('player-search-history');
     if (savedHistory) {
       try {
         const parsedHistory = JSON.parse(savedHistory);
@@ -71,26 +69,7 @@ export default function LandingSearch({
   }, []);
 
   useEffect(() => {
-    if (searchKeyword.trim() === '') {
-      setSearchResults([]);
-      setSelectedIndex(-1);
-      return;
-    }
-
-    const filteredResults = mockUsers
-      .filter((user) =>
-        user.name.toLowerCase().includes(searchKeyword.toLowerCase())
-      )
-      .sort((a, b) => {
-        const searchTerm = searchKeyword.toLowerCase();
-        const aStarts = a.name.toLowerCase().startsWith(searchTerm);
-        const bStarts = b.name.toLowerCase().startsWith(searchTerm);
-        if (aStarts && !bStarts) return -1;
-        if (!aStarts && bStarts) return 1;
-        return 0;
-      });
-
-    setSearchResults(filteredResults);
+    setSearchResults([]);
     setSelectedIndex(-1);
   }, [searchKeyword]);
 
@@ -106,12 +85,12 @@ export default function LandingSearch({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const saveToHistory = (user: User) => {
+  const saveToHistory = (player: Player) => {
     setSearchHistory((prev) => {
-      const filtered = prev.filter((item) => item.id !== user.id);
-      const updated = [user, ...filtered].slice(0, 10);
+      const filtered = prev.filter((item) => item.id !== player.id);
+      const updated = [player, ...filtered].slice(0, 10);
       try {
-        localStorage.setItem('user-search-history', JSON.stringify(updated));
+        localStorage.setItem('player-search-history', JSON.stringify(updated));
       } catch (error) {
         console.error('검색 이력 저장 오류:', error);
       }
@@ -119,11 +98,11 @@ export default function LandingSearch({
     });
   };
 
-  const removeFromHistory = (userId: string) => {
+  const removeFromHistory = (playerId: string) => {
     setSearchHistory((prev) => {
-      const updated = prev.filter((item) => item.id !== userId);
+      const updated = prev.filter((item) => item.id !== playerId);
       try {
-        localStorage.setItem('user-search-history', JSON.stringify(updated));
+        localStorage.setItem('player-search-history', JSON.stringify(updated));
       } catch (error) {
         console.error('검색 이력 삭제 오류:', error);
       }
@@ -145,14 +124,14 @@ export default function LandingSearch({
     setSelectedIndex(-1);
   };
 
-  const handleUserClick = (user: User) => {
-    saveToHistory(user);
+  const handlePlayerClick = (player: Player) => {
+    saveToHistory(player);
     setSearchKeyword('');
     setSearchResults([]);
     setSelectedIndex(-1);
     setIsFocused(false);
     if (onUserSelect) {
-      onUserSelect(user);
+      onUserSelect(player);
     }
   };
 
@@ -190,7 +169,7 @@ export default function LandingSearch({
       );
     } else if (e.key === 'Enter' || e.key === ' ') {
       if (selectedIndex >= 0 && selectedIndex < currentResults.length) {
-        handleUserClick(currentResults[selectedIndex]);
+        handlePlayerClick(currentResults[selectedIndex]);
       }
     }
   };
@@ -219,32 +198,32 @@ export default function LandingSearch({
           ref={searchResultsRef}
           className={styles.resultsContainer}
           role="listbox"
-          aria-label={searchKeyword.trim() ? '검색 결과' : '최근 검색한 사용자'}
+          aria-label={searchKeyword.trim() ? '검색 결과' : '최근 검색한 선수'}
           onMouseLeave={() => setSelectedIndex(-1)}
           onMouseDown={(e) => e.preventDefault()}
           tabIndex={0}
         >
-          {currentResults.map((user, index) => (
+          {currentResults.map((player, index) => (
             <div
-              key={`${searchKeyword.trim() ? 'search' : 'history'}-${user.id}`}
+              key={`${searchKeyword.trim() ? 'search' : 'history'}-${player.id}`}
               className={`${styles.resultItem} ${index === selectedIndex ? styles.selected : ''}`}
               onMouseEnter={() => handleMouseEnter(index)}
               role="option"
               aria-selected={index === selectedIndex}
               data-search-item
               tabIndex={-1}
-              onClick={() => handleUserClick(user)}
+              onClick={() => handlePlayerClick(player)}
             >
               <UserResultCard
-                id={user.id}
-                name={user.name}
-                grade={user.grade}
-                gender={user.gender}
+                id={player.id}
+                name={player.name}
+                grade={player.grade}
+                gender={player.gender}
                 variant={searchKeyword.trim() ? 'result' : 'history'}
-                onClick={() => handleUserClick(user)}
+                onClick={() => handlePlayerClick(player)}
                 onRemove={
                   !searchKeyword.trim()
-                    ? () => removeFromHistory(user.id)
+                    ? () => removeFromHistory(player.id)
                     : undefined
                 }
                 searchQuery={searchKeyword}
