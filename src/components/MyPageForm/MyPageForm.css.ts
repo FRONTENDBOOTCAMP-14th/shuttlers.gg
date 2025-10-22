@@ -2,24 +2,6 @@ import { tokens } from '@/styles/tokens.css';
 import { textStyle } from '@/styles/typography.css';
 import { style } from '@vanilla-extract/css';
 
-export const MyPage = style({
-  margin: 'auto',
-  maxWidth: 1080,
-  width: '100%',
-  marginTop: 80,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 50,
-});
-
-export const MyPageHeader = style({
-  //   border: '1px solid',
-});
-
-export const HeaderTitle = style([textStyle.title.bold, {}]);
-
-export const HeaderDescription = style([textStyle.subtitle.semibold]);
-
 export const Form = style({
   borderRadius: '0px 20px 20px 20px',
   background: tokens.color.surface.raised,
@@ -64,3 +46,7 @@ export const GradeButtonGroup = style({
   gridTemplateColumns: 'repeat(5, minmax(0, 1fr))',
   gap: 12,
 });
+
+export const errorText = style({});
+
+export const helperText = style({});

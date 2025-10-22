@@ -4,10 +4,12 @@ import { textStyle } from '../../styles/typography.css';
 import { Badge } from '../Badge/Badge';
 import * as styles from './UserCard.css';
 
+type Gender = 'male' | 'female' | 'other';
+
 type UserCardProps = {
   variant?: 'public' | 'personal';
   name: string;
-  gender: 'male' | 'female';
+  gender: Gender | null;
   grade?: { local?: string; national: string };
   email: string;
   role?: 'amateur' | 'pro';
@@ -26,7 +28,14 @@ export default function UserCard({
   return (
     <section className={styles.userCard({ variant })}>
       <div>
-        <h3 style={{ ...textStyle.subtitle.bold, marginBottom: 12 }}>{name}</h3>
+        <div
+          style={{
+            ...textStyle.subtitle.bold,
+            marginBottom: 12,
+          }}
+        >
+          {name}
+        </div>
         <div>
           {variant === 'public' && (
             <div
