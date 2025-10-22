@@ -258,7 +258,7 @@ export default function LandingSearch({
               role="option"
               aria-selected={index === selectedIndex}
               data-search-item
-              tabIndex={-1} // ✅ 이거만 남기고 ref/focus 관련 코드 없음
+              tabIndex={-1}
               onClick={() => handleUserClick(user)}
             >
               <UserResultCard

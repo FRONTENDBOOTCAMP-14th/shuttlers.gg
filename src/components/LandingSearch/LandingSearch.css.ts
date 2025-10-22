@@ -47,6 +47,6 @@ export const resultItem = style({
 
 export const selected = style({
   backgroundColor: tokens.color.bg,
-  outline: 'none', // 기본 포커스 제거
+  outline: 'none',
   transition: 'background-color 0.15s ease',
 });
