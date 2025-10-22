@@ -1,5 +1,5 @@
 import Input from '@/components/Input/Input';
-import { Logo } from '@/components/Logo';
+import Logo from '@/components/Logo/Logo';
 import { Users } from '@/libs/supabase/client';
 import {
   ArrowLeftIcon,
@@ -19,6 +19,7 @@ type Menu = {
   label: string;
   icon?: ReactNode;
   path: string;
+  variant?: 'primary' | 'secondary';
 };
 
 type NavBarProps = {
@@ -83,7 +84,7 @@ export default function NavBar({
             </button>
 
             <div className={styles.navMenu({ isOpen })}>
-              <div>{showSearch && <Input type="search" />}</div>
+              <div>{showSearch && <Input name="search" type="search" />}</div>
 
               {navItems && (
                 <ul

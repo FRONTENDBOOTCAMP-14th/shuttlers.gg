@@ -183,6 +183,7 @@ export default function LandingSearch({
         onBlur={handleInputWrapperBlur}
       >
         <Input
+          name="landing-search"
           type="search"
           placeholder={placeholder}
           value={searchKeyword}

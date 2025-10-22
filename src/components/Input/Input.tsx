@@ -7,10 +7,12 @@ import {
 } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
 import React, { forwardRef, useRef, useState } from 'react';
+import { UseFormRegisterReturn } from 'react-hook-form';
 import * as styles from './Input.css';
 
 type InputProps = {
-  type?: 'text' | 'password' | 'search';
+  name: string;
+  type?: 'text' | 'email' | 'password' | 'search';
   label?: string;
   placeholder?: string;
   value?: string;
@@ -18,12 +20,14 @@ type InputProps = {
   error?: boolean;
   disabled?: boolean;
   onSearchClick?: () => void;
+  register?: UseFormRegisterReturn;
   variant?: 'primary' | 'secondary';
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 };
 
 const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   {
+    name = '',
     type = 'text',
     label,
     placeholder = 'placeholder',
@@ -32,6 +36,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     error = false,
     disabled = false,
     onSearchClick,
+    register,
     variant = 'primary',
     onKeyDown,
   },
@@ -110,69 +115,77 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   };
 
   return (
-    <div
-      className={clsx(styles.inputWrapper)}
-      data-error={error}
-      data-input-focused={isInputFocused}
-      data-variant={variant}
-    >
-      <input
-        ref={ref}
-        className={clsx(
-          type === 'search'
-            ? variant === 'secondary'
-              ? styles.inputSecondary
+    <div className={styles.inputField}>
+      {label && <label htmlFor={name}>{label}</label>}
+
+      <div
+        className={clsx(styles.inputWrapper)}
+        data-error={error}
+        data-input-focused={isInputFocused}
+        data-variant={variant}
+      >
+        <input
+          id={name}
+          name={name}
+          ref={register ? undefined : ref}
+          className={clsx(
+            type === 'search'
+              ? variant === 'secondary'
+                ? styles.inputSecondary
+                : styles.input
               : styles.input
-            : styles.input
-        )}
-        type={type === 'password' ? (showPassword ? 'text' : 'password') : type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        onFocus={() => setIsInputFocused(true)}
-        onBlur={() => setIsInputFocused(false)}
-        aria-invalid={error}
-        disabled={disabled}
-        onKeyDown={onKeyDown}
-      />
-
-      {type === 'password' && (
-        <button
-          ref={iconButtonRef}
-          type="button"
-          className={styles.iconButton}
-          onClick={handleTogglePassword}
-          onFocus={() => setIsInputFocused(false)}
-          onKeyDown={(e) => handleKeyDown(e, handleTogglePassword)}
-          onMouseDown={handleMouseDown}
-          aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
-          tabIndex={disabled ? -1 : 0}
-          disabled={disabled}
-        >
-          {showPassword ? (
-            <EyeSlashIcon style={{ width: '24px', height: '24px' }} />
-          ) : (
-            <EyeIcon style={{ width: '24px', height: '24px' }} />
           )}
-        </button>
-      )}
-
-      {type === 'search' && (
-        <button
-          ref={searchButtonRef}
-          type="button"
-          className={styles.searchIcon}
-          onClick={handleSearchClick}
-          onFocus={() => setIsInputFocused(false)}
-          onKeyDown={(e) => handleKeyDown(e, handleSearchClick)}
-          onMouseDown={handleMouseDown}
-          aria-label="검색"
-          tabIndex={disabled ? -1 : 0}
+          type={
+            type === 'password' ? (showPassword ? 'text' : 'password') : type
+          }
+          placeholder={placeholder}
+          value={register ? undefined : value}
+          onChange={register ? undefined : onChange}
+          onFocus={() => setIsInputFocused(true)}
+          onBlur={() => setIsInputFocused(false)}
+          aria-invalid={error}
           disabled={disabled}
-        >
-          <MagnifyingGlassIcon style={{ width: 20, height: 20 }} />
-        </button>
-      )}
+          onKeyDown={onKeyDown}
+          {...((register as any) ?? {})}
+        />
+
+        {type === 'password' && (
+          <button
+            ref={iconButtonRef}
+            type="button"
+            className={styles.iconButton}
+            onClick={handleTogglePassword}
+            onFocus={() => setIsInputFocused(false)}
+            onKeyDown={(e) => handleKeyDown(e, handleTogglePassword)}
+            onMouseDown={handleMouseDown}
+            aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+            tabIndex={disabled ? -1 : 0}
+            disabled={disabled}
+          >
+            {showPassword ? (
+              <EyeSlashIcon style={{ width: '24px', height: '24px' }} />
+            ) : (
+              <EyeIcon style={{ width: '24px', height: '24px' }} />
+            )}
+          </button>
+        )}
+
+        {type === 'search' && (
+          <button
+            type="button"
+            className={styles.searchIcon}
+            onClick={handleSearchClick}
+            onFocus={() => setIsInputFocused(false)}
+            onKeyDown={(e) => handleKeyDown(e, handleSearchClick)}
+            onMouseDown={handleMouseDown}
+            aria-label="검색"
+            tabIndex={disabled ? -1 : 0}
+            disabled={disabled}
+          >
+            <MagnifyingGlassIcon style={{ width: 20, height: 20 }} />
+          </button>
+        )}
+      </div>
     </div>
   );
 });

@@ -1,3 +1,6 @@
+// Badge.tsx
+'use client';
+import { useTheme } from 'next-themes';
 import type { ReactNode } from 'react';
 import * as styles from './Badge.css.ts';
 
@@ -16,31 +19,44 @@ export type BadgeProps =
   | ({ variant: 'outline'; color?: OutlineColor } & BaseProps);
 
 export function Badge(props: BadgeProps) {
-  const { text = '태그', icon, className, active } = props;
+  const { resolvedTheme } = useTheme();
+  const mode = resolvedTheme === 'dark' ? 'dark' : 'light';
 
-  const variant = props.variant ?? 'filled';
-  const color =
-    ('color' in props && props.color) ??
-    (variant === 'filled' ? 'primary' : 'primary');
+  const { text = '태그', icon, className } = props;
+  const isOutline = props.variant === 'outline';
+  const variant = isOutline ? 'outline' : 'filled';
 
-  const variantClass =
-    variant === 'filled'
-      ? styles.filled[color as FilledColor]
-      : styles.outline[color as OutlineColor];
+  const color = isOutline
+    ? (props.color ?? 'primary')
+    : ((('color' in props ? props.color : undefined) as FilledColor) ??
+      'primary');
 
-  const textClass =
-    variant === 'outline' && color === 'primary'
-      ? styles.gradientText
+  const variantClass = isOutline
+    ? styles.outline[color as OutlineColor]
+    : styles.filled[color as FilledColor];
+
+  const wantGradientText = isOutline && color === 'primary' && mode === 'light';
+
+  const textClass = wantGradientText ? styles.gradientText : styles.textSolid;
+
+  const outlineBorderModeClass =
+    isOutline && color === 'primary'
+      ? styles.outlinePrimaryMode[mode]
       : undefined;
 
   return (
     <span
-      className={[styles.badgeBase, variantClass, className]
+      className={[
+        styles.badgeBase,
+        variantClass,
+        outlineBorderModeClass,
+        className,
+      ]
         .filter(Boolean)
         .join(' ')}
     >
       {icon ? (
-        <span aria-hidden style={{ lineHeight: 1 }}>
+        <span aria-hidden className={styles.iconStyle}>
           {icon}
         </span>
       ) : null}
