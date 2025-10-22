@@ -130,41 +130,42 @@ export function MonthlyCalendar({
           </button>
         </div>
       </div>
-
-      <div className={styles.grid}>
-        {WEEK_LABELS.map((label) => (
-          <div key={label} className={styles.weekday}>
-            {label}
-          </div>
-        ))}
-
-        {cells.map((date, index) => {
-          const key = date ? toKey(date) : `empty-${index}`;
-          const isToday = date ? key === todayKey : false;
-          const hasEvent = date ? isInRanges(date, events) : false;
-          const isSelected = !!date && selectedKey === key;
-
-          return (
-            <div
-              key={key}
-              className={styles.cell}
-              onClick={() => setDate(date)}
-              data-selected={isSelected || undefined}
-            >
-              {date && (
-                <>
-                  <div
-                    className={styles.dayNumber}
-                    data-today={isToday || undefined}
-                  >
-                    {date.getDate()}
-                  </div>
-                  {hasEvent && <div className={styles.eventBar} />}
-                </>
-              )}
+      <div className={styles.gridWrap}>
+        <div className={styles.grid}>
+          {WEEK_LABELS.map((label) => (
+            <div key={label} className={styles.weekday}>
+              {label}
             </div>
-          );
-        })}
+          ))}
+
+          {cells.map((date, index) => {
+            const key = date ? toKey(date) : `empty-${index}`;
+            const isToday = date ? key === todayKey : false;
+            const hasEvent = date ? isInRanges(date, events) : false;
+            const isSelected = !!date && selectedKey === key;
+
+            return (
+              <div
+                key={key}
+                className={styles.cell}
+                onClick={() => setDate(date)}
+                data-selected={isSelected || undefined}
+              >
+                {date && (
+                  <>
+                    <div
+                      className={styles.dayNumber}
+                      data-today={isToday || undefined}
+                    >
+                      {date.getDate()}
+                    </div>
+                    {hasEvent && <div className={styles.eventBar} />}
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
