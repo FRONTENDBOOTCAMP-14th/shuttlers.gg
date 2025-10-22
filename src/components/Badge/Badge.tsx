@@ -1,0 +1,66 @@
+// Badge.tsx
+'use client';
+import { useTheme } from 'next-themes';
+import type { ReactNode } from 'react';
+import * as styles from './Badge.css.ts';
+
+type FilledColor = 'primary' | 'dark' | 'white';
+type OutlineColor = 'primary' | 'white';
+
+type BaseProps = {
+  text?: string;
+  icon?: ReactNode;
+  className?: string;
+  active?: boolean;
+};
+
+export type BadgeProps =
+  | ({ variant?: 'filled'; color?: FilledColor } & BaseProps)
+  | ({ variant: 'outline'; color?: OutlineColor } & BaseProps);
+
+export function Badge(props: BadgeProps) {
+  const { resolvedTheme } = useTheme();
+  const mode = resolvedTheme === 'dark' ? 'dark' : 'light';
+
+  const { text = '태그', icon, className } = props;
+  const isOutline = props.variant === 'outline';
+  const variant = isOutline ? 'outline' : 'filled';
+
+  const color = isOutline
+    ? (props.color ?? 'primary')
+    : ((('color' in props ? props.color : undefined) as FilledColor) ??
+      'primary');
+
+  const variantClass = isOutline
+    ? styles.outline[color as OutlineColor]
+    : styles.filled[color as FilledColor];
+
+  const wantGradientText = isOutline && color === 'primary' && mode === 'light';
+
+  const textClass = wantGradientText ? styles.gradientText : styles.textSolid;
+
+  const outlineBorderModeClass =
+    isOutline && color === 'primary'
+      ? styles.outlinePrimaryMode[mode]
+      : undefined;
+
+  return (
+    <span
+      className={[
+        styles.badgeBase,
+        variantClass,
+        outlineBorderModeClass,
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
+      {icon ? (
+        <span aria-hidden className={styles.iconStyle}>
+          {icon}
+        </span>
+      ) : null}
+      <span className={textClass}>{text}</span>
+    </span>
+  );
+}

@@ -1,6 +1,6 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
 
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
@@ -16,7 +16,9 @@
     "typescriptreact"
   ],
 
-  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.importModuleSpecifierEnding": "auto",
   "typescript.preferences.includePackageJsonAutoImports": "auto",
 
   "files.associations": {
@@ -43,5 +45,13 @@
   "path-intellisense.absolutePathToWorkspace": true,
   "path-intellisense.ignoreTsConfigBaseUrl": false,
 
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/node_modules": false
+  }
 }
