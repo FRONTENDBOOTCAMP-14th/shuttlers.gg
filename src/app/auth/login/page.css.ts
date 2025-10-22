@@ -6,16 +6,10 @@ export const loginPage = style({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  height: 'calc(100vh - 56px)',
+  height: '100%',
   width: '100%',
   maxWidth: 700,
   marginInline: 'auto',
-
-  '@media': {
-    'screen and (min-width: 768px)': {
-      height: 'calc(100vh - 72px)',
-    },
-  },
 });
 
 globalStyle(`${loginPage} > section`, {
@@ -68,6 +62,7 @@ export const resetForm = style({
   flexDirection: 'column',
   rowGap: 30,
   width: '90%',
+  marginInline: 'auto',
 });
 
 globalStyle(`${resetForm} > p`, {
