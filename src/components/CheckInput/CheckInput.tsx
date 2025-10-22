@@ -34,7 +34,7 @@ export default function CheckInput({
   name = '',
   type = 'text',
   label,
-  placeholder = 'placeholder',
+  placeholder,
   value,
   register,
   status = 'idle',

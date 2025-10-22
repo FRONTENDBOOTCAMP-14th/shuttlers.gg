@@ -131,6 +131,7 @@ export default function RegisterForm({
                 name="code"
                 type="text"
                 label="인증코드"
+                placeholder="6자리 인증 코드"
                 register={register('verify_code', { required: true })}
                 status={status}
                 buttonType="verify"
