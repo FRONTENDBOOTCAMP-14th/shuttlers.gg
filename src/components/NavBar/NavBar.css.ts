@@ -46,6 +46,11 @@ export const navContainer = recipe({
       'screen and (min-width: 768px)': {
         columnGap: 24,
       },
+      // '&:focus-visible': {
+      //   outline: `2px solid ${tokens.color.text.info}`,
+      //   outlineOffset: '2px',
+      //   borderRadius: '4px',
+      // },
     },
   },
   variants: {

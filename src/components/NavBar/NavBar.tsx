@@ -19,6 +19,7 @@ type Menu = {
   label: string;
   icon?: ReactNode;
   path: string;
+  variant?: 'primary' | 'secondary';
 };
 
 type NavBarProps = {
