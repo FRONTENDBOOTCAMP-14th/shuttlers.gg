@@ -24,38 +24,19 @@ export type UserResultCardProps = {
 
 // ✅ formatGrade 함수 수정
 function formatGrade(grade: Grade | null) {
-<<<<<<< HEAD
-  if (!grade) return null; // 1. null 체크
+  if (!grade) return null;
 
-  const parts = []; // 2. 빈 배열 생성
-
-  if (grade.local) {
-    // 3. local이 있으면 추가
-=======
-  if (!grade) return null; 
-
-  const parts = []; 
+  const parts = [];
 
   if (grade.local) {
-    
->>>>>>> develop
     parts.push(`지역${grade.local}`);
   }
 
   if (grade.national) {
-<<<<<<< HEAD
-    // 4. national이 있으면 추가
     parts.push(`전국${grade.national}`);
   }
 
-  return parts.join(' '); // 5. 배열을 공백으로 연결
-=======
-   
-    parts.push(`전국${grade.national}`);
-  }
-
-  return parts.join(' '); 
->>>>>>> develop
+  return parts.join(' ');
 }
 
 function escapeRegExp(s: string) {
