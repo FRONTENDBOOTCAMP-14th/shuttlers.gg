@@ -6,8 +6,8 @@ import {
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
-import { UseFormRegisterReturn } from 'react-hook-form';
 import React, { forwardRef, useRef, useState } from 'react';
+import { UseFormRegisterReturn } from 'react-hook-form';
 import * as styles from './Input.css';
 
 type InputProps = {
@@ -127,7 +127,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         <input
           id={name}
           name={name}
-          ref={register ? undefined : inputRef}
+          ref={register ? undefined : ref}
           className={clsx(
             type === 'search'
               ? variant === 'secondary'
@@ -145,8 +145,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           onBlur={() => setIsInputFocused(false)}
           aria-invalid={error}
           disabled={disabled}
-        onKeyDown={onKeyDown}
-          disabled={disabled}
+          onKeyDown={onKeyDown}
           {...((register as any) ?? {})}
         />
 
