@@ -65,7 +65,7 @@ export const resetForm = style({
   marginInline: 'auto',
 });
 
-globalStyle(`${resetForm} > p`, {
+globalStyle(`${resetForm} > *`, {
   ...textStyle.heading.medium,
   lineHeight: 1.5,
   textAlign: 'center',
