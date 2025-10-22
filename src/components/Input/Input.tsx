@@ -6,8 +6,8 @@ import {
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
-import { useRef, useState } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
+import React, { forwardRef, useRef, useState } from 'react';
 import * as styles from './Input.css';
 
 type InputProps = {
@@ -22,45 +22,30 @@ type InputProps = {
   onSearchClick?: () => void;
   register?: UseFormRegisterReturn;
   variant?: 'primary' | 'secondary';
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 };
 
-export default function Input({
-  name = '',
-  type = 'text',
-  label,
-  placeholder = 'placeholder',
-  value,
-  onChange,
-  error = false,
-  disabled = false,
-  onSearchClick,
-  register,
-  variant = 'primary',
-}: InputProps) {
+const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+  {
+    name = '',
+    type = 'text',
+    label,
+    placeholder = 'placeholder',
+    value,
+    onChange,
+    error = false,
+    disabled = false,
+    onSearchClick,
+    register,
+    variant = 'primary',
+    onKeyDown,
+  },
+  ref
+) {
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
   const iconButtonRef = useRef<HTMLButtonElement>(null);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
-
-  const handleInputFocus = () => {
-    setIsInputFocused(true);
-  };
-
-  const handleInputBlur = () => {
-    setIsInputFocused(false);
-  };
-
-  const handleIconFocus = () => {
-    setIsInputFocused(false);
-  };
-
-  const getInputType = () => {
-    if (type === 'password') {
-      return showPassword ? 'text' : 'password';
-    }
-    return type;
-  };
 
   const handleTogglePassword = (
     e:
@@ -70,7 +55,6 @@ export default function Input({
     e.preventDefault();
     e.stopPropagation();
 
-    const currentCursorPosition = inputRef.current?.selectionStart || 0;
     const wasKeyboardActivated = e.type === 'keydown' || e.detail === 0;
 
     setShowPassword((prev) => !prev);
@@ -78,12 +62,8 @@ export default function Input({
     setTimeout(() => {
       if (wasKeyboardActivated && iconButtonRef.current) {
         iconButtonRef.current.focus();
-      } else if (inputRef.current) {
-        inputRef.current.focus();
-        inputRef.current.setSelectionRange(
-          currentCursorPosition,
-          currentCursorPosition
-        );
+      } else if (ref && typeof ref !== 'function' && ref?.current) {
+        ref.current.focus();
       }
     }, 0);
   };
@@ -101,21 +81,21 @@ export default function Input({
     if (onSearchClick) {
       onSearchClick();
     } else {
-      if (inputRef.current) {
+      if (ref && typeof ref !== 'function' && ref?.current) {
         const enterEvent = new KeyboardEvent('keydown', {
           key: 'Enter',
           code: 'Enter',
           bubbles: true,
         });
-        inputRef.current.dispatchEvent(enterEvent);
+        ref.current.dispatchEvent(enterEvent);
       }
     }
 
     setTimeout(() => {
       if (wasKeyboardActivated && searchButtonRef.current) {
         searchButtonRef.current.focus();
-      } else if (inputRef.current) {
-        inputRef.current.focus();
+      } else if (ref && typeof ref !== 'function' && ref?.current) {
+        ref.current.focus();
       }
     }, 0);
   };
@@ -165,6 +145,8 @@ export default function Input({
           onBlur={() => setIsInputFocused(false)}
           aria-invalid={error}
           disabled={disabled}
+        onKeyDown={onKeyDown}
+          disabled={disabled}
           {...((register as any) ?? {})}
         />
 
@@ -207,4 +189,6 @@ export default function Input({
       </div>
     </div>
   );
-}
+});
+
+export default Input;
