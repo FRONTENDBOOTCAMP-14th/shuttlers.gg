@@ -84,8 +84,6 @@ export default function NavBar({
             </button>
 
             <div className={styles.navMenu({ isOpen })}>
-              <div>{showSearch && <Input name="search" type="search" />}</div>
-
               {navItems && (
                 <ul
                   style={{
@@ -106,6 +104,15 @@ export default function NavBar({
                     );
                   })}
                 </ul>
+              )}
+
+              {showSearch && (
+                <Input
+                  type="search"
+                  name="search-player"
+                  placeholder="전적 검색"
+                  variant="secondary"
+                />
               )}
             </div>
 

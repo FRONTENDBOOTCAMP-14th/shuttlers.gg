@@ -76,7 +76,7 @@ export const navMenu = recipe({
       'screen and (min-width: 768px)': {
         display: 'flex',
         flexDirection: 'row',
-        columnGap: 16,
+        columnGap: 30,
         maxWidth: 999,
         background: 'none',
       },
