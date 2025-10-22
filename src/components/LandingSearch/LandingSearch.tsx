@@ -15,33 +15,7 @@ export type User = {
   gender: NonNullable<UserResultCardProps['gender']>;
 };
 
-const mockUsers: User[] = [
-  {
-    id: '1',
-    name: '김배드민턴',
-    grade: { local: 'A급', national: 'B급' },
-    gender: 'male',
-  },
-  {
-    id: '2',
-    name: '이셔틀콕',
-    grade: { local: 'B급', national: 'C급' },
-    gender: 'female',
-  },
-  {
-    id: '3',
-    name: '박스매시김배드',
-    grade: { national: 'A급' },
-    gender: 'male',
-  },
-  {
-    id: '4',
-    name: '최네트샷',
-    grade: { local: 'C급', national: 'D급' },
-    gender: 'female',
-  },
-  { id: '5', name: '정클리어', grade: { national: 'B급' }, gender: 'male' },
-];
+const mockUsers: User[] = [];
 
 type LandingSearchProps = {
   onUserSelect?: (user: User) => void;
