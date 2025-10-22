@@ -14,6 +14,7 @@ export const navBar = style({
   maxWidth: 1080,
   background: tokens.color.bg,
   transition: 'background 0.2s ease',
+  zIndex: 9999,
 
   '@media': {
     'screen and (min-width: 768px)': {

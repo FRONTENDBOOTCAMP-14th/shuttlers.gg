@@ -66,7 +66,12 @@ export default function NavBar({
               className={styles.navItem({})}
             >
               <div
-                style={{ display: 'flex', alignItems: 'center', columnGap: 8 }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  columnGap: 8,
+                  lineHeight: 1,
+                }}
               >
                 <ArrowLeftIcon width={24} aria-hidden />
                 이전으로
