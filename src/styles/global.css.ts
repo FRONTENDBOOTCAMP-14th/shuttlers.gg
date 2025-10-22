@@ -31,12 +31,6 @@ globalStyle('body', {
   },
 });
 
-globalStyle('#root, main', {
-  minHeight: '100vh',
-  display: 'flex',
-  flexDirection: 'column',
-});
-
 globalStyle('a', {
   color: 'inherit',
   textDecoration: 'none',

@@ -13,6 +13,9 @@ export const userResultCard = style({
     '&:hover': {
       background: tokens.color.surface.raised,
     },
+    '&:focus': {
+      outline: 'none',
+    },
   },
 });
 
