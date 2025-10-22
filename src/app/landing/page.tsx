@@ -1,7 +1,7 @@
 'use client';
 
 import LandingSearch from '@/components/LandingSearch/LandingSearch';
-import { Logo } from '@/components/Logo';
+import Logo from '@/components/Logo/Logo';
 import * as styles from './page.css';
 
 export default function HomePage() {

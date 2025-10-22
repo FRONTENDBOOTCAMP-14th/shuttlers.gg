@@ -8,6 +8,13 @@ export const mainSection = style({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
+  height: 'calc(100vh - 56px)',
+
+  '@media': {
+    'screen and (min-width: 768px)': {
+      height: 'calc(100vh - 72px)',
+    },
+  },
 });
 
 export const logoContainer = style({
