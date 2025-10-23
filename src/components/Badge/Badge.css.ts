@@ -28,6 +28,11 @@ export const gradientText = style({
   WebkitTextFillColor: 'transparent',
 });
 
+export const textSolid = style({
+  color: 'currentColor',
+  WebkitTextFillColor: 'currentColor',
+});
+
 export const iconStyle = style({
   display: 'inline-flex',
   alignItems: 'center',
@@ -51,12 +56,19 @@ export const filled = styleVariants({
 
 export const outline = styleVariants({
   primary: {
-    background: `linear-gradient(white, white) padding-box, ${tokens.color.badge.outline.border.brand} border-box`,
-    backgroundOrigin: 'border-box',
+    background: `linear-gradient(${tokens.color.surface.base}, ${tokens.color.surface.base}) padding-box, ${tokens.color.badge.outline.border.brand} border-box`,
     color: tokens.color.badge.outline.text.brand,
   },
   white: {
     border: `1px solid ${tokens.color.badge.outline.border.white}`,
     color: tokens.color.badge.outline.text.white,
+  },
+});
+
+export const outlinePrimaryMode = styleVariants({
+  light: {},
+  dark: {
+    background: 'transparent',
+    border: `1px solid ${tokens.color.badge.outline.text.brand}`,
   },
 });

@@ -1,5 +1,5 @@
 import { tokens } from '@/styles/tokens.css';
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { textStyle } from '../../styles/typography.css';
 
 export const inputField = style({
@@ -11,9 +11,20 @@ export const inputField = style({
   width: '100%',
 });
 
+export const checkInput = style({
+  display: 'flex',
+  flexDirection: 'row',
+  columnGap: 12,
+});
+
+globalStyle(`${checkInput} > button`, {
+  width: '200px',
+});
+
 export const inputWrapper = style({
   position: 'relative',
   display: 'flex',
+  width: '100%',
   alignItems: 'center',
   selectors: {
     '&::before': {
@@ -40,9 +51,6 @@ export const inputWrapper = style({
     },
 
     '&[data-error="true"]::before': {
-      opacity: 0,
-    },
-    '&[data-variant="secondary"]::before': {
       opacity: 0,
     },
   },
@@ -76,78 +84,6 @@ export const input = style({
     },
     '&:not(:focus)': {
       border: '2px solid transparent',
-    },
-  },
-});
-
-export const inputSecondary = style([
-  input,
-  {
-    padding: '12px 30px',
-    background: tokens.color.surface.raised,
-    color: 'tokens.color.text.body',
-    borderRadius: '50px',
-  },
-]);
-
-export const iconButton = style({
-  position: 'absolute',
-  right: '30px',
-  display: 'flex',
-  background: 'none',
-  border: 'none',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: '24px',
-  width: '24px',
-  cursor: 'pointer',
-  zIndex: 2,
-  color: tokens.color.badge.filled.bg.gray,
-  padding: 0,
-  borderRadius: '4px',
-  selectors: {
-    '&:hover:not(:disabled)': {
-      color: tokens.color.field.border.focus,
-    },
-    '&:disabled': {
-      color: tokens.color.action.bg.disabled,
-      cursor: 'not-allowed',
-    },
-    '&:active': {
-      color: tokens.color.field.border.focus,
-    },
-    '&:focus': {
-      outline: `2px solid ${tokens.color.field.border.focus}`,
-      outlineOffset: '2px',
-    },
-  },
-});
-
-export const searchIcon = style({
-  width: '24px',
-  height: '24px',
-  position: 'absolute',
-  right: '30px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: tokens.color.badge.filled.bg.gray,
-  borderRadius: '4px',
-  padding: '2px',
-  cursor: 'pointer',
-  transition: 'all 0.2s ease',
-  zIndex: 2,
-
-  selectors: {
-    '&:hover': {
-      color: tokens.color.field.border.focus,
-    },
-    '&:active': {
-      color: tokens.color.field.border.focus,
-    },
-    '&:focus': {
-      outline: `2px solid ${tokens.color.field.border.focus}`,
-      outlineOffset: '2px',
     },
   },
 });

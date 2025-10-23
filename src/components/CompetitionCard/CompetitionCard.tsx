@@ -33,7 +33,12 @@ export function CompetitionCard({
 }: CompetitionCardProps) {
   return (
     <Link href={`/tournaments/${tnmtId}`} className={styles.competitionCard}>
-      <div className={styles.competitionCardHeader}>
+      <div
+        className={[
+          styles.competitionCardHeader,
+          styles.competitionCardHeaderNarrow,
+        ].join(' ')}
+      >
         <span className={styles.competitionCardTitle}>{title}</span>
         <span className={styles.competitionCardDate}>{date}</span>
       </div>

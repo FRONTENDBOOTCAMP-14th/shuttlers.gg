@@ -9,9 +9,11 @@ type EventRange = { start: string; end: string };
 type Props = {
   year: number;
   month: number;
+  selectedDate: Date | null;
   events?: EventRange[];
   setMonth: React.Dispatch<React.SetStateAction<number>>;
   setYear: React.Dispatch<React.SetStateAction<number>>;
+  setDate: React.Dispatch<React.SetStateAction<Date | null>>;
 };
 
 const WEEK_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
@@ -67,9 +69,11 @@ function generateCalendarCells(
 export function MonthlyCalendar({
   year,
   month,
+  selectedDate,
   events = [],
   setMonth,
   setYear,
+  setDate,
 }: Props) {
   const todayKey = useMemo(() => toKey(new Date()), []);
 
@@ -96,6 +100,11 @@ export function MonthlyCalendar({
     }
   };
 
+  const selectedKey = useMemo(
+    () => (selectedDate ? toKey(selectedDate) : null),
+    [selectedDate]
+  );
+
   return (
     <div className={styles.calendarCard}>
       <div className={styles.header}>
@@ -121,35 +130,42 @@ export function MonthlyCalendar({
           </button>
         </div>
       </div>
-
-      <div className={styles.grid}>
-        {WEEK_LABELS.map((label) => (
-          <div key={label} className={styles.weekday}>
-            {label}
-          </div>
-        ))}
-
-        {cells.map((date, index) => {
-          const key = date ? toKey(date) : `empty-${index}`;
-          const isToday = date ? key === todayKey : false;
-          const hasEvent = date ? isInRanges(date, events) : false;
-
-          return (
-            <div key={key} className={styles.cell}>
-              {date && (
-                <>
-                  <div
-                    className={styles.dayNumber}
-                    data-today={isToday || undefined}
-                  >
-                    {date.getDate()}
-                  </div>
-                  {hasEvent && <div className={styles.eventBar} />}
-                </>
-              )}
+      <div className={styles.gridWrap}>
+        <div className={styles.grid}>
+          {WEEK_LABELS.map((label) => (
+            <div key={label} className={styles.weekday}>
+              {label}
             </div>
-          );
-        })}
+          ))}
+
+          {cells.map((date, index) => {
+            const key = date ? toKey(date) : `empty-${index}`;
+            const isToday = date ? key === todayKey : false;
+            const hasEvent = date ? isInRanges(date, events) : false;
+            const isSelected = !!date && selectedKey === key;
+
+            return (
+              <div
+                key={key}
+                className={styles.cell}
+                onClick={() => setDate(date)}
+                data-selected={isSelected || undefined}
+              >
+                {date && (
+                  <>
+                    <div
+                      className={styles.dayNumber}
+                      data-today={isToday || undefined}
+                    >
+                      {date.getDate()}
+                    </div>
+                    {hasEvent && <div className={styles.eventBar} />}
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -5,6 +5,6 @@ export const metadata = {
   description: '배드민턴 대회 캘린더',
 };
 
-export default function CalendarPage() {
+export default function Page() {
   return <Calendar />;
 }

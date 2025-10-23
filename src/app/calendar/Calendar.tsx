@@ -1,19 +1,35 @@
 'use client';
 
-import * as styles from '@/app/calendar/Calendar.css.ts';
+import * as styles from '@/app/calendar/Calendar.css';
 import { CompetitionCard } from '@/components/CompetitionCard/CompetitionCard';
 import { MonthlyCalendar } from '@/components/MonthlyCalendar/MonthlyCalendar';
 import { useMonthlyTournaments } from '@/hooks/useMonthlyTournaments';
 import { extractRegionTags } from '@/utils/regionUtils';
 import { getTournamentStatus } from '@/utils/tournamentStatus';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+
+const titleOf = (date: Date | null, year: number, month: number) =>
+  `${
+    date
+      ? new Intl.DateTimeFormat('ko-KR', { dateStyle: 'long' }).format(date)
+      : new Intl.DateTimeFormat('ko-KR', {
+          year: 'numeric',
+          month: 'long',
+        }).format(new Date(year, month - 1))
+  } 대회 리스트`;
 
 export function Calendar() {
   const [year, setYear] = useState(2025);
   const [month, setMonth] = useState<number>(10);
+  const [date, setDate] = useState<Date | null>(null);
 
-  const { data, events, isLoading, error } = useMonthlyTournaments(year, month);
-  console.log(data);
+  const { data, events, isLoading, error, getByDate } = useMonthlyTournaments(
+    year,
+    month
+  );
+
+  const list = useMemo(() => getByDate(date), [date, getByDate]);
+
   return (
     <div className={styles.calendar}>
       <header className={styles.calendarHeader}>
@@ -27,26 +43,32 @@ export function Calendar() {
         <MonthlyCalendar
           year={year}
           month={month}
-          setMonth={setMonth}
-          setYear={setYear}
+          selectedDate={date}
+          setMonth={(m) => {
+            setMonth(m);
+            setDate(null);
+          }}
+          setYear={(y) => {
+            setYear(y);
+            setDate(null);
+          }}
+          setDate={setDate}
           events={events}
         />
       </div>
 
       <div className={styles.calendarListSection}>
-        <div className={styles.listHeader}>
-          {year}년 {month}월 대회 리스트
-        </div>
+        <div className={styles.listHeader}>{titleOf(date, year, month)}</div>
 
         {isLoading ? (
           <div>로딩 중...</div>
         ) : error ? (
           <div>오류가 발생했습니다</div>
-        ) : data.length === 0 ? (
+        ) : list.length === 0 ? (
           <div>대회가 없습니다</div>
         ) : (
           <ul className={styles.eventList}>
-            {data.map((item) => {
+            {list.map((item) => {
               const regionTags = extractRegionTags(item.region);
               const status = getTournamentStatus(
                 item.start_date,

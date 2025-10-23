@@ -9,22 +9,24 @@ export const competitionCard = style({
   display: 'flex',
   flexDirection: 'column',
   background: tokens.color.surface.base,
+  transition: 'box-shadow 0.2s ease',
   selectors: {
-    '&:hover': { boxShadow: tokens.elevation.shadow.hover },
+    '&:hover': { boxShadow: tokens.elevation.shadow.primary },
   },
 });
 
 export const competitionCardHeader = style({
   marginBottom: 10,
-  display: 'flex',
+  display: 'grid',
+  gridTemplateColumns: '1fr auto',
   alignItems: 'center',
+  columnGap: 8,
 });
 
 export const competitionCardTitle = style([
   textStyle.heading.semibold,
   {
-    maxWidth: 700,
-    marginRight: 8,
+    minWidth: 0,
     color: tokens.color.text.title,
     overflow: 'hidden',
     whiteSpace: 'nowrap',
@@ -37,10 +39,23 @@ export const competitionCardDate = style([
   textStyle.body.regular,
   {
     color: tokens.color.text.body,
+    whiteSpace: 'nowrap',
+    overflow: 'visible',
+    textOverflow: 'clip',
   },
 ]);
 
 export const competitionCardTagList = style({
   display: 'flex',
   gap: 6,
+  flexWrap: 'wrap',
+});
+
+export const competitionCardHeaderNarrow = style({
+  '@media': {
+    '(max-width: 420px)': {
+      gridTemplateColumns: '1fr',
+      rowGap: 4,
+    },
+  },
 });

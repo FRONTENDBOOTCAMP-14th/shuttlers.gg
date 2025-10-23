@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
   },
   typedRoutes: false,
   reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/landing',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default withVanillaExtract(nextConfig);

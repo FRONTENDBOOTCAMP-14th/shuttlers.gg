@@ -4,9 +4,10 @@ import { textStyle } from '@/styles/typography.css';
 import { style } from '@vanilla-extract/css';
 
 export const calendar = style({
-  width: 1080,
+  maxWidth: 1080,
+  width: '100%',
   margin: 'auto',
-  padding: '80px 0',
+  paddingBlock: '80px 0',
 });
 
 export const calendarHeader = style({
