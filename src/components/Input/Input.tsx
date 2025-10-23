@@ -6,8 +6,8 @@ import {
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
-import { UseFormRegisterReturn } from 'react-hook-form';
 import React, { forwardRef, useRef, useState } from 'react';
+import { UseFormRegisterReturn } from 'react-hook-form';
 import * as styles from './Input.css';
 
 type InputProps = {
@@ -25,18 +25,6 @@ type InputProps = {
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 };
 
-<<<<<<< HEAD
-export default function Input({
-  type = 'text',
-  placeholder = 'placeholder',
-  value,
-  onChange,
-  error = false,
-  disabled = false,
-  label,
-  onSearchClick,
-}: InputProps) {
-=======
 const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   {
     name = '',
@@ -54,7 +42,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   },
   ref
 ) {
->>>>>>> a165fba4652659192bc2b71c608766cb1d3baca0
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const iconButtonRef = useRef<HTMLButtonElement>(null);
@@ -140,7 +127,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         <input
           id={name}
           name={name}
-          ref={register ? undefined : inputRef}
+          ref={register ? undefined : ref}
           className={clsx(
             type === 'search'
               ? variant === 'secondary'
@@ -158,8 +145,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           onBlur={() => setIsInputFocused(false)}
           aria-invalid={error}
           disabled={disabled}
-        onKeyDown={onKeyDown}
-          disabled={disabled}
+          onKeyDown={onKeyDown}
           {...((register as any) ?? {})}
         />
 

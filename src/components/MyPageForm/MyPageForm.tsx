@@ -96,18 +96,15 @@ export function MyPageForm({ userId }: MyPageFormProps) {
     <form className={styles.Form} onSubmit={onSubmit}>
       {/* 이름 */}
       <div className={styles.Item}>
-        <div className={styles.ItemLabel}>이름</div>
-        <div>
-          <Input
-            type="text"
-            label="이름"
-            placeholder="이름"
-            {...register('name')}
-          />
-          {errors.name && (
-            <div className={styles.errorText}>{errors.name.message}</div>
-          )}
-        </div>
+        <Input
+          type="text"
+          label="이름"
+          placeholder="이름"
+          {...register('name')}
+        />
+        {errors.name && (
+          <div className={styles.errorText}>{errors.name.message}</div>
+        )}
       </div>
 
       {/* 성별 */}
@@ -130,7 +127,6 @@ export function MyPageForm({ userId }: MyPageFormProps) {
 
       {/* 비밀번호 */}
       <div className={styles.Item}>
-        <div className={styles.ItemLabel}>비밀번호</div>
         <Input
           type="password"
           label="비밀번호"
@@ -142,7 +138,6 @@ export function MyPageForm({ userId }: MyPageFormProps) {
         )}
       </div>
       <div className={styles.Item}>
-        <div className={styles.ItemLabel}>비밀번호 확인</div>
         <Input
           type="password"
           label="비밀번호 확인"
@@ -174,15 +169,19 @@ export function MyPageForm({ userId }: MyPageFormProps) {
         </div>
       </div>
 
-      <Button
-        text={isSubmitting ? '저장 중…' : '변경 완료'}
-        type="submit"
-        variant="primary"
-        disabled={!canEdit || !isDirty || isSubmitting}
-      />
-      {!canEdit && (
-        <div className={styles.helperText}>본인 정보만 수정할 수 있습니다.</div>
-      )}
+      <div className={styles.formSubmit}>
+        <Button
+          text={isSubmitting ? '저장 중…' : '변경 완료'}
+          type="submit"
+          variant="primary"
+          disabled={!canEdit || !isDirty || isSubmitting}
+        />
+        {!canEdit && (
+          <div className={styles.helperText}>
+            본인 정보만 수정할 수 있습니다.
+          </div>
+        )}
+      </div>
     </form>
   );
 }

@@ -2,6 +2,7 @@
 
 import * as styles from '@/app/mypage/MyPage.css';
 import { MyPageForm } from '@/components/MyPageForm/MyPageForm';
+import MyPageMeetup from '@/components/MyPageMeetup/MyPageMeetup';
 import MyPageTabs from '@/components/MyPageTab/MyPageTab';
 import UserCard from '@/components/UserCard/UserCard';
 import { useUser } from '@/hooks/useUser';
@@ -35,7 +36,7 @@ export function MyPage() {
         {tab === 'profile' ? (
           <MyPageForm userId="02a687fb-561b-4bf2-a96a-1734a1610417" />
         ) : (
-          <div className={styles.Form}>여기에 “모임 관리” 리스트/그리드...</div>
+          <MyPageMeetup />
         )}
       </MyPageTabs>
     </div>
