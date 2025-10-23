@@ -47,7 +47,7 @@ export default function RegisterForm({
   const [grade, setGrade] = useState<Profile['national_grade']>();
   const [status, setStatus] = useState<Status>('idle');
   const [remainingTime, setRemainingTime] = useState<number>(VERIFY_TIME);
-  const [checked, setChecked] = useState<Boolean>(false);
+  const [checked, setChecked] = useState(false);
   const modal = useModal();
 
   useEffect(() => {
