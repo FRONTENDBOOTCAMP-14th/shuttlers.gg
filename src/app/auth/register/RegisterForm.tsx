@@ -33,7 +33,6 @@ const GENDER_OPTIONS: {
   { value: 'female', label: '여성' },
 ];
 const GRADE_OPTIONS: Profile['national_grade'][] = ['초심', 'D', 'C', 'B', 'A'];
-const VERIFY_TIME = 300;
 
 export default function RegisterForm({
   step,
@@ -42,13 +41,13 @@ export default function RegisterForm({
 }: RegisterFormProps) {
   const { handleSubmit, register, setValue, trigger, watch } =
     useFormContext<RegisterFormValues>();
+  const modal = useModal();
 
   const [gender, setGender] = useState<Profile['gender']>();
   const [grade, setGrade] = useState<Profile['national_grade']>();
   const [status, setStatus] = useState<Status>('idle');
-  const [remainingTime, setRemainingTime] = useState<number>(VERIFY_TIME);
+  const [sendCool, setSendCool] = useState(0);
   const [checked, setChecked] = useState(false);
-  const modal = useModal();
 
   useEffect(() => {
     register('gender', { required: '성별을 선택해주세요.' });
@@ -67,11 +66,15 @@ export default function RegisterForm({
   });
 
   const handleSendOtp = async () => {
+    if (sendCool > 0) return toast(`${sendCool}초 후 다시 시도해주세요.`);
     setStatus('pending');
 
     const { error: sendError } = await supabase.auth.signInWithOtp({
       email: watch('email'),
-      options: { shouldCreateUser: true },
+      options: {
+        shouldCreateUser: true,
+        emailRedirectTo: `${location.origin}/auth/verify`,
+      },
     });
 
     if (sendError) {
@@ -81,7 +84,23 @@ export default function RegisterForm({
       );
     }
 
-    toast.success('인증 메일 발송 완료! 수신한 메일에서 링크를 클릭해 주세요.');
+    if (!sendError) {
+      setSendCool(30);
+
+      const timer = setInterval(() => {
+        setSendCool((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      toast.success(
+        `인증 메일 발송 완료!\n수신한 메일에서 링크를 클릭해 주세요.`
+      );
+    }
   };
 
   return (
