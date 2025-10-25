@@ -56,55 +56,32 @@ export default function RegisterForm({
   }, [register]);
 
   useEffect(() => {
-    if (status === 'pending') {
-      const timer = setInterval(() => {
-        setRemainingTime((prevTime) => {
-          if (prevTime <= 0) {
-            clearInterval(timer);
-            setStatus('idle');
-            toast('인증 시간이 만료되었습니다. 다시 인증해 주세요.');
-            return VERIFY_TIME;
-          }
-          return prevTime - 1;
-        });
-
-        return () => clearInterval(timer);
-      }, 1000);
-    }
-  }, [status]);
-
-  const handleSendOtp = async () => {
-    const { error } = await supabase.auth.signInWithOtp({
-      email: watch('email'),
-      options: { shouldCreateUser: false },
+    const { data } = supabase.auth.onAuthStateChange((e, session) => {
+      if (e === 'SIGNED_IN' && session) {
+        setStatus('resolved');
+        toast.success('이메일 인증 완료');
+      }
     });
 
-    if (error) {
+    return () => data.subscription.unsubscribe();
+  });
+
+  const handleSendOtp = async () => {
+    setStatus('pending');
+
+    const { error: sendError } = await supabase.auth.signInWithOtp({
+      email: watch('email'),
+      options: { shouldCreateUser: true },
+    });
+
+    if (sendError) {
       setStatus('idle');
       return toast.error(
-        `인증 코드 발송 실패\n ${error.status}: ${error.message}`
+        `인증 메일 발송 실패\n ${sendError.status}: ${sendError.message}`
       );
     }
 
-    toast.success('인증 코드 발송 완료! 이메일을 확인해 주세요.');
-    setStatus('pending');
-  };
-
-  const handleVerifyOtp = async () => {
-    const { data, error } = await supabase.auth.verifyOtp({
-      email: watch('email'),
-      token: watch('verify_code') ?? '',
-      type: 'signup',
-    });
-
-    if (error) {
-      setStatus('idle');
-      return toast.error(`인증 실패\n ${error.status}: ${error.message}`);
-    }
-    if (!data.user) return;
-
-    toast.success('이메일 인증 성공');
-    setStatus('resolved');
+    toast.success('인증 메일 발송 완료! 수신한 메일에서 링크를 클릭해 주세요.');
   };
 
   return (
@@ -122,22 +99,9 @@ export default function RegisterForm({
               placeholder="이메일 입력"
               register={register('email', emailRules)}
               status={status}
-              remainingTime={remainingTime}
-              buttonType="send"
               buttonAction={handleSendOtp}
             />
-            {status !== 'idle' && (
-              <CheckInput
-                name="code"
-                type="text"
-                label="인증코드"
-                placeholder="6자리 인증 코드"
-                register={register('verify_code', { required: true })}
-                status={status}
-                buttonType="verify"
-                buttonAction={handleVerifyOtp}
-              />
-            )}
+
             <Input
               {...(register('password'), passwordRules)}
               name="password"
@@ -153,6 +117,7 @@ export default function RegisterForm({
               label="비밀번호 확인"
               placeholder="8자 이상 12자 이하"
             />
+
             <Button
               type="button"
               text="다음으로"

@@ -109,13 +109,13 @@ export default function LoginPage() {
 
           <button onClick={modal.open} className={styles.optionLink}>
             비밀번호 찾기
-            <ArrowRightIcon width={16} />
+            <ArrowRightIcon width={16} height={16} />
           </button>
           <span style={{ display: 'flex', columnGap: 10 }}>
             셔틀러스 회원이 아니신가요?
             <Link href="/auth/register" className={styles.optionLink}>
               가입하기
-              <ArrowRightIcon width={16} />
+              <ArrowRightIcon width={16} height={16} />
             </Link>
           </span>
         </div>
