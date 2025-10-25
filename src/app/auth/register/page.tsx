@@ -18,14 +18,12 @@ export default function RegisterPage() {
     const user = (await supabase.auth.getUser()).data.user;
     if (!user) return toast.error('이메일 인증이 완료되지 않았습니다.');
 
-    const { error: registerError } = await supabase.auth.updateUser({
-      password: formData.password,
-      data: {
-        name: formData.name,
-        gender: formData.gender,
-        national_grade: formData.national_grade,
-        created_at: new Date().toISOString(),
-      },
+    const { error: registerError } = await supabase.from('users').insert({
+      email: formData.email,
+      name: formData.name,
+      gender: formData.gender,
+      national_grade: formData.national_grade,
+      created_at: new Date().toISOString(),
     });
 
     if (registerError)
