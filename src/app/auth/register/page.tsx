@@ -15,24 +15,39 @@ export default function RegisterPage() {
   const [step, setStep] = useState<1 | 2>(1);
 
   const handleRegister = async (formData: RegisterFormValues) => {
-    const user = (await supabase.auth.getUser()).data.user;
-    if (!user) return toast.error('이메일 인증이 완료되지 않았습니다.');
+    const { data, error: userError } = await supabase.auth.getUser();
 
-    const { error: registerError } = await supabase.from('users').insert({
-      email: formData.email,
-      name: formData.name,
-      gender: formData.gender,
-      national_grade: formData.national_grade,
-      created_at: new Date().toISOString(),
-    });
+    if (!data.user || userError) {
+      return toast.error('이메일 인증이 완료되지 않았습니다.');
+    }
 
-    if (registerError)
+    const { error: upsertError } = await supabase.from('users').upsert(
+      {
+        id: data.user.id,
+        email: data.user.email,
+        name: formData.name,
+        gender: formData.gender,
+        national_grade: formData.national_grade,
+        updated_at: new Date().toISOString(),
+      },
+      {
+        onConflict: 'id',
+      }
+    );
+
+    if (upsertError) {
+      console.error('Upsert error:', upsertError);
       return toast.error(
-        `회원가입 요청에 실패했습니다.\n ${registerError.code}: ${registerError.message}`
+        `회원가입 요청에 실패했습니다.\n${upsertError.message}`
       );
+    }
 
     toast.success('회원가입 성공!\n로그인 화면으로 이동합니다.');
-    router.push('./login');
+    await supabase.auth.signOut();
+
+    setTimeout(() => {
+      router.push('/auth/login');
+    }, 1500);
   };
 
   return (
