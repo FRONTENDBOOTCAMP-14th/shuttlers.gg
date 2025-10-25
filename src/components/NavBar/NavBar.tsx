@@ -66,7 +66,12 @@ export default function NavBar({
               className={styles.navItem({})}
             >
               <div
-                style={{ display: 'flex', alignItems: 'center', columnGap: 8 }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  columnGap: 8,
+                  lineHeight: 1,
+                }}
               >
                 <ArrowLeftIcon width={24} aria-hidden />
                 이전으로
@@ -84,8 +89,6 @@ export default function NavBar({
             </button>
 
             <div className={styles.navMenu({ isOpen })}>
-              <div>{showSearch && <Input name="search" type="search" />}</div>
-
               {navItems && (
                 <ul
                   style={{
@@ -106,6 +109,15 @@ export default function NavBar({
                     );
                   })}
                 </ul>
+              )}
+
+              {showSearch && (
+                <Input
+                  type="search"
+                  name="search-player"
+                  placeholder="전적 검색"
+                  variant="secondary"
+                />
               )}
             </div>
 

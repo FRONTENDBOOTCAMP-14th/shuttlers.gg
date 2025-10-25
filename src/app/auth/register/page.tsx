@@ -3,8 +3,6 @@
 import type { RegisterFormValues } from '@/@types/forms';
 import RegisterForm from '@/app/auth/register/RegisterForm';
 import { supabase } from '@/libs/supabase/client';
-import { tokens } from '@/styles/tokens.css';
-import { textStyle } from '@/styles/typography.css';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -40,29 +38,14 @@ export default function RegisterPage() {
 
   return (
     <div className={styles.registerPage}>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          rowGap: 16,
-          alignItems: 'center',
-        }}
-      >
-        <h2 style={{ ...textStyle.subtitle.bold }}>회원가입</h2>
-        <p
-          style={{
-            ...textStyle.heading.semibold,
-            color: tokens.color.text.body,
-            textAlign: 'center',
-            marginBottom: 60,
-          }}
-        >
+      <div className={styles.registerHeader}>
+        <h2>회원가입</h2>
+        <p>
           {step === 1
             ? '계정 등록 후 다양한 기능들을 활용해 보세요.'
             : '회원님의 정보를 입력해주세요.'}
         </p>
       </div>
-
       <FormProvider {...methods}>
         <RegisterForm
           step={step}

@@ -14,6 +14,7 @@ export const navBar = style({
   maxWidth: 1080,
   background: tokens.color.bg,
   transition: 'background 0.2s ease',
+  zIndex: 999,
 
   '@media': {
     'screen and (min-width: 768px)': {
@@ -76,7 +77,7 @@ export const navMenu = recipe({
       'screen and (min-width: 768px)': {
         display: 'flex',
         flexDirection: 'row',
-        columnGap: 16,
+        columnGap: 30,
         maxWidth: 999,
         background: 'none',
       },
