@@ -55,15 +55,19 @@ export default function RegisterForm({
   }, [register]);
 
   useEffect(() => {
-    const { data } = supabase.auth.onAuthStateChange((e, session) => {
-      if (e === 'SIGNED_IN' && session) {
-        setStatus('resolved');
-        toast.success('이메일 인증 완료');
+    const handleSuccessVerify = async (e: StorageEvent) => {
+      if (e.key === 'supabase.auth.token') {
+        const { data } = await supabase.auth.getSession();
+        if (data.session) {
+          setStatus('resolved');
+          toast.success('이메일 인증 완료!');
+        }
       }
-    });
+    };
 
-    return () => data.subscription.unsubscribe();
-  });
+    window.addEventListener('storage', handleSuccessVerify);
+    return () => window.removeEventListener('storage', handleSuccessVerify);
+  }, []);
 
   const handleSendOtp = async () => {
     if (sendCool > 0) return toast(`${sendCool}초 후 다시 시도해주세요.`);
@@ -72,7 +76,7 @@ export default function RegisterForm({
     const { error: sendError } = await supabase.auth.signInWithOtp({
       email: watch('email'),
       options: {
-        shouldCreateUser: true,
+        shouldCreateUser: false,
         emailRedirectTo: `${location.origin}/auth/verify`,
       },
     });
