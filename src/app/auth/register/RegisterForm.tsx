@@ -61,33 +61,33 @@ export default function RegisterForm({
           setStatus('resolved');
           toast.success('이메일 인증 완료!');
         }
+
+        await supabase.auth.signOut();
       }
     );
 
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
+    return () => authListener.subscription.unsubscribe();
   }, []);
 
   const handleSendOtp = async () => {
     if (sendCool > 0) return toast(`${sendCool}초 후 다시 시도해주세요.`);
 
-    const emailValue = watch('email');
-    if (!emailValue) return toast.error('이메일을 입력해주세요.');
+    const email = watch('email');
+    const password = watch('password');
+
+    if (!email) return toast.error('이메일을 입력해주세요.');
+    if (!password) return toast.error('비밀번호를 입력해주세요.');
 
     setStatus('pending');
 
-    const { error: sendError } = await supabase.auth.signInWithOtp({
-      email: emailValue,
-      options: {
-        shouldCreateUser: true,
-        emailRedirectTo: `${window.location.origin}/auth/verify`,
-      },
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
     });
 
-    if (sendError) {
+    if (error) {
       setStatus('idle');
-      return toast.error(`인증 메일 발송 실패\n${sendError.message}`);
+      return toast.error(`인증 메일 발송 실패\n${error.message}`);
     }
 
     setSendCool(30);
@@ -159,7 +159,7 @@ export default function RegisterForm({
                 }
 
                 if (status !== 'resolved') {
-                  return toast.error('이메일 인증을 먼저 완료해주세요.');
+                  return toast.error('이메일 인증을 완료해주세요.');
                 }
 
                 onClickNext();

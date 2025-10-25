@@ -36,7 +36,6 @@ export default function RegisterPage() {
     );
 
     if (upsertError) {
-      console.error('Upsert error:', upsertError);
       return toast.error(
         `회원가입 요청에 실패했습니다.\n${upsertError.message}`
       );
@@ -46,7 +45,7 @@ export default function RegisterPage() {
     await supabase.auth.signOut();
 
     setTimeout(() => {
-      router.push('/auth/login');
+      router.push(`${window.location.origin}/auth/login`);
     }, 1500);
   };
 

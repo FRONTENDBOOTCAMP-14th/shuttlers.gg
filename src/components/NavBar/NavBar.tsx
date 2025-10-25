@@ -124,7 +124,7 @@ export default function NavBar({
             <div style={{ display: 'flex', columnGap: 16 }}>
               {user ? (
                 <Link
-                  href={`mypage/${user.id}`}
+                  href={`/mypage/${user.id}`}
                   aria-label="마이페이지"
                   className={styles.menuIcon}
                 >
@@ -132,7 +132,7 @@ export default function NavBar({
                 </Link>
               ) : (
                 <Link
-                  href="auth/login"
+                  href="/auth/login"
                   aria-label="로그인"
                   className={styles.menuIcon}
                 >

@@ -11,7 +11,6 @@ import { tokens } from '@/styles/tokens.css';
 import { textStyle } from '@/styles/typography.css';
 import { emailRules } from '@/utils/authValidation';
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
-import { AuthError } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -41,40 +40,31 @@ export default function LoginPage() {
     const { data, error } = await supabase.auth.signInWithPassword(formData);
 
     if (error)
-      return toast.error(
-        <>
-          <b>로그인 실패!</b>
-          <br />
-          {error.status}: {error.message}
-        </>
-      );
-
+      return toast.error(`로그인 실패!\n${error.status}: ${error.message}`);
     if (!data.user) return toast.error('확인되지 않은 사용자입니다.');
 
-    const username = data.user.user_metadata?.username;
+    const { data: userData } = await supabase
+      .from('users')
+      .select('name')
+      .eq('id', data.user.id)
+      .single();
 
-    toast.success(`어서 오세요, ${username}님!`);
+    toast.success(`어서 오세요, ${userData?.name || '회원'}님!`);
 
     router.push('/');
   };
 
   const handleSendLink = async (formData: SendFormValues) => {
-    const { data: userData, error: userError } = await supabase.auth.getUser(
-      formData.email
-    );
-
-    if (!userData.user || userError)
-      return new AuthError('확인되지 않은 사용자');
-
-    const { error: sendError } = await supabase.auth.resetPasswordForEmail(
+    const { error } = await supabase.auth.resetPasswordForEmail(
       formData.email,
-      {
-        redirectTo: `auth/reset-password/${userData.user?.id}`,
-      }
+      { redirectTo: `${window.location.origin}/auth/reset-password/` }
     );
 
-    if (sendError) return new Error('인증 에러');
+    if (error) return toast.error('확인되지 않은 사용자입니다.');
 
+    toast.error(
+      `비밀번호 재설정 메일 발송 완료!\n수신한 메일에서 링크를 클릭해 주세요.`
+    );
     setStep(2);
   };
 
@@ -96,17 +86,6 @@ export default function LoginPage() {
         </FormProvider>
 
         <div className={styles.loginOptions}>
-          {
-            // TODO: 차후 시간 남으면 로그인유지도 구현
-            /* <label
-              htmlFor="keep-loggedin"
-              style={{ display: 'flex', columnGap: 10 }}
-              >
-                <input type="checkbox" id="keep-loggedin" />
-                로그인 유지
-              </label> */
-          }
-
           <button onClick={modal.open} className={styles.optionLink}>
             비밀번호 찾기
             <ArrowRightIcon width={16} height={16} />

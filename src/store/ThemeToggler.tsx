@@ -13,7 +13,9 @@ export default function ThemeToggler({ children }: PropsWithChildren) {
     path === '/landing'
       ? 'secondary'
       : path.startsWith('/auth')
-        ? 'minimal'
+        ? path.startsWith('/auth/verify')
+          ? 'secondary'
+          : 'minimal'
         : 'primary';
   const showSearch = !(path === '/landing' || path.startsWith('/auth'));
 
