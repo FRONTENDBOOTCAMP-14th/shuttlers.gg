@@ -42,7 +42,9 @@ export const button = recipe({
     },
 
     size: {
-      short: {},
+      short: {
+        width: 'fit-content',
+      },
       long: {
         width: '100%',
       },
@@ -83,7 +85,7 @@ export const button = recipe({
 
 export const buttonContent = recipe({
   base: {
-    display: 'inline-flex',
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     whiteSpace: 'nowrap',

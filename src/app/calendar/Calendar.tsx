@@ -4,9 +4,9 @@ import * as styles from '@/app/calendar/Calendar.css';
 import { CompetitionCard } from '@/components/CompetitionCard/CompetitionCard';
 import { MonthlyCalendar } from '@/components/MonthlyCalendar/MonthlyCalendar';
 import { useMonthlyTournaments } from '@/hooks/useMonthlyTournaments';
+import { extractRegionTags } from '@/utils/regionUtils';
+import { getTournamentStatus } from '@/utils/tournamentStatus';
 import { useMemo, useState } from 'react';
-import { extractRegionTags } from './utils/regionUtils';
-import { getTournamentStatus } from './utils/tournamentStatus';
 
 const titleOf = (date: Date | null, year: number, month: number) =>
   `${
