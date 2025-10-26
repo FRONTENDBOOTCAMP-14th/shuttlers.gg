@@ -8,12 +8,13 @@ export const button = recipe({
     ...textStyle.heading.bold,
     paddingInline: 24,
     paddingBlock: 14,
-    height: 52,
+    minHeight: 52,
     lineHeight: 1,
     transition:
       'background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease',
-    ':focus': {
+    ':focus-visible': {
       outline: `2px solid ${tokens.color.field.border.focus}`,
+      outlineOffset: 1,
     },
   },
 
@@ -41,7 +42,9 @@ export const button = recipe({
     },
 
     size: {
-      short: {},
+      short: {
+        width: 'fit-content',
+      },
       long: {
         width: '100%',
       },
@@ -82,9 +85,10 @@ export const button = recipe({
 
 export const buttonContent = recipe({
   base: {
-    display: 'inline-flex',
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    whiteSpace: 'nowrap',
     color: tokens.color.text.inverse,
   },
 

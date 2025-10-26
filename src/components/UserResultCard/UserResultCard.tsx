@@ -1,3 +1,4 @@
+// UserResultCard.tsx 수정
 'use client';
 
 import { Badge } from '@/components/Badge/Badge';
@@ -5,7 +6,10 @@ import * as styles from '@/components/UserResultCard/UserResultCard.css';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 
-type Grade = { national: string; local: string };
+type Grade =
+  | { national: string; local?: never }
+  | { national?: never; local: string }
+  | { national: string; local: string };
 
 export type UserResultCardProps = {
   id: string;
@@ -18,9 +22,21 @@ export type UserResultCardProps = {
   searchQuery?: string;
 };
 
+// ✅ formatGrade 함수 수정
 function formatGrade(grade: Grade | null) {
   if (!grade) return null;
-  return `지역${grade.local} 전국${grade.national}`;
+
+  const parts = [];
+
+  if (grade.local) {
+    parts.push(`지역${grade.local}`);
+  }
+
+  if (grade.national) {
+    parts.push(`전국${grade.national}`);
+  }
+
+  return parts.join(' ');
 }
 
 function escapeRegExp(s: string) {

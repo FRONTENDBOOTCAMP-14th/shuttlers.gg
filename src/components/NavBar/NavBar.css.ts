@@ -10,14 +10,14 @@ export const navBar = style({
   position: 'sticky',
   top: 0,
   margin: '0 auto',
-  paddingBlock: 20,
+  height: 56,
   maxWidth: 1080,
   background: tokens.color.bg,
   transition: 'background 0.2s ease',
 
   '@media': {
     'screen and (min-width: 768px)': {
-      paddingBlock: 24,
+      height: 72,
     },
   },
 });
@@ -46,6 +46,11 @@ export const navContainer = recipe({
       'screen and (min-width: 768px)': {
         columnGap: 24,
       },
+      // '&:focus-visible': {
+      //   outline: `2px solid ${tokens.color.text.info}`,
+      //   outlineOffset: '2px',
+      //   borderRadius: '4px',
+      // },
     },
   },
   variants: {
