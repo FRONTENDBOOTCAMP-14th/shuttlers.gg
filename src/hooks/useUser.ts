@@ -4,49 +4,87 @@ import { supabase } from '@/libs/supabase/client';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 type Gender = 'male' | 'female' | 'other';
-type Grade = '초심' | 'D' | 'C' | 'B' | 'A';
+type GradeValue = '초심' | 'D' | 'C' | 'B' | 'A' | '-';
 
-type UsersRow = { id: string; email: string };
-type PlayerCardRow = {
-  id: string;
-  name: string | null;
-  gender: Gender | null;
-  grade: Grade | null;
-};
-
-type UseUserData = {
+type UserData = {
   id: string;
   name: string | null;
   email: string;
   gender: Gender | null;
-  grade: Grade | null;
+  localGrade: GradeValue | null;
+  nationalGrade: GradeValue | null;
 };
 
-type SaveInput = Partial<Pick<PlayerCardRow, 'name' | 'gender' | 'grade'>>;
+type SaveInput = Partial<
+  Pick<UserData, 'name' | 'gender' | 'nationalGrade' | 'localGrade'>
+>;
+
+type PlayerDbRow = {
+  id: string;
+  name: string | null;
+  gender: Gender | null;
+  national_grade: GradeValue | null;
+  local_grade: GradeValue | null;
+};
 
 const DEV_AUTHLESS = process.env.NEXT_PUBLIC_AUTHLESS_DEV === '1';
 const LS_KEY = '__mypage_dev_user__';
 
-const DEFAULT_DEV_USER: UseUserData = {
+const DEFAULT_DEV_USER: UserData = {
   id: '00000000-0000-0000-0000-000000000000',
   name: '김민턴',
   email: 'dev@example.com',
   gender: 'male',
-  grade: 'C',
+  localGrade: 'A',
+  nationalGrade: 'A',
 };
 
-function loadDevUser(targetId?: string): UseUserData {
-  // targetId가 있으면 id만 교체해서 테스트
-  const raw =
-    typeof window !== 'undefined' ? localStorage.getItem(LS_KEY) : null;
-  const base = raw ? (JSON.parse(raw) as UseUserData) : DEFAULT_DEV_USER;
-  return { ...base, id: targetId ?? base.id };
+function loadDevUser(targetId?: string): UserData {
+  if (typeof window === 'undefined') return DEFAULT_DEV_USER;
+
+  const raw = localStorage.getItem(LS_KEY);
+  const base = raw ? (JSON.parse(raw) as UserData) : DEFAULT_DEV_USER;
+  return targetId ? { ...base, id: targetId } : base;
+}
+
+function saveDevUser(data: UserData): void {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(LS_KEY, JSON.stringify(data));
+  }
+}
+
+function mapPlayerToUserData(
+  userId: string,
+  email: string,
+  player: PlayerDbRow | null
+): UserData {
+  return {
+    id: userId,
+    email,
+    name: player?.name ?? null,
+    gender: player?.gender ?? null,
+    localGrade: player?.local_grade ?? null,
+    nationalGrade: player?.national_grade ?? null,
+  };
+}
+
+function mapSaveInputToDbPayload(updates: SaveInput): Partial<PlayerDbRow> {
+  const payload: Partial<PlayerDbRow> = {};
+
+  if (updates.name !== undefined) payload.name = updates.name ?? null;
+  if (updates.gender !== undefined) payload.gender = updates.gender ?? null;
+  if (updates.localGrade !== undefined)
+    payload.local_grade = updates.localGrade ?? null;
+  if (updates.nationalGrade !== undefined)
+    payload.national_grade = updates.nationalGrade ?? null;
+
+  return payload;
 }
 
 export function useUser(targetId?: string) {
   const client = useMemo(() => supabase, []);
 
-  const [data, setData] = useState<UseUserData | null>(null);
+  const [data, setData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [canEdit, setCanEdit] = useState(false);
@@ -54,51 +92,43 @@ export function useUser(targetId?: string) {
   const fetchOne = useCallback(async () => {
     setLoading(true);
     setError(null);
-    try {
-      // 1) 세션 확인
-      const { data: sessionData } = await client.auth.getSession();
-      const session = sessionData.session ?? null;
-      const authId = session?.user?.id ?? null;
 
-      // 2) DEV 모드: 세션 없어도 mock 데이터 반환 (Supabase 쿼리 X)
-      if (!session && DEV_AUTHLESS) {
+    try {
+      if (DEV_AUTHLESS) {
         const mock = loadDevUser(targetId);
         setData(mock);
-        setCanEdit(true); // 테스트 편의상 true
+        setCanEdit(true);
         return;
       }
 
-      // 3) 실제 동작 (세션 필요)
+      const { data: sessionData } = await client.auth.getSession();
+      const session = sessionData.session;
+      const authId = session?.user?.id;
+
       const userId = targetId ?? authId;
       if (!userId) throw new Error('로그인이 필요합니다.');
+
       setCanEdit(!!authId && authId === userId);
 
-      // email: 자신이면 세션 이메일 우선
-      let email: string | null =
-        authId === userId ? (session?.user?.email ?? null) : null;
+      let email = authId === userId ? (session?.user?.email ?? '') : '';
 
-      const { data: u, error: uErr } = await client
+      const { data: user } = await client
         .from('users')
-        .select('id, email')
+        .select('email')
         .eq('id', userId)
-        .maybeSingle<UsersRow>();
-      if (uErr) throw uErr;
-      if (u?.email) email = u.email ?? email;
+        .maybeSingle();
 
-      const { data: p, error: pErr } = await client
-        .from('player_card')
-        .select('id, name, gender, grade')
+      if (user?.email) email = user.email;
+
+      const { data: player, error: playerError } = await client
+        .from('players')
+        .select('id, name, gender, national_grade, local_grade')
         .eq('id', userId)
-        .maybeSingle<PlayerCardRow>();
-      if (pErr) throw pErr;
+        .maybeSingle<PlayerDbRow>();
 
-      setData({
-        id: userId,
-        email: email ?? '',
-        name: p?.name ?? null,
-        gender: (p?.gender as Gender | null) ?? null,
-        grade: (p?.grade as Grade | null) ?? null,
-      });
+      if (playerError) throw playerError;
+
+      setData(mapPlayerToUserData(userId, email, player));
     } catch (e: any) {
       console.error('[useUser] fetch error:', e);
       setError(e?.message ?? '사용자 정보를 불러오지 못했습니다.');
@@ -113,55 +143,37 @@ export function useUser(targetId?: string) {
     async (updates: SaveInput) => {
       if (!data?.id) throw new Error('사용자 정보가 없습니다.');
 
-      // DEV 모드: 로컬스토리지에만 저장
       if (DEV_AUTHLESS) {
-        setData((prev) => {
-          const next = prev
-            ? {
-                ...prev,
-                name: updates.name ?? prev.name,
-                gender: (updates.gender as Gender | null) ?? prev.gender,
-                grade: (updates.grade as Grade | null) ?? prev.grade,
-              }
-            : prev;
-          if (next) {
-            localStorage.setItem(LS_KEY, JSON.stringify(next));
-          }
-          return next;
-        });
+        const updatedData = { ...data, ...updates };
+        setData(updatedData);
+        saveDevUser(updatedData);
         return;
       }
 
-      // 실제 업데이트 (RLS 필요)
       if (!canEdit) throw new Error('수정 권한이 없습니다.');
-      const { error: upErr } = await (client as any)
-        .from('player_card')
-        .update(updates)
-        .eq('id', data.id);
-      if (upErr) throw upErr;
 
-      // 낙관적 갱신
-      setData((prev) =>
-        prev
-          ? {
-              ...prev,
-              name: updates.name ?? prev.name,
-              gender: (updates.gender as Gender | null) ?? prev.gender,
-              grade: (updates.grade as Grade | null) ?? prev.grade,
-            }
-          : prev
-      );
+      const payload = mapSaveInputToDbPayload(updates);
+
+      const { error: updateError } = await client
+        .from('players')
+        .update(payload)
+        .eq('id', data.id);
+
+      if (updateError) throw updateError;
+
+      setData((prev) => (prev ? { ...prev, ...updates } : prev));
     },
-    [client, data?.id, canEdit]
+    [client, data, canEdit]
   );
 
   useEffect(() => {
     fetchOne();
+
     if (!DEV_AUTHLESS) {
-      const { data: sub } = client.auth.onAuthStateChange(() => {
+      const { data: subscription } = client.auth.onAuthStateChange(() => {
         fetchOne();
       });
-      return () => sub.subscription.unsubscribe();
+      return () => subscription.subscription.unsubscribe();
     }
   }, [client, fetchOne]);
 
@@ -170,12 +182,13 @@ export function useUser(targetId?: string) {
     name: data?.name ?? '',
     email: data?.email ?? '',
     gender: data?.gender ?? null,
-    grade: data?.grade ?? null,
+    localGrade: data?.localGrade ?? null,
+    nationalGrade: data?.nationalGrade ?? null,
     loading,
     error,
     canEdit,
     refresh: fetchOne,
     save,
-    __dev: DEV_AUTHLESS, // 필요시 UI에서 표시
+    __dev: DEV_AUTHLESS,
   };
 }

@@ -9,8 +9,6 @@ export default function TournamentPage() {
   const id = params?.id;
   const { isLoading, isError, data, error } = useTournament(id);
 
-  console.log(data);
-
   if (isLoading) return <div style={{ padding: 40 }}>로딩 중…</div>;
   if (isError) return <div style={{ padding: 40 }}>오류: {error}</div>;
   if (!data) return null;

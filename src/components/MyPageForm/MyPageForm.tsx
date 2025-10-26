@@ -10,11 +10,20 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import * as styles from './MyPageForm.css';
 
+const GENDERS = ['male', 'female', 'other'] as const;
+const GRADES = ['초심', 'D', 'C', 'B', 'A'] as const;
+
+const GENDER_LABELS: Record<(typeof GENDERS)[number], string> = {
+  male: '남성',
+  female: '여성',
+  other: '기타',
+};
+
 const schema = z
   .object({
     name: z.string().trim().min(1, '이름을 입력하세요').max(40),
-    gender: z.enum(['male', 'female', 'other']).nullable().optional(),
-    grade: z.enum(['초심', 'D', 'C', 'B', 'A']).nullable().optional(),
+    gender: z.enum(GENDERS).nullable().optional(),
+    grade: z.enum(['초심', 'D', 'C', 'B', 'A', '-']).nullable().optional(),
     password: z.string().min(8, '8자 이상').optional().or(z.literal('')),
     passwordConfirm: z.string().optional().or(z.literal('')),
   })
@@ -27,10 +36,11 @@ type FormValues = z.infer<typeof schema>;
 
 type MyPageFormProps = {
   userId: string;
+  onSaveSuccess?: () => void;
 };
 
-export function MyPageForm({ userId }: MyPageFormProps) {
-  const { id, name, email, gender, grade, loading, error, save, canEdit } =
+export function MyPageForm({ userId, onSaveSuccess }: MyPageFormProps) {
+  const { name, gender, nationalGrade, loading, error, save, canEdit } =
     useUser(userId);
 
   const {
@@ -45,48 +55,53 @@ export function MyPageForm({ userId }: MyPageFormProps) {
     defaultValues: {
       name: name || '',
       gender: gender ?? null,
-      grade: grade ?? null,
+      grade: nationalGrade,
       password: '',
       passwordConfirm: '',
     },
     mode: 'onChange',
   });
 
-  // 서버 값이 바뀌면 폼 초기화
+  const wGender = watch('gender');
+  const wGrade = watch('grade');
+
   useEffect(() => {
     reset({
       name: name || '',
       gender: gender ?? null,
-      grade: grade ?? null,
+      grade: nationalGrade,
       password: '',
       passwordConfirm: '',
     });
-  }, [name, gender, grade, reset]);
-
-  const wGender = watch('gender');
-  const wGrade = watch('grade');
+  }, [name, gender, nationalGrade, reset]);
 
   const onSubmit = handleSubmit(async (values) => {
-    await save({
-      name: values.name,
-      gender: values.gender ?? null,
-      grade: values.grade ?? null,
-    });
-
-    if (canEdit && values.password && values.password.length >= 8) {
-      const { error: pwErr } = await supabase.auth.updateUser({
-        password: values.password,
+    try {
+      await save({
+        name: values.name,
+        nationalGrade: values.grade ?? null,
+        gender: values.gender ?? null,
       });
-      if (pwErr) console.error(pwErr);
-    }
 
-    reset({
-      name: values.name,
-      gender: values.gender ?? null,
-      grade: values.grade ?? null,
-      password: '',
-      passwordConfirm: '',
-    });
+      if (canEdit && values.password && values.password.length >= 8) {
+        const { error: pwErr } = await supabase.auth.updateUser({
+          password: values.password,
+        });
+        if (pwErr) throw pwErr;
+      }
+
+      reset({
+        name: values.name,
+        gender: values.gender ?? null,
+        grade: values.grade ?? null,
+        password: '',
+        passwordConfirm: '',
+      });
+
+      onSaveSuccess?.();
+    } catch (err) {
+      console.error('[MyPageForm] submit error:', err);
+    }
   });
 
   if (loading) return <div className={styles.Form}>불러오는 중…</div>;
@@ -94,7 +109,6 @@ export function MyPageForm({ userId }: MyPageFormProps) {
 
   return (
     <form className={styles.Form} onSubmit={onSubmit}>
-      {/* 이름 */}
       <div className={styles.Item}>
         <Input
           type="text"
@@ -107,14 +121,13 @@ export function MyPageForm({ userId }: MyPageFormProps) {
         )}
       </div>
 
-      {/* 성별 */}
       <div className={styles.Item}>
         <div className={styles.ItemLabel}>성별</div>
         <div className={styles.GenderButtonGroup}>
-          {(['male', 'female', 'other'] as const).map((g) => (
+          {GENDERS.map((g) => (
             <Button
               key={g}
-              text={g === 'male' ? '남성' : g === 'female' ? '여성' : '기타'}
+              text={GENDER_LABELS[g]}
               type="button"
               variant={wGender === g ? 'secondary' : 'dark'}
               rounded
@@ -125,7 +138,6 @@ export function MyPageForm({ userId }: MyPageFormProps) {
         </div>
       </div>
 
-      {/* 비밀번호 */}
       <div className={styles.Item}>
         <Input
           type="password"
@@ -137,6 +149,7 @@ export function MyPageForm({ userId }: MyPageFormProps) {
           <div className={styles.errorText}>{errors.password.message}</div>
         )}
       </div>
+
       <div className={styles.Item}>
         <Input
           type="password"
@@ -151,11 +164,10 @@ export function MyPageForm({ userId }: MyPageFormProps) {
         )}
       </div>
 
-      {/* 급수 */}
       <div className={styles.itemFull}>
         <div className={styles.ItemLabel}>전국 급수</div>
         <div className={styles.GradeButtonGroup}>
-          {(['초심', 'D', 'C', 'B', 'A'] as const).map((g) => (
+          {GRADES.map((g) => (
             <Button
               key={g}
               text={g}

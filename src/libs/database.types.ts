@@ -175,7 +175,7 @@ export type Database = {
         };
         Relationships: [];
       };
-      player_card: {
+      players: {
         Row: {
           id: string;
           name: string | null;
