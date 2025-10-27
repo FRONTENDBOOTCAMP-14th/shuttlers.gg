@@ -54,6 +54,7 @@ export default function CheckInput({
           />
         </div>
         <Button
+          type="button"
           text={buttonText}
           variant="secondary"
           disabled={status === 'resolved'}

@@ -61,8 +61,6 @@ export default function RegisterForm({
           setStatus('resolved');
           toast.success('이메일 인증 완료!');
         }
-
-        await supabase.auth.signOut();
       }
     );
 

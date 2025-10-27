@@ -15,38 +15,48 @@ export default function RegisterPage() {
   const [step, setStep] = useState<1 | 2>(1);
 
   const handleRegister = async (formData: RegisterFormValues) => {
-    const { data, error: userError } = await supabase.auth.getUser();
+    try {
+      console.log('=== Register Submit Start ===');
+      console.log('Form Data:', formData);
 
-    if (!data.user || userError) {
-      return toast.error('이메일 인증이 완료되지 않았습니다.');
-    }
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
 
-    const { error: upsertError } = await supabase.from('users').upsert(
-      {
-        id: data.user.id,
-        email: data.user.email,
-        name: formData.name,
-        gender: formData.gender,
-        national_grade: formData.national_grade,
-        updated_at: new Date().toISOString(),
-      },
-      {
-        onConflict: 'id',
+      if (!user || userError) {
+        return toast.error('이메일 인증이 완료되지 않았습니다.');
       }
-    );
 
-    if (upsertError) {
-      return toast.error(
-        `회원가입 요청에 실패했습니다.\n${upsertError.message}`
+      const { error: upsertError } = await supabase.from('users').upsert(
+        {
+          id: user.id,
+          email: user.email,
+          name: formData.name,
+          gender: formData.gender,
+          national_grade: formData.national_grade,
+          updated_at: new Date().toISOString(),
+        },
+        {
+          onConflict: 'id',
+        }
       );
+
+      if (upsertError)
+        return toast.error(
+          `회원가입 요청에 실패했습니다.\n${upsertError.message}`
+        );
+
+      toast.success('회원가입 성공! 🎉\n로그인 화면으로 이동합니다.');
+      await supabase.auth.signOut();
+
+      setTimeout(() => {
+        router.push('/auth/login');
+      }, 1500);
+    } catch (err) {
+      console.error(err);
+      toast.error('회원가입 중 오류가 발생했습니다.');
     }
-
-    toast.success('회원가입 성공!\n로그인 화면으로 이동합니다.');
-    await supabase.auth.signOut();
-
-    setTimeout(() => {
-      router.push(`${window.location.origin}/auth/login`);
-    }, 1500);
   };
 
   return (
