@@ -10,7 +10,7 @@ import * as styles from './page.css';
 export default function VerifyPage() {
   const router = useRouter();
   const params = useSearchParams();
-  const [verified, setVeri] = useState(true);
+  const [verified, setVerified] = useState(true);
 
   useEffect(() => {
     const handleVerify = async () => {
@@ -18,7 +18,7 @@ export default function VerifyPage() {
       const type = params.get('type');
 
       if (!tokenHash || !type) {
-        setVeri(false);
+        setVerified(false);
         return toast.error('잘못된 인증입니다.');
       }
 
@@ -31,7 +31,7 @@ export default function VerifyPage() {
         if (error) {
           console.error('Verification error:', error);
           toast.error(`인증 실패: ${error.message}`);
-          setVeri(false);
+          setVerified(false);
           return;
         }
 
@@ -53,7 +53,7 @@ export default function VerifyPage() {
         }
       } catch (err) {
         toast.error('인증 오류 발생');
-        setVeri(false);
+        setVerified(false);
       }
     };
 
