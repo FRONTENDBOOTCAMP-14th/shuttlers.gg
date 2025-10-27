@@ -45,6 +45,40 @@ export type Database = {
           tnmt_id: string;
           updated_at: string;
         };
+        users: {
+          Row: { id: string; email: string /* ... */ };
+          Insert: { id?: string; email: string /* ... */ };
+          Update: { email?: string /* ... */ };
+          Relationships: [];
+        };
+        player_card: {
+          Row: {
+            id: string;
+            name: string | null;
+            gender: 'male' | 'female' | 'other' | null;
+            grade: '초심' | 'D' | 'C' | 'B' | 'A' | null;
+          };
+          Insert: {
+            id: string;
+            name?: string | null;
+            gender?: 'male' | 'female' | 'other' | null;
+            grade?: '초심' | 'D' | 'C' | 'B' | 'A' | null;
+          };
+          Update: {
+            name?: string | null;
+            gender?: 'male' | 'female' | 'other' | null;
+            grade?: '초심' | 'D' | 'C' | 'B' | 'A' | null;
+          };
+          Relationships: [
+            {
+              foreignKeyName: 'player_card_id_fkey';
+              columns: ['id'];
+              isOneToOne: true;
+              referencedRelation: 'users';
+              referencedColumns: ['id'];
+            },
+          ];
+        };
         Insert: {
           account_bank?: string | null;
           account_holder?: string | null;
@@ -140,6 +174,34 @@ export type Database = {
           updated_at?: string | null;
         };
         Relationships: [];
+      };
+      players: {
+        Row: {
+          id: string;
+          name: string | null;
+          gender: 'male' | 'female' | 'other' | null;
+          grade: '초심' | 'D' | 'C' | 'B' | 'A' | null;
+        };
+        Insert: {
+          id: string;
+          name?: string | null;
+          gender?: 'male' | 'female' | 'other' | null;
+          grade?: '초심' | 'D' | 'C' | 'B' | 'A' | null;
+        };
+        Update: {
+          name?: string | null;
+          gender?: 'male' | 'female' | 'other' | null;
+          grade?: '초심' | 'D' | 'C' | 'B' | 'A' | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'player_card_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
       };
     };
     Views: {
