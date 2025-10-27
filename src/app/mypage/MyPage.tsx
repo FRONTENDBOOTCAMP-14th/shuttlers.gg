@@ -7,13 +7,33 @@ import MyPageTabs from '@/components/MyPageTab/MyPageTab';
 import UserCard from '@/components/UserCard/UserCard';
 import { useUser } from '@/hooks/useUser';
 import { useState } from 'react';
+import { supabase } from '@/libs/supabase/client';
+import { useRouter } from 'next/navigation';
 
-const USER_ID = '02a687fb-561b-4bf2-a96a-1734a1610417';
-
-export function MyPage() {
+export function MyPage(id: string) {
+  const router = useRouter();
   const [tab, setTab] = useState<'profile' | 'group'>('profile');
-  const { name, email, gender, localGrade, nationalGrade, loading, refresh } =
-    useUser(USER_ID);
+
+  const {
+    name,
+    email,
+    gender,
+    localGrade,
+    nationalGrade,
+    loading,
+    refresh,
+  } = useUser(id);
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      router.replace('/landing');
+      router.refresh();
+    } catch (e) {
+      console.error('logout failed', e);
+      alert('로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.');
+    }
+  };
 
   if (loading) {
     return (
@@ -44,6 +64,7 @@ export function MyPage() {
         gender={gender}
         email={email}
         grade={{ local: localGrade, national: nationalGrade }}
+        onClick={handleLogout}
       />
 
       <MyPageTabs
@@ -55,7 +76,7 @@ export function MyPage() {
         onChange={(v) => setTab(v as 'profile' | 'group')}
       >
         {tab === 'profile' ? (
-          <MyPageForm userId={USER_ID} onSaveSuccess={refresh} />
+          <MyPageForm userId={id} onSaveSuccess={refresh} />
         ) : (
           <MyPageMeetup />
         )}
