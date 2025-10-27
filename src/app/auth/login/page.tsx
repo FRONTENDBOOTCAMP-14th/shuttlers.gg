@@ -37,35 +37,59 @@ export default function LoginPage() {
   });
 
   const handleLogin = async (formData: LoginFormValues) => {
-    const { data, error } = await supabase.auth.signInWithPassword(formData);
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword(formData);
 
-    if (error)
-      return toast.error(`로그인 실패!\n${error.status}: ${error.message}`);
-    if (!data.user) return toast.error('확인되지 않은 사용자입니다.');
+      if (error) {
+        if (error.message.includes('Invalid login credentials')) {
+          return toast.error(
+            '로그인 실패!\n아이디 또는 비밀번호가 올바르지 않습니다.'
+          );
+        } else if (error.message.includes('Email not confirmed')) {
+          return toast.error('로그인 실패!\n확인되지 않은 사용자입니다.');
+        }
+      }
 
-    const { data: userData } = await supabase
-      .from('users')
-      .select('name')
-      .eq('id', data.user.id)
-      .single();
+      if (!data.user) {
+        return toast.error('확인되지 않은 사용자입니다.');
+      }
 
-    toast.success(`어서 오세요, ${userData?.name || '회원'}님!`);
+      const { data: userData } = await supabase
+        .from('users')
+        .select('name')
+        .eq('id', data.user.id)
+        .single();
 
-    router.push('/');
+      toast.success(`어서 오세요, ${userData?.name || '회원'}님!`);
+      router.push('/');
+    } catch (err) {
+      console.error(err);
+      toast.error('로그인 중 오류가 발생했습니다.');
+    }
   };
 
   const handleSendLink = async (formData: SendFormValues) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(
-      formData.email,
-      { redirectTo: `${window.location.origin}/auth/reset-password/` }
-    );
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(
+        formData.email,
+        {
+          redirectTo: `${window.location.origin}/auth/reset-password`,
+        }
+      );
 
-    if (error) return toast.error('확인되지 않은 사용자입니다.');
+      if (error) {
+        console.error('Reset password email error:', error);
+        return toast.error('메일 발송에 실패했습니다.');
+      }
 
-    toast.error(
-      `비밀번호 재설정 메일 발송 완료!\n수신한 메일에서 링크를 클릭해 주세요.`
-    );
-    setStep(2);
+      toast.success(
+        `재설정 메일 발송 완료!\n수신한 메일에서 링크를 클릭해 주세요.`
+      );
+      setStep(2);
+    } catch (err) {
+      console.error(err);
+      toast.error('메일 발송 중 오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -103,15 +127,25 @@ export default function LoginPage() {
       <form onSubmit={sendMethods.handleSubmit(handleSendLink)}>
         <Modal
           title={
-            step === 1 ? '비밀번호를 잊으셨나요?🥲' : '이메일 전송 완료 ✅'
+            step === 1 ? '비밀번호를 잊으셨나요? 🥲' : '이메일 전송 완료 ✅'
           }
           visible={modal.isOpen}
           variant="alert"
           confirmText={step === 1 ? '링크 요청' : '확인'}
           onConfirm={
-            step === 1 ? sendMethods.handleSubmit(handleSendLink) : modal.close
+            step === 1
+              ? sendMethods.handleSubmit(handleSendLink)
+              : () => {
+                  modal.close();
+                  setStep(1);
+                  sendMethods.reset();
+                }
           }
-          onCancel={modal.close}
+          onCancel={() => {
+            modal.close();
+            setStep(1);
+            sendMethods.reset();
+          }}
         >
           <div className={styles.resetForm}>
             {step === 1 ? (
@@ -141,7 +175,7 @@ export default function LoginPage() {
                     color: tokens.color.text.caption,
                   }}
                 >
-                  링크는 5분 뒤 만료됩니다.
+                  링크는 1시간 뒤 만료됩니다.
                 </span>
               </>
             )}
