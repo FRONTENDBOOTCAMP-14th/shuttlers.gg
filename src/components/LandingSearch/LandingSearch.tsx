@@ -5,6 +5,7 @@ import {
   UserResultCard,
   UserResultCardProps,
 } from '@/components/UserResultCard/UserResultCard';
+import { supabase } from '@/libs/supabase/client';
 import { useEffect, useRef, useState } from 'react';
 import * as styles from './LandingSearch.css';
 
@@ -13,6 +14,8 @@ export type Player = {
   name: string;
   grade: UserResultCardProps['grade'];
   gender: NonNullable<UserResultCardProps['gender']>;
+  national_grade?: string | null;
+  local_grade?: string | null;
 };
 
 type LandingSearchProps = {
@@ -32,6 +35,25 @@ export default function LandingSearch({
   const [isFocused, setIsFocused] = useState(false);
   const searchResultsRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const fetchPlayers = async (keyword: string) => {
+    const { data, error } = await supabase
+      .from('players')
+      .select('id, name, gender, national_grade, local_grade')
+      .ilike('name', `%${keyword}%`);
+
+    return (data ?? []).map((player) => ({
+      ...player,
+      grade:
+        player.national_grade && player.local_grade
+          ? { national: player.national_grade, local: player.local_grade }
+          : player.national_grade
+            ? { national: player.national_grade }
+            : player.local_grade
+              ? { local: player.local_grade }
+              : null,
+    }));
+  };
 
   useEffect(() => {
     if (inputWrapperRef.current) {
@@ -69,8 +91,15 @@ export default function LandingSearch({
   }, []);
 
   useEffect(() => {
-    setSearchResults([]);
-    setSelectedIndex(-1);
+    if (searchKeyword.trim()) {
+      fetchPlayers(searchKeyword.trim()).then((results) => {
+        setSearchResults(results);
+        setSelectedIndex(-1);
+      });
+    } else {
+      setSearchResults([]);
+      setSelectedIndex(-1);
+    }
   }, [searchKeyword]);
 
   useEffect(() => {
@@ -216,10 +245,22 @@ export default function LandingSearch({
               onClick={() => handlePlayerClick(player)}
             >
               <UserResultCard
+                key={player.id}
                 id={player.id}
                 name={player.name}
-                grade={player.grade}
                 gender={player.gender}
+                grade={
+                  player.national_grade && player.local_grade
+                    ? {
+                        national: player.national_grade,
+                        local: player.local_grade,
+                      }
+                    : player.national_grade
+                      ? { national: player.national_grade }
+                      : player.local_grade
+                        ? { local: player.local_grade }
+                        : null
+                }
                 variant={searchKeyword.trim() ? 'result' : 'history'}
                 onClick={() => handlePlayerClick(player)}
                 onRemove={

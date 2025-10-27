@@ -12,7 +12,14 @@ import * as styles from './Input.css';
 
 type InputProps = {
   name: string;
-  type?: 'text' | 'email' | 'password' | 'search';
+  type?:
+    | 'text'
+    | 'search'
+    | 'email'
+    | 'password'
+    | 'calendar'
+    | 'time'
+    | 'date';
   label?: string;
   placeholder?: string;
   value?: string;
@@ -20,9 +27,16 @@ type InputProps = {
   error?: boolean;
   disabled?: boolean;
   onSearchClick?: () => void;
+  onCalendarClick?: () => void; // date picker 오픈
+  onTimeClick?: () => void; // time picker 오픈
   register?: UseFormRegisterReturn;
   variant?: 'primary' | 'secondary';
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  minLength?: number;
+  maxLength?: number;
+  required?: boolean;
+  inputMode?: string;
+  readOnly?: boolean;
 };
 
 const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
@@ -36,9 +50,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     error = false,
     disabled = false,
     onSearchClick,
+    onCalendarClick,
+    onTimeClick,
     register,
     variant = 'primary',
     onKeyDown,
+    required,
+    inputMode,
+    readOnly,
   },
   ref
 ) {
@@ -114,6 +133,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     }
   };
 
+  let inputType = type;
+  if (type === 'password') {
+    inputType = showPassword ? 'text' : 'password';
+  } else if (type === 'calendar') {
+    inputType = 'text';
+  }
+
   return (
     <div className={styles.inputField}>
       {label && <label htmlFor={name}>{label}</label>}
@@ -136,7 +162,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               : styles.input
           )}
           type={
-            type === 'password' ? (showPassword ? 'text' : 'password') : type
+            type === 'password'
+              ? showPassword
+                ? 'text'
+                : 'password'
+              : type === 'calendar'
+                ? 'text'
+                : type
           }
           placeholder={placeholder}
           value={register ? undefined : value}
@@ -146,6 +178,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           aria-invalid={error}
           disabled={disabled}
           onKeyDown={onKeyDown}
+          required={required}
+          inputMode={inputMode}
+          readOnly={readOnly}
           {...((register as any) ?? {})}
         />
 
@@ -174,7 +209,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           <button
             type="button"
             className={styles.searchIcon}
-            onClick={handleSearchClick}
+            onClick={onSearchClick}
             onFocus={() => setIsInputFocused(false)}
             onKeyDown={(e) => handleKeyDown(e, handleSearchClick)}
             onMouseDown={handleMouseDown}
@@ -184,6 +219,17 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           >
             <MagnifyingGlassIcon style={{ width: 20, height: 20 }} />
           </button>
+        )}
+
+        {type === 'time' && (
+          <button
+            type="button"
+            onClick={onTimeClick}
+            onFocus={() => setIsInputFocused(false)}
+            aria-label="시간 선택"
+            tabIndex={disabled ? -1 : 0}
+            disabled={disabled}
+          ></button>
         )}
       </div>
     </div>
