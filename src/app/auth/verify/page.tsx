@@ -3,14 +3,14 @@
 import Button from '@/components/Button/Button';
 import { supabase } from '@/libs/supabase/client';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import * as styles from './page.css';
 
-export default function VerifyPage() {
+function Verify() {
   const router = useRouter();
   const params = useSearchParams();
-  const [verified, setVerified] = useState(true);
+  const [isVerifying, setIsVerifying] = useState(true);
 
   useEffect(() => {
     const handleVerify = async () => {
@@ -18,7 +18,7 @@ export default function VerifyPage() {
       const type = params.get('type');
 
       if (!tokenHash || !type) {
-        setVerified(false);
+        setIsVerifying(false);
         return toast.error('잘못된 인증입니다.');
       }
 
@@ -29,10 +29,8 @@ export default function VerifyPage() {
         });
 
         if (error) {
-          console.error('Verification error:', error);
-          toast.error(`인증 실패: ${error.message}`);
-          setVerified(false);
-          return;
+          setIsVerifying(false);
+          return toast.error(`인증 실패: ${error.message}`);
         }
 
         if (data.session) {
@@ -53,7 +51,7 @@ export default function VerifyPage() {
         }
       } catch (err) {
         toast.error('인증 오류 발생');
-        setVerified(false);
+        setIsVerifying(false);
       }
     };
 
@@ -62,7 +60,7 @@ export default function VerifyPage() {
 
   return (
     <div className={styles.verifyPage}>
-      {verified ? (
+      {isVerifying ? (
         <>
           <div className={styles.statusIcon}>✉️</div>
           <h2>이메일 인증 중입니다...</h2>
@@ -89,5 +87,20 @@ export default function VerifyPage() {
         </>
       )}
     </div>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className={styles.verifyPage}>
+          <div className={styles.statusIcon}>⏳</div>
+          <h2>로딩 중...</h2>
+        </div>
+      }
+    >
+      <Verify />
+    </Suspense>
   );
 }
