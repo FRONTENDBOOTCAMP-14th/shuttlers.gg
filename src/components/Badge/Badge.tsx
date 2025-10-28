@@ -12,6 +12,8 @@ type BaseProps = {
   icon?: ReactNode;
   className?: string;
   active?: boolean;
+  onClick?: () => void;
+  tabIndex?: number;
 };
 
 export type BadgeProps =
@@ -36,12 +38,24 @@ export function Badge(props: BadgeProps) {
 
   const wantGradientText = isOutline && color === 'primary' && mode === 'light';
 
-  const textClass = wantGradientText ? styles.gradientText : styles.textSolid;
+  const textClass =
+    wantGradientText && props.active
+      ? styles.textSolid
+      : wantGradientText
+        ? styles.gradientText
+        : styles.textSolid;
 
   const outlineBorderModeClass =
     isOutline && color === 'primary'
       ? styles.outlinePrimaryMode[mode]
       : undefined;
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>) => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      props.onClick?.();
+    }
+  };
 
   return (
     <span
@@ -53,6 +67,10 @@ export function Badge(props: BadgeProps) {
       ]
         .filter(Boolean)
         .join(' ')}
+      onClick={props.onClick}
+      onKeyDown={handleKeyDown}
+      data-active={props.active ? 'true' : undefined}
+      tabIndex={props.tabIndex ?? 0}
     >
       {icon ? (
         <span aria-hidden className={styles.iconStyle}>

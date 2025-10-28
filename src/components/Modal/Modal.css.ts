@@ -44,7 +44,7 @@ export const modal = recipe({
 export const modalContent = style({
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
+  alignItems: 'stretch',
 });
 
 globalStyle(`${modalContent} > h2`, {

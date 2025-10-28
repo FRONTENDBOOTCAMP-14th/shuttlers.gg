@@ -128,6 +128,9 @@ export default function RegisterForm({
               type="password"
               label="비밀번호"
               placeholder="8자 이상 12자 이하"
+              minLength={8}
+              maxLength={12}
+              required
             />
             <Input
               {...register('password_check', passwordCheck(watch('password')))}
@@ -135,6 +138,9 @@ export default function RegisterForm({
               type="password"
               label="비밀번호 확인"
               placeholder="8자 이상 12자 이하"
+              minLength={8}
+              maxLength={12}
+              required
             />
 
             <Button
@@ -170,6 +176,8 @@ export default function RegisterForm({
               type="text"
               label="이름"
               placeholder="실명을 입력해주세요."
+              minLength={2}
+              required
             />
 
             <div

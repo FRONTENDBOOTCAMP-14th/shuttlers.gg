@@ -113,7 +113,7 @@ export type Database = {
         };
         Relationships: [];
       };
-      create_party: {
+      parties: {
         Row: {
           amount: number | null;
           created_at: string;
@@ -272,33 +272,104 @@ export type Database = {
       };
       users: {
         Row: {
-          created_at: string;
-          email: string | null;
+          amount: number | null;
+          created_at: string | null;
+          creator_id: string;
+          date: string;
+          end_time: string | null;
           gender: string | null;
+          grade: string | null;
           id: string;
-          name: string | null;
-          national_grade: string | null;
-          updated_at: string | null;
+          location: string;
+          max_participants: number | null;
+          notice: string | null;
+          participants: Json | null;
+          shuttle_cock: number | null;
+          start_time: string | null;
+          status: string;
+          title: string;
         };
         Insert: {
-          created_at?: string;
-          email?: string | null;
+          amount?: number | null;
+          created_at?: string | null;
+          creator_id: string;
+          date: string;
+          end_time?: string | null;
           gender?: string | null;
+          grade?: string | null;
           id?: string;
-          name?: string | null;
-          national_grade?: string | null;
-          updated_at?: string | null;
+          location: string;
+          max_participants?: number | null;
+          notice?: string | null;
+          participants?: Json | null;
+          shuttle_cock?: number | null;
+          start_time?: string | null;
+          status?: string;
+          title: string;
         };
         Update: {
-          created_at?: string;
-          email?: string | null;
+          amount?: number | null;
+          created_at?: string | null;
+          creator_id?: string;
+          date?: string;
+          end_time?: string | null;
           gender?: string | null;
+          grade?: string | null;
           id?: string;
-          name?: string | null;
-          national_grade?: string | null;
-          updated_at?: string | null;
+          location?: string;
+          max_participants?: number | null;
+          notice?: string | null;
+          participants?: Json | null;
+          shuttle_cock?: number | null;
+          start_time?: string | null;
+          status?: string;
+          title?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'parties_creator_id_fkey';
+            columns: ['creator_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      party_participants: {
+        Row: {
+          id: string;
+          joined_at: string;
+          party_id: string;
+          user_id: string;
+        };
+        Insert: {
+          id?: string;
+          joined_at?: string;
+          party_id: string;
+          user_id: string;
+        };
+        Update: {
+          id?: string;
+          joined_at?: string;
+          party_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'party_participants_party_id_fkey';
+            columns: ['party_id'];
+            isOneToOne: false;
+            referencedRelation: 'parties';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'party_participants_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
       };
     };
     Views: {

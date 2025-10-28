@@ -17,6 +17,7 @@ export const inputWrapper = style({
 export const resultsContainer = style({
   position: 'absolute',
   maxWidth: '710px',
+  width: '100%',
   top: '70px',
   left: 0,
   right: 0,
@@ -27,7 +28,8 @@ export const resultsContainer = style({
   boxShadow: tokens.elevation.shadow.primary,
   zIndex: 99,
   height: '260px',
-  overflow: 'hidden',
+  overflowY: 'auto',
+  overflowX: 'hidden',
   paddingTop: '10px',
   outline: 'none',
 });
