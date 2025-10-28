@@ -2,30 +2,31 @@ import { tokens } from '@/styles/tokens.css';
 import { textStyle } from '@/styles/typography.css';
 import { globalStyle, style } from '@vanilla-extract/css';
 
-export const registerPage = style({
+export const verifyPage = style({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  rowGap: 50,
-  width: '100%',
+  alignItems: 'center',
   height: '100%',
+  width: '100%',
   maxWidth: 700,
   marginInline: 'auto',
-});
-
-export const registerHeader = style({
-  display: 'flex',
-  flexDirection: 'column',
-  rowGap: 12,
-  alignItems: 'center',
-});
-
-globalStyle(`${registerHeader} > h2`, {
-  ...textStyle.subtitle.bold,
-});
-
-globalStyle(`${registerHeader} > p`, {
-  ...textStyle.heading.semibold,
-  color: tokens.color.text.body,
   textAlign: 'center',
+});
+
+export const statusIcon = style({
+  fontSize: '64px',
+  marginBottom: '24px',
+});
+
+globalStyle(`${verifyPage} > h2`, {
+  ...textStyle.subtitle.bold,
+  color: tokens.color.text.title,
+  marginBottom: 12,
+});
+
+globalStyle(`${verifyPage} > p`, {
+  ...textStyle.body.regular,
+  color: tokens.color.text.body,
+  marginBottom: 24,
 });

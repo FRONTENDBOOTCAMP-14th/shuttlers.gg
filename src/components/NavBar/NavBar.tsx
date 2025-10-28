@@ -1,6 +1,6 @@
 import Input from '@/components/Input/Input';
 import Logo from '@/components/Logo/Logo';
-import { Users } from '@/libs/supabase/client';
+import { useUser } from '@/hooks/useUser';
 import {
   ArrowLeftIcon,
   ArrowRightEndOnRectangleIcon,
@@ -24,7 +24,6 @@ type Menu = {
 
 type NavBarProps = {
   navItems?: Menu[];
-  user?: Pick<Users, 'id'>;
   theme: 'light' | 'dark';
   variant?: 'primary' | 'secondary' | 'minimal';
   activePath?: string;
@@ -34,7 +33,6 @@ type NavBarProps = {
 
 export default function NavBar({
   navItems,
-  user = undefined,
   theme = 'light',
   variant = 'primary',
   activePath = '/',
@@ -43,6 +41,7 @@ export default function NavBar({
 }: NavBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const { id, loading } = useUser();
 
   useEffect(() => {
     const handleResize = () => {
@@ -66,7 +65,12 @@ export default function NavBar({
               className={styles.navItem({})}
             >
               <div
-                style={{ display: 'flex', alignItems: 'center', columnGap: 8 }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  columnGap: 8,
+                  lineHeight: 1,
+                }}
               >
                 <ArrowLeftIcon width={24} aria-hidden />
                 이전으로
@@ -84,8 +88,6 @@ export default function NavBar({
             </button>
 
             <div className={styles.navMenu({ isOpen })}>
-              <div>{showSearch && <Input name="search" type="search" />}</div>
-
               {navItems && (
                 <ul
                   style={{
@@ -107,12 +109,21 @@ export default function NavBar({
                   })}
                 </ul>
               )}
+
+              {showSearch && (
+                <Input
+                  type="search"
+                  name="search-player"
+                  placeholder="전적 검색"
+                  variant="secondary"
+                />
+              )}
             </div>
 
             <div style={{ display: 'flex', columnGap: 16 }}>
-              {user ? (
+              {id ? (
                 <Link
-                  href={`mypage/${user.id}`}
+                  href={`/mypage/${id}`}
                   aria-label="마이페이지"
                   className={styles.menuIcon}
                 >
@@ -120,7 +131,7 @@ export default function NavBar({
                 </Link>
               ) : (
                 <Link
-                  href="auth/login"
+                  href="/auth/login"
                   aria-label="로그인"
                   className={styles.menuIcon}
                 >

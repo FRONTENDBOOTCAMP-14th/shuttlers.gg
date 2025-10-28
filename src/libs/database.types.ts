@@ -186,43 +186,40 @@ export type Database = {
       }
       player_stats: {
         Row: {
-          best_rank: number | null
-          competition_type: Database["public"]["Enums"]["competition_enum"]
-          event_type: Database["public"]["Enums"]["event_enum"]
-          grade: Database["public"]["Enums"]["grade_enum"]
-          histories: Json
+          competition_type: Database["public"]["Enums"]["competition_enum"] | null
+          created_at: string
+          event_type: Database["public"]["Enums"]["event_enum"] | null
+          grade: Database["public"]["Enums"]["grade_enum"] | null
           id: string
-          losses: number
-          partners: Json
-          player_id: string
+          losses: number | null
+          player_id: string | null
+          rank: number | null
           updated_at: string
-          wins: number
+          wins: number | null
         }
         Insert: {
-          best_rank?: number | null
-          competition_type: Database["public"]["Enums"]["competition_enum"]
-          event_type: Database["public"]["Enums"]["event_enum"]
-          grade: Database["public"]["Enums"]["grade_enum"]
-          histories?: Json
+          competition_type?: Database["public"]["Enums"]["competition_enum"] | null
+          created_at?: string
+          event_type?: Database["public"]["Enums"]["event_enum"] | null
+          grade?: Database["public"]["Enums"]["grade_enum"] | null
           id?: string
-          losses?: number
-          partners?: Json
-          player_id: string
+          losses?: number | null
+          player_id?: string | null
+          rank?: number | null
           updated_at?: string
-          wins?: number
+          wins?: number | null
         }
         Update: {
-          best_rank?: number | null
-          competition_type?: Database["public"]["Enums"]["competition_enum"]
-          event_type?: Database["public"]["Enums"]["event_enum"]
-          grade?: Database["public"]["Enums"]["grade_enum"]
-          histories?: Json
+          competition_type?: Database["public"]["Enums"]["competition_enum"] | null
+          created_at?: string
+          event_type?: Database["public"]["Enums"]["event_enum"] | null
+          grade?: Database["public"]["Enums"]["grade_enum"] | null
           id?: string
-          losses?: number
-          partners?: Json
-          player_id?: string
+          losses?: number | null
+          player_id?: string | null
+          rank?: number | null
           updated_at?: string
-          wins?: number
+          wins?: number | null
         }
         Relationships: [
           {
@@ -252,7 +249,7 @@ export type Database = {
           local_grade: Database["public"]["Enums"]["grade_enum"]
           name: string
           national_grade: Database["public"]["Enums"]["grade_enum"]
-          role?: Database["public"]["Enums"]["role_enum"]
+          role: Database["public"]["Enums"]["role_enum"]
           updated_at?: string
         }
         Update: {

@@ -10,12 +10,14 @@ export default function ThemeToggler({ children }: PropsWithChildren) {
   const path = usePathname();
 
   const variant =
-    path === '/'
-      ? 'primary'
+    path === '/landing'
+      ? 'secondary'
       : path.startsWith('/auth')
-        ? 'minimal'
-        : 'secondary';
-  const showSearch = path === '/';
+        ? path.startsWith('/auth/verify')
+          ? 'secondary'
+          : 'minimal'
+        : 'primary';
+  const showSearch = !(path === '/landing' || path.startsWith('/auth'));
 
   const menus = [
     { label: '대회일정', path: '/calendar' },
