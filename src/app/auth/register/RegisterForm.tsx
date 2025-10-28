@@ -80,14 +80,11 @@ export default function RegisterForm({
         .eq('email', email)
         .maybeSingle();
 
-      const { data: all } = await supabase.from('users').select('email, name');
-
       if (exstingUser) {
         const isCompleted =
           exstingUser?.name &&
           exstingUser?.gender &&
           exstingUser?.national_grade;
-        console.log(isCompleted);
 
         if (isCompleted) {
           return toast.error('이미 가입된 이메일입니다.');
