@@ -93,10 +93,7 @@ export default function ResetPasswordPage() {
         <Input
           {...resetMethods.register(
             'password_check',
-            passwordCheck(
-              resetMethods.watch('password'),
-              resetMethods.watch('password_check')
-            )
+            passwordCheck(resetMethods.watch('password'))
           )}
           type="password"
           label="비밀번호 확인"

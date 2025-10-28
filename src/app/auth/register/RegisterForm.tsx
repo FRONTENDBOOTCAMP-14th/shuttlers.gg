@@ -130,10 +130,7 @@ export default function RegisterForm({
               placeholder="8자 이상 12자 이하"
             />
             <Input
-              {...register(
-                'password_check',
-                passwordCheck(watch('password'), watch('password_check'))
-              )}
+              {...register('password_check', passwordCheck(watch('password')))}
               name="password_check"
               type="password"
               label="비밀번호 확인"
