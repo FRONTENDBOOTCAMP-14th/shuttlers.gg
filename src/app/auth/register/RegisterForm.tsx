@@ -39,7 +39,7 @@ export default function RegisterForm({
   onClickNext,
   onSubmitAction,
 }: RegisterFormProps) {
-  const { handleSubmit, register, setValue, trigger, watch } =
+  const { handleSubmit, register, setValue, trigger, watch, formState } =
     useFormContext<RegisterFormValues>();
   const modal = useModal();
 
@@ -104,6 +104,21 @@ export default function RegisterForm({
     );
   };
 
+  const handleStepNext = async () => {
+    const isValid = await trigger(['email', 'password', 'password_check']);
+
+    if (!isValid) {
+      const firstError = Object.values(formState.errors)[0];
+      return toast.error(firstError?.message || '입력값을 확인해주세요.');
+    }
+
+    if (status !== 'resolved') {
+      return toast.error('이메일 인증을 완료해주세요.');
+    }
+
+    onClickNext();
+  };
+
   return (
     <>
       <form
@@ -142,23 +157,7 @@ export default function RegisterForm({
               text="다음으로"
               variant="primary"
               size="long"
-              onClick={async () => {
-                const isValid = await trigger([
-                  'email',
-                  'password',
-                  'password_check',
-                ]);
-
-                if (!isValid) {
-                  return toast.error('입력값을 확인해주세요.');
-                }
-
-                if (status !== 'resolved') {
-                  return toast.error('이메일 인증을 완료해주세요.');
-                }
-
-                onClickNext();
-              }}
+              onClick={handleStepNext}
             />
           </>
         )}
@@ -272,7 +271,7 @@ export default function RegisterForm({
               text="가입 완료"
               variant="primary"
               size="long"
-              disabled={!checked}
+              disabled={!checked || !gender || !grade}
             />
           </>
         )}
