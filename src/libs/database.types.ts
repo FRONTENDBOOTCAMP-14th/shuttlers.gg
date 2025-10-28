@@ -16,37 +16,37 @@ export type Database = {
     Tables: {
       bk_tournaments: {
         Row: {
-          account_bank: string | null
-          account_holder: string | null
-          account_number: string | null
-          apply_end: string | null
-          apply_start: string | null
-          category: string | null
-          contact_primary: string | null
-          contacts: string[] | null
-          detail_kv: Json | null
-          detail_rows: Json
-          detail_url: string | null
-          end_date: string | null
-          event_end: string | null
-          event_start: string | null
-          fee_amount: number | null
-          fee_raw: string | null
-          host: string | null
-          inserted_at: string
-          organizer: string | null
-          parsed: Json | null
-          poster_url: string | null
-          raw: Json
-          region: string | null
-          sponsor: string | null
-          start_date: string | null
-          start_month: string | null
-          supporter: string | null
-          title: string
-          tnmt_id: string
-          updated_at: string
-        }
+          account_bank: string | null;
+          account_holder: string | null;
+          account_number: string | null;
+          apply_end: string | null;
+          apply_start: string | null;
+          category: string | null;
+          contact_primary: string | null;
+          contacts: string[] | null;
+          detail_kv: Json | null;
+          detail_rows: Json;
+          detail_url: string | null;
+          end_date: string | null;
+          event_end: string | null;
+          event_start: string | null;
+          fee_amount: number | null;
+          fee_raw: string | null;
+          host: string | null;
+          inserted_at: string;
+          organizer: string | null;
+          parsed: Json | null;
+          poster_url: string | null;
+          raw: Json;
+          region: string | null;
+          sponsor: string | null;
+          start_date: string | null;
+          start_month: string | null;
+          supporter: string | null;
+          title: string;
+          tnmt_id: string;
+          updated_at: string;
+        };
         Insert: {
           account_bank?: string | null
           account_holder?: string | null
@@ -80,40 +80,197 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          account_bank?: string | null
-          account_holder?: string | null
-          account_number?: string | null
-          apply_end?: string | null
-          apply_start?: string | null
-          category?: string | null
-          contact_primary?: string | null
-          contacts?: string[] | null
-          detail_kv?: Json | null
-          detail_rows?: Json
-          detail_url?: string | null
-          end_date?: string | null
-          event_end?: string | null
-          event_start?: string | null
-          fee_amount?: number | null
-          fee_raw?: string | null
-          host?: string | null
-          inserted_at?: string
-          organizer?: string | null
-          parsed?: Json | null
-          poster_url?: string | null
-          raw?: Json
-          region?: string | null
-          sponsor?: string | null
-          start_date?: string | null
-          start_month?: string | null
-          supporter?: string | null
-          title?: string
-          tnmt_id?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
+          account_bank?: string | null;
+          account_holder?: string | null;
+          account_number?: string | null;
+          apply_end?: string | null;
+          apply_start?: string | null;
+          category?: string | null;
+          contact_primary?: string | null;
+          contacts?: string[] | null;
+          detail_kv?: Json | null;
+          detail_rows?: Json;
+          detail_url?: string | null;
+          end_date?: string | null;
+          event_end?: string | null;
+          event_start?: string | null;
+          fee_amount?: number | null;
+          fee_raw?: string | null;
+          host?: string | null;
+          inserted_at?: string;
+          organizer?: string | null;
+          parsed?: Json | null;
+          poster_url?: string | null;
+          raw?: Json;
+          region?: string | null;
+          sponsor?: string | null;
+          start_date?: string | null;
+          start_month?: string | null;
+          supporter?: string | null;
+          title?: string;
+          tnmt_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       create_party: {
+        Row: {
+          amount: number | null;
+          created_at: string;
+          creator_id: string | null;
+          creator_name: string | null;
+          date: string | null;
+          end_time: string | null;
+          gender: string | null;
+          grade: string | null;
+          id: number;
+          location: string | null;
+          max_participants: number | null;
+          notice: string | null;
+          participants: number | null;
+          participantsList: string[] | null;
+          shuttleCock: number | null;
+          start_time: string | null;
+          status: string | null;
+          title: string | null;
+        };
+        Insert: {
+          amount?: number | null;
+          created_at?: string;
+          creator_id?: string | null;
+          creator_name?: string | null;
+          date?: string | null;
+          end_time?: string | null;
+          gender?: string | null;
+          grade?: string | null;
+          id?: number;
+          location?: string | null;
+          max_participants?: number | null;
+          notice?: string | null;
+          participants?: number | null;
+          participantsList?: string[] | null;
+          shuttleCock?: number | null;
+          start_time?: string | null;
+          status?: string | null;
+          title?: string | null;
+        };
+        Update: {
+          amount?: number | null;
+          created_at?: string;
+          creator_id?: string | null;
+          creator_name?: string | null;
+          date?: string | null;
+          end_time?: string | null;
+          gender?: string | null;
+          grade?: string | null;
+          id?: number;
+          location?: string | null;
+          max_participants?: number | null;
+          notice?: string | null;
+          participants?: number | null;
+          participantsList?: string[] | null;
+          shuttleCock?: number | null;
+          start_time?: string | null;
+          status?: string | null;
+          title?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'create_party_creator_id_fkey';
+            columns: ['creator_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      player_stats: {
+        Row: {
+          competition_type:
+            | Database['public']['Enums']['competition_enum']
+            | null;
+          created_at: string;
+          event_type: Database['public']['Enums']['event_enum'] | null;
+          grade: Database['public']['Enums']['grade_enum'] | null;
+          id: string;
+          losses: number | null;
+          player_id: string | null;
+          rank: number | null;
+          updated_at: string;
+          wins: number | null;
+        };
+        Insert: {
+          competition_type?:
+            | Database['public']['Enums']['competition_enum']
+            | null;
+          created_at?: string;
+          event_type?: Database['public']['Enums']['event_enum'] | null;
+          grade?: Database['public']['Enums']['grade_enum'] | null;
+          id?: string;
+          losses?: number | null;
+          player_id?: string | null;
+          rank?: number | null;
+          updated_at?: string;
+          wins?: number | null;
+        };
+        Update: {
+          competition_type?:
+            | Database['public']['Enums']['competition_enum']
+            | null;
+          created_at?: string;
+          event_type?: Database['public']['Enums']['event_enum'] | null;
+          grade?: Database['public']['Enums']['grade_enum'] | null;
+          id?: string;
+          losses?: number | null;
+          player_id?: string | null;
+          rank?: number | null;
+          updated_at?: string;
+          wins?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'player_stats_player_id_fkey';
+            columns: ['player_id'];
+            isOneToOne: false;
+            referencedRelation: 'players';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      players: {
+        Row: {
+          created_at: string;
+          gender: Database['public']['Enums']['gender_enum'];
+          id: string;
+          local_grade: Database['public']['Enums']['grade_enum'];
+          name: string;
+          national_grade: Database['public']['Enums']['grade_enum'];
+          role: Database['public']['Enums']['role_enum'];
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          gender: Database['public']['Enums']['gender_enum'];
+          id?: string;
+          local_grade: Database['public']['Enums']['grade_enum'];
+          name: string;
+          national_grade: Database['public']['Enums']['grade_enum'];
+          role: Database['public']['Enums']['role_enum'];
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          gender?: Database['public']['Enums']['gender_enum'];
+          id?: string;
+          local_grade?: Database['public']['Enums']['grade_enum'];
+          name?: string;
+          national_grade?: Database['public']['Enums']['grade_enum'];
+          role?: Database['public']['Enums']['role_enum'];
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      users: {
         Row: {
           amount: number | null
           created_at: string
@@ -155,184 +312,55 @@ export type Database = {
           title?: string | null
         }
         Update: {
-          amount?: number | null
-          created_at?: string
-          creator_id?: string | null
-          creator_name?: string | null
-          date?: string | null
-          end_time?: string | null
-          gender?: string | null
-          grade?: string | null
-          id?: number
-          location?: string | null
-          max_participants?: number | null
-          notice?: string | null
-          participants?: number | null
-          participantsList?: string[] | null
-          shuttleCock?: number | null
-          start_time?: string | null
-          status?: string | null
-          title?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "create_party_creator_id_fkey"
-            columns: ["creator_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      player_stats: {
-        Row: {
-          competition_type: Database["public"]["Enums"]["competition_enum"] | null
-          created_at: string
-          event_type: Database["public"]["Enums"]["event_enum"] | null
-          grade: Database["public"]["Enums"]["grade_enum"] | null
-          id: string
-          losses: number | null
-          player_id: string | null
-          rank: number | null
-          updated_at: string
-          wins: number | null
-        }
-        Insert: {
-          competition_type?: Database["public"]["Enums"]["competition_enum"] | null
-          created_at?: string
-          event_type?: Database["public"]["Enums"]["event_enum"] | null
-          grade?: Database["public"]["Enums"]["grade_enum"] | null
-          id?: string
-          losses?: number | null
-          player_id?: string | null
-          rank?: number | null
-          updated_at?: string
-          wins?: number | null
-        }
-        Update: {
-          competition_type?: Database["public"]["Enums"]["competition_enum"] | null
-          created_at?: string
-          event_type?: Database["public"]["Enums"]["event_enum"] | null
-          grade?: Database["public"]["Enums"]["grade_enum"] | null
-          id?: string
-          losses?: number | null
-          player_id?: string | null
-          rank?: number | null
-          updated_at?: string
-          wins?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "player_stats_player_id_fkey"
-            columns: ["player_id"]
-            isOneToOne: false
-            referencedRelation: "players"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      players: {
-        Row: {
-          created_at: string
-          gender: Database["public"]["Enums"]["gender_enum"]
-          id: string
-          local_grade: Database["public"]["Enums"]["grade_enum"]
-          name: string
-          national_grade: Database["public"]["Enums"]["grade_enum"]
-          role: Database["public"]["Enums"]["role_enum"]
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          gender: Database["public"]["Enums"]["gender_enum"]
-          id?: string
-          local_grade: Database["public"]["Enums"]["grade_enum"]
-          name: string
-          national_grade: Database["public"]["Enums"]["grade_enum"]
-          role: Database["public"]["Enums"]["role_enum"]
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          gender?: Database["public"]["Enums"]["gender_enum"]
-          id?: string
-          local_grade?: Database["public"]["Enums"]["grade_enum"]
-          name?: string
-          national_grade?: Database["public"]["Enums"]["grade_enum"]
-          role?: Database["public"]["Enums"]["role_enum"]
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      users: {
-        Row: {
-          created_at: string
-          email: string | null
-          gender: string | null
-          id: string
-          name: string | null
-          national_grade: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string
-          email?: string | null
-          gender?: string | null
-          id?: string
-          name?: string | null
-          national_grade?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string
-          email?: string | null
-          gender?: string | null
-          id?: string
-          name?: string | null
-          national_grade?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-    }
+          created_at?: string;
+          email?: string | null;
+          gender?: string | null;
+          id?: string;
+          name?: string | null;
+          national_grade?: string | null;
+          updated_at?: string | null;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
       player_stats_summary: {
         Row: {
-          best_rank: number | null
+          best_rank: number | null;
           competition_type:
-            | Database["public"]["Enums"]["competition_enum"]
-            | null
-          event_type: Database["public"]["Enums"]["event_enum"] | null
-          games: number | null
-          grade: Database["public"]["Enums"]["grade_enum"] | null
-          player_id: string | null
-          total_losses: number | null
-          total_wins: number | null
-          win_rate: number | null
-        }
+            | Database['public']['Enums']['competition_enum']
+            | null;
+          event_type: Database['public']['Enums']['event_enum'] | null;
+          games: number | null;
+          grade: Database['public']['Enums']['grade_enum'] | null;
+          player_id: string | null;
+          total_losses: number | null;
+          total_wins: number | null;
+          win_rate: number | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "player_stats_player_id_fkey"
-            columns: ["player_id"]
-            isOneToOne: false
-            referencedRelation: "players"
-            referencedColumns: ["id"]
+            foreignKeyName: 'player_stats_player_id_fkey';
+            columns: ['player_id'];
+            isOneToOne: false;
+            referencedRelation: 'players';
+            referencedColumns: ['id'];
           },
-        ]
-      }
-    }
+        ];
+      };
+    };
     Functions: {
       [_ in never]: never
     }
     Enums: {
-      competition_enum: "national" | "local"
-      event_enum: "single" | "double"
-      gender_enum: "male" | "female"
-      grade_enum: "A" | "B" | "C" | "D" | "초심" | "준자강" | "자강"
-      local_grade_enum: "A" | "B" | "C" | "D" | "초심"
-      national_grade_enum: "A" | "B" | "C" | "D" | "초심" | "준자강" | "자강"
-      role_enum: "amateur" | "pro"
-    }
+      competition_enum: 'national' | 'local';
+      event_enum: 'single' | 'double';
+      gender_enum: 'male' | 'female';
+      grade_enum: 'A' | 'B' | 'C' | 'D' | '초심' | '준자강' | '자강';
+      local_grade_enum: 'A' | 'B' | 'C' | 'D' | '초심';
+      national_grade_enum: 'A' | 'B' | 'C' | 'D' | '초심' | '준자강' | '자강';
+      role_enum: 'amateur' | 'pro';
+    };
     CompositeTypes: {
       [_ in never]: never
     }
@@ -459,13 +487,13 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      competition_enum: ["national", "local"],
-      event_enum: ["single", "double"],
-      gender_enum: ["male", "female"],
-      grade_enum: ["A", "B", "C", "D", "초심", "준자강", "자강"],
-      local_grade_enum: ["A", "B", "C", "D", "초심"],
-      national_grade_enum: ["A", "B", "C", "D", "초심", "준자강", "자강"],
-      role_enum: ["amateur", "pro"],
+      competition_enum: ['national', 'local'],
+      event_enum: ['single', 'double'],
+      gender_enum: ['male', 'female'],
+      grade_enum: ['A', 'B', 'C', 'D', '초심', '준자강', '자강'],
+      local_grade_enum: ['A', 'B', 'C', 'D', '초심'],
+      national_grade_enum: ['A', 'B', 'C', 'D', '초심', '준자강', '자강'],
+      role_enum: ['amateur', 'pro'],
     },
   },
 } as const

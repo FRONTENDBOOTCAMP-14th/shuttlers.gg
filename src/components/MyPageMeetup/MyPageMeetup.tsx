@@ -15,13 +15,6 @@ type Meetup = {
   status: PartyStatus;
 };
 
-const DUMMY_MEETUP: Meetup = {
-  title: '함께 운동하실분',
-  participants: 20,
-  maxParticipants: 30,
-  status: 'full',
-};
-
 type MeetupSectionProps = {
   title: string;
   meetups: Meetup[];

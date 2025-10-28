@@ -10,5 +10,6 @@ import { useParams } from 'next/navigation';
 
 export default function MyPagePage() {
   const params = useParams<{ id: string }>();
+
   return <MyPage id={params.id} />;
 }

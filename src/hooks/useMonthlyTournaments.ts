@@ -112,19 +112,22 @@ export function useMonthlyTournaments(year: number, month: number) {
       if (myReqId === reqIdRef.current) {
         setState({ data, isLoading: false, error: null });
       }
-    } catch (err: any) {
-      if (err?.name === 'AbortError') return;
+    } catch (e) {
+      const error = e as Error;
+      if (error?.name === 'AbortError') return;
       if (myReqId === reqIdRef.current) {
-        setState({ data: [], isLoading: false, error: err });
+        setState({ data: [], isLoading: false, error });
       }
     }
   }, [year, month]);
 
   useEffect(() => {
+    const currentReqId = reqIdRef.current;
+
     fetchData();
     return () => {
       abortControllerRef.current?.abort();
-      reqIdRef.current++;
+      reqIdRef.current = currentReqId + 1;
     };
   }, [fetchData]);
 
@@ -160,7 +163,7 @@ export function useMonthlyTournaments(year: number, month: number) {
   }, [state.data, year, month]);
 
   const getByDate = useCallback(
-    (d: Date | null) => (d ? dateIndex.get(ymd(d)) ?? [] : state.data),
+    (d: Date | null) => (d ? (dateIndex.get(ymd(d)) ?? []) : state.data),
     [dateIndex, state.data]
   );
 

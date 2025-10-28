@@ -154,8 +154,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       >
         <input
           id={name}
-          name={name}
-          ref={register ? undefined : ref}
           className={clsx(
             type === 'search'
               ? variant === 'secondary'
@@ -174,16 +172,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           }
           placeholder={placeholder}
           value={register ? undefined : value}
-          onChange={register ? undefined : onChange}
           onFocus={() => setIsInputFocused(true)}
-          onBlur={() => setIsInputFocused(false)}
           aria-invalid={error}
           disabled={disabled}
           onKeyDown={onKeyDown}
-          required={required}
-          inputMode={inputMode}
-          readOnly={readOnly}
-          {...((register as any) ?? {})}
+          {...(register ?? {
+            ref,
+            name,
+            onChange,
+            onBlur: () => setIsInputFocused(false),
+          })}
         />
 
         {type === 'password' && (

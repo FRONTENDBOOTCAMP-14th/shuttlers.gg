@@ -130,10 +130,7 @@ export default function RegisterForm({
               placeholder="8자 이상 12자 이하"
             />
             <Input
-              {...register(
-                'password_check',
-                passwordCheck(watch('password'), watch('password_check'))
-              )}
+              {...register('password_check', passwordCheck(watch('password')))}
               name="password_check"
               type="password"
               label="비밀번호 확인"
@@ -296,13 +293,14 @@ export default function RegisterForm({
         }}
         visible={modal.isOpen}
       >
+        {/* TODO: 이용 약관 추가 예정 */}
         <p>
           <strong>제 1 장 총칙 제 1 조</strong>
           <br />
-          (목적) 본 약관은 (주)셔틀러스(이하 "회사"라 합니다)가 운영하는
+          {`(목적) 본 약관은 (주)셔틀러스(이하 "회사"라 합니다)가 운영하는
           웹사이트 '셔틀러스' (www.shuttlers.gg) (이하 "웹사이트"라 합니다)에서
           제공하는 온라인 서비스(이하 "서비스"라 한다)를 이용함에 있어
-          사이버몰과 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
+          사이버몰과 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.`}
         </p>
       </Modal>
     </>
