@@ -1,3 +1,4 @@
+// src/hooks/useUser.ts
 'use client';
 
 import { supabase } from '@/libs/supabase/client';
@@ -11,40 +12,38 @@ type UserData = {
   name: string | null;
   email: string;
   gender: Gender | null;
-  localGrade: GradeValue | null;
   nationalGrade: GradeValue | null;
 };
 
-type SaveInput = Partial<
-  Pick<UserData, 'name' | 'gender' | 'nationalGrade' | 'localGrade'>
->;
+type SaveInput = Partial<Pick<UserData, 'name' | 'gender' | 'nationalGrade'>>;
 
-type PlayerDbRow = {
+/** users 테이블 스키마 */
+type UserDbRow = {
   id: string;
+  email: string | null;
   name: string | null;
   gender: Gender | null;
   national_grade: GradeValue | null;
-  local_grade: GradeValue | null;
 };
 
 const DEV_AUTHLESS = process.env.NEXT_PUBLIC_AUTHLESS_DEV === '1';
 const LS_KEY = '__mypage_dev_user__';
+const UUID_RE = /^[0-9a-fA-F-]{36}$/;
 
 const DEFAULT_DEV_USER: UserData = {
   id: '00000000-0000-0000-0000-000000000000',
   name: '김민턴',
   email: 'dev@example.com',
   gender: 'male',
-  localGrade: 'A',
   nationalGrade: 'A',
 };
 
-function loadDevUser(targetId?: string): UserData {
+function loadDevUser(targetId?: unknown): UserData {
   if (typeof window === 'undefined') return DEFAULT_DEV_USER;
-
   const raw = localStorage.getItem(LS_KEY);
   const base = raw ? (JSON.parse(raw) as UserData) : DEFAULT_DEV_USER;
-  return targetId ? { ...base, id: targetId } : base;
+  const normId = normalizeId(targetId);
+  return normId ? { ...base, id: normId } : base;
 }
 
 function saveDevUser(data: UserData): void {
@@ -53,35 +52,44 @@ function saveDevUser(data: UserData): void {
   }
 }
 
-function mapPlayerToUserData(
-  userId: string,
-  email: string,
-  player: PlayerDbRow | null
+/** 라우트/임의 입력을 안전한 string id로 정규화 */
+function normalizeId(input: unknown): string | null {
+  if (!input) return null;
+  if (typeof input === 'string') return input;
+  // 흔한 케이스: { id: '...' } 또는 { params: { id: '...' } }
+  if (typeof input === 'object') {
+    const any = input as any;
+    if (typeof any.id === 'string') return any.id;
+    if (any.params && typeof any.params.id === 'string') return any.params.id;
+    if (Array.isArray(any)) return typeof any[0] === 'string' ? any[0] : null;
+  }
+  return null;
+}
+
+function mapUserRowToUserData(
+  row: UserDbRow | null,
+  fallbackId: string,
+  fallbackEmail: string
 ): UserData {
   return {
-    id: userId,
-    email,
-    name: player?.name ?? null,
-    gender: player?.gender ?? null,
-    localGrade: player?.local_grade ?? null,
-    nationalGrade: player?.national_grade ?? null,
+    id: row?.id ?? fallbackId,
+    email: row?.email ?? fallbackEmail ?? '',
+    name: row?.name ?? null,
+    gender: (row?.gender as Gender | null) ?? null,
+    nationalGrade: row?.national_grade ?? null,
   };
 }
 
-function mapSaveInputToDbPayload(updates: SaveInput): Partial<PlayerDbRow> {
-  const payload: Partial<PlayerDbRow> = {};
-
+function mapSaveInputToDbPayload(updates: SaveInput): Partial<UserDbRow> {
+  const payload: Partial<UserDbRow> = {};
   if (updates.name !== undefined) payload.name = updates.name ?? null;
   if (updates.gender !== undefined) payload.gender = updates.gender ?? null;
-  if (updates.localGrade !== undefined)
-    payload.local_grade = updates.localGrade ?? null;
   if (updates.nationalGrade !== undefined)
     payload.national_grade = updates.nationalGrade ?? null;
-
   return payload;
 }
 
-export function useUser(targetId?: string) {
+export function useUser(targetId?: unknown) {
   const client = useMemo(() => supabase, []);
 
   const [data, setData] = useState<UserData | null>(null);
@@ -101,36 +109,72 @@ export function useUser(targetId?: string) {
         return;
       }
 
-      const { data: sessionData } = await client.auth.getSession();
-      const session = sessionData.session;
-      const authId = session?.user?.id;
+      const {
+        data: sessionData,
+        error: sessionErr,
+      } = await client.auth.getSession();
+      if (sessionErr) throw sessionErr;
 
-      const userId = targetId ?? authId;
-      if (!userId) throw new Error('로그인이 필요합니다.');
+      const session = sessionData.session ?? null;
+      const authId = session?.user?.id ?? null;
 
-      setCanEdit(!!authId && authId === userId);
+      // targetId가 객체여도 안전하게 문자열로 변환
+      const userIdRaw = normalizeId(targetId) ?? authId;
+      if (!userIdRaw) {
+        // 로그인/타겟 모두 없으면 빈 프로필 반환(원하면 throw로 바꿔도 됨)
+        setData({
+          id: '',
+          email: '',
+          name: null,
+          gender: null,
+          nationalGrade: null,
+        });
+        setCanEdit(false);
+        return;
+      }
 
-      let email = authId === userId ? (session?.user?.email ?? '') : '';
+      // uuid 컬럼이면 형식 체크(형식 안 맞으면 조회 스킵)
+      if (!UUID_RE.test(userIdRaw)) {
+        console.warn('[useUser] non-UUID id detected:', userIdRaw);
+        setData({
+          id: userIdRaw,
+          email: '',
+          name: null,
+          gender: null,
+          nationalGrade: null,
+        });
+        setCanEdit(false);
+        return;
+      }
 
-      const { data: user } = await client
+      setCanEdit(!!authId && authId === userIdRaw);
+
+      const { data: row, error: userErr } = await client
         .from('users')
-        .select('email')
-        .eq('id', userId)
-        .maybeSingle();
+        .select('id, email, name, gender, national_grade')
+        .eq('id', userIdRaw)
+        .maybeSingle<UserDbRow>();
 
-      if (user?.email) email = user.email;
+      if (userErr) {
+        console.error('[useUser] select error:', userErr);
+        throw userErr;
+      }
 
-      const { data: player, error: playerError } = await client
-        .from('players')
-        .select('id, name, gender, national_grade, local_grade')
-        .eq('id', userId)
-        .maybeSingle<PlayerDbRow>();
+      if (!row) {
+        const minimal: UserData = {
+          id: userIdRaw,
+          email: session?.user?.email ?? '',
+          name: null,
+          gender: null,
+          nationalGrade: null,
+        };
+        setData(minimal);
+        return;
+      }
 
-      if (playerError) throw playerError;
-
-      setData(mapPlayerToUserData(userId, email, player));
-    } catch (e: any) {
-      console.error('[useUser] fetch error:', e);
+      setData(mapUserRowToUserData(row, userIdRaw, session?.user?.email ?? ''));
+    } catch (e) {
+      console.error('[useUser] fetch error:', e, e?.message, e?.code);
       setError(e?.message ?? '사용자 정보를 불러오지 못했습니다.');
       setData(null);
       setCanEdit(false);
@@ -152,14 +196,24 @@ export function useUser(targetId?: string) {
 
       if (!canEdit) throw new Error('수정 권한이 없습니다.');
 
+      // id가 uuid가 아니면 서버 업데이트 스킵
+      if (!UUID_RE.test(data.id)) {
+        console.warn('[useUser] skip update: non-UUID id:', data.id);
+        setData((prev) => (prev ? { ...prev, ...updates } : prev));
+        return;
+      }
+
       const payload = mapSaveInputToDbPayload(updates);
 
       const { error: updateError } = await client
-        .from('players')
+        .from('users')
         .update(payload)
         .eq('id', data.id);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error('[useUser] update error:', updateError);
+        throw updateError;
+      }
 
       setData((prev) => (prev ? { ...prev, ...updates } : prev));
     },
@@ -182,7 +236,6 @@ export function useUser(targetId?: string) {
     name: data?.name ?? '',
     email: data?.email ?? '',
     gender: data?.gender ?? null,
-    localGrade: data?.localGrade ?? null,
     nationalGrade: data?.nationalGrade ?? null,
     loading,
     error,

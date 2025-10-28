@@ -32,7 +32,7 @@ export function CompetitionCard({
   tags,
 }: CompetitionCardProps) {
   return (
-    <Link href={`/tournaments/${tnmtId}`} className={styles.competitionCard}>
+    <Link href={`/tournament/${tnmtId}`} className={styles.competitionCard}>
       <div
         className={[
           styles.competitionCardHeader,

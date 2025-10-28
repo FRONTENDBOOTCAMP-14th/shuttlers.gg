@@ -13,7 +13,7 @@ import * as styles from './MyPageForm.css';
 const GENDERS = ['male', 'female', 'other'] as const;
 const GRADES = ['초심', 'D', 'C', 'B', 'A'] as const;
 
-const GENDER_LABELS: Record<(typeof GENDERS)[number], string> = {
+const GENDER_LABELS: Record<typeof GENDERS[number], string> = {
   male: '남성',
   female: '여성',
   other: '기타',
@@ -21,11 +21,28 @@ const GENDER_LABELS: Record<(typeof GENDERS)[number], string> = {
 
 const schema = z
   .object({
-    name: z.string().trim().min(1, '이름을 입력하세요').max(40),
-    gender: z.enum(GENDERS).nullable().optional(),
-    grade: z.enum(['초심', 'D', 'C', 'B', 'A', '-']).nullable().optional(),
-    password: z.string().min(8, '8자 이상').optional().or(z.literal('')),
-    passwordConfirm: z.string().optional().or(z.literal('')),
+    name: z
+      .string()
+      .trim()
+      .min(1, '이름을 입력하세요')
+      .max(40),
+    gender: z
+      .enum(GENDERS)
+      .nullable()
+      .optional(),
+    grade: z
+      .enum(['초심', 'D', 'C', 'B', 'A', '-'])
+      .nullable()
+      .optional(),
+    password: z
+      .string()
+      .min(8, '8자 이상')
+      .optional()
+      .or(z.literal('')),
+    passwordConfirm: z
+      .string()
+      .optional()
+      .or(z.literal('')),
   })
   .refine((v) => !v.password || v.password === v.passwordConfirm, {
     message: '비밀번호가 일치하지 않습니다',
@@ -40,8 +57,15 @@ type MyPageFormProps = {
 };
 
 export function MyPageForm({ userId, onSaveSuccess }: MyPageFormProps) {
-  const { name, gender, nationalGrade, loading, error, save, canEdit } =
-    useUser(userId);
+  const {
+    name,
+    gender,
+    nationalGrade,
+    loading,
+    error,
+    save,
+    canEdit,
+  } = useUser(userId);
 
   const {
     register,
