@@ -7,6 +7,8 @@ export type Json =
   | Json[];
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: '13.0.5';
   };
@@ -44,40 +46,6 @@ export type Database = {
           title: string;
           tnmt_id: string;
           updated_at: string;
-        };
-        users: {
-          Row: { id: string; email: string /* ... */ };
-          Insert: { id?: string; email: string /* ... */ };
-          Update: { email?: string /* ... */ };
-          Relationships: [];
-        };
-        player_card: {
-          Row: {
-            id: string;
-            name: string | null;
-            gender: 'male' | 'female' | 'other' | null;
-            grade: '초심' | 'D' | 'C' | 'B' | 'A' | null;
-          };
-          Insert: {
-            id: string;
-            name?: string | null;
-            gender?: 'male' | 'female' | 'other' | null;
-            grade?: '초심' | 'D' | 'C' | 'B' | 'A' | null;
-          };
-          Update: {
-            name?: string | null;
-            gender?: 'male' | 'female' | 'other' | null;
-            grade?: '초심' | 'D' | 'C' | 'B' | 'A' | null;
-          };
-          Relationships: [
-            {
-              foreignKeyName: 'player_card_id_fkey';
-              columns: ['id'];
-              isOneToOne: true;
-              referencedRelation: 'users';
-              referencedColumns: ['id'];
-            },
-          ];
         };
         Insert: {
           account_bank?: string | null;
@@ -145,6 +113,163 @@ export type Database = {
         };
         Relationships: [];
       };
+      create_party: {
+        Row: {
+          amount: number | null;
+          created_at: string;
+          creator_id: string | null;
+          creator_name: string | null;
+          date: string | null;
+          end_time: string | null;
+          gender: string | null;
+          grade: string | null;
+          id: number;
+          location: string | null;
+          max_participants: number | null;
+          notice: string | null;
+          participants: number | null;
+          participantsList: string[] | null;
+          shuttleCock: number | null;
+          start_time: string | null;
+          status: string | null;
+          title: string | null;
+        };
+        Insert: {
+          amount?: number | null;
+          created_at?: string;
+          creator_id?: string | null;
+          creator_name?: string | null;
+          date?: string | null;
+          end_time?: string | null;
+          gender?: string | null;
+          grade?: string | null;
+          id?: number;
+          location?: string | null;
+          max_participants?: number | null;
+          notice?: string | null;
+          participants?: number | null;
+          participantsList?: string[] | null;
+          shuttleCock?: number | null;
+          start_time?: string | null;
+          status?: string | null;
+          title?: string | null;
+        };
+        Update: {
+          amount?: number | null;
+          created_at?: string;
+          creator_id?: string | null;
+          creator_name?: string | null;
+          date?: string | null;
+          end_time?: string | null;
+          gender?: string | null;
+          grade?: string | null;
+          id?: number;
+          location?: string | null;
+          max_participants?: number | null;
+          notice?: string | null;
+          participants?: number | null;
+          participantsList?: string[] | null;
+          shuttleCock?: number | null;
+          start_time?: string | null;
+          status?: string | null;
+          title?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'create_party_creator_id_fkey';
+            columns: ['creator_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      player_stats: {
+        Row: {
+          competition_type:
+            | Database['public']['Enums']['competition_enum']
+            | null;
+          created_at: string;
+          event_type: Database['public']['Enums']['event_enum'] | null;
+          grade: Database['public']['Enums']['grade_enum'] | null;
+          id: string;
+          losses: number | null;
+          player_id: string | null;
+          rank: number | null;
+          updated_at: string;
+          wins: number | null;
+        };
+        Insert: {
+          competition_type?:
+            | Database['public']['Enums']['competition_enum']
+            | null;
+          created_at?: string;
+          event_type?: Database['public']['Enums']['event_enum'] | null;
+          grade?: Database['public']['Enums']['grade_enum'] | null;
+          id?: string;
+          losses?: number | null;
+          player_id?: string | null;
+          rank?: number | null;
+          updated_at?: string;
+          wins?: number | null;
+        };
+        Update: {
+          competition_type?:
+            | Database['public']['Enums']['competition_enum']
+            | null;
+          created_at?: string;
+          event_type?: Database['public']['Enums']['event_enum'] | null;
+          grade?: Database['public']['Enums']['grade_enum'] | null;
+          id?: string;
+          losses?: number | null;
+          player_id?: string | null;
+          rank?: number | null;
+          updated_at?: string;
+          wins?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'player_stats_player_id_fkey';
+            columns: ['player_id'];
+            isOneToOne: false;
+            referencedRelation: 'players';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      players: {
+        Row: {
+          created_at: string;
+          gender: Database['public']['Enums']['gender_enum'];
+          id: string;
+          local_grade: Database['public']['Enums']['grade_enum'];
+          name: string;
+          national_grade: Database['public']['Enums']['grade_enum'];
+          role: Database['public']['Enums']['role_enum'];
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          gender: Database['public']['Enums']['gender_enum'];
+          id?: string;
+          local_grade: Database['public']['Enums']['grade_enum'];
+          name: string;
+          national_grade: Database['public']['Enums']['grade_enum'];
+          role: Database['public']['Enums']['role_enum'];
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          gender?: Database['public']['Enums']['gender_enum'];
+          id?: string;
+          local_grade?: Database['public']['Enums']['grade_enum'];
+          name?: string;
+          national_grade?: Database['public']['Enums']['grade_enum'];
+          role?: Database['public']['Enums']['role_enum'];
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       users: {
         Row: {
           created_at: string;
@@ -175,43 +300,44 @@ export type Database = {
         };
         Relationships: [];
       };
-      players: {
+    };
+    Views: {
+      player_stats_summary: {
         Row: {
-          id: string;
-          name: string | null;
-          gender: 'male' | 'female' | 'other' | null;
-          grade: '초심' | 'D' | 'C' | 'B' | 'A' | null;
-        };
-        Insert: {
-          id: string;
-          name?: string | null;
-          gender?: 'male' | 'female' | 'other' | null;
-          grade?: '초심' | 'D' | 'C' | 'B' | 'A' | null;
-        };
-        Update: {
-          name?: string | null;
-          gender?: 'male' | 'female' | 'other' | null;
-          grade?: '초심' | 'D' | 'C' | 'B' | 'A' | null;
+          best_rank: number | null;
+          competition_type:
+            | Database['public']['Enums']['competition_enum']
+            | null;
+          event_type: Database['public']['Enums']['event_enum'] | null;
+          games: number | null;
+          grade: Database['public']['Enums']['grade_enum'] | null;
+          player_id: string | null;
+          total_losses: number | null;
+          total_wins: number | null;
+          win_rate: number | null;
         };
         Relationships: [
           {
-            foreignKeyName: 'player_card_id_fkey';
-            columns: ['id'];
-            isOneToOne: true;
-            referencedRelation: 'users';
+            foreignKeyName: 'player_stats_player_id_fkey';
+            columns: ['player_id'];
+            isOneToOne: false;
+            referencedRelation: 'players';
             referencedColumns: ['id'];
           },
         ];
       };
     };
-    Views: {
-      [_ in never]: never;
-    };
     Functions: {
       [_ in never]: never;
     };
     Enums: {
-      [_ in never]: never;
+      competition_enum: 'national' | 'local';
+      event_enum: 'single' | 'double';
+      gender_enum: 'male' | 'female';
+      grade_enum: 'A' | 'B' | 'C' | 'D' | '초심' | '준자강' | '자강';
+      local_grade_enum: 'A' | 'B' | 'C' | 'D' | '초심';
+      national_grade_enum: 'A' | 'B' | 'C' | 'D' | '초심' | '준자강' | '자강';
+      role_enum: 'amateur' | 'pro';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -341,6 +467,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      competition_enum: ['national', 'local'],
+      event_enum: ['single', 'double'],
+      gender_enum: ['male', 'female'],
+      grade_enum: ['A', 'B', 'C', 'D', '초심', '준자강', '자강'],
+      local_grade_enum: ['A', 'B', 'C', 'D', '초심'],
+      national_grade_enum: ['A', 'B', 'C', 'D', '초심', '준자강', '자강'],
+      role_enum: ['amateur', 'pro'],
+    },
   },
 } as const;

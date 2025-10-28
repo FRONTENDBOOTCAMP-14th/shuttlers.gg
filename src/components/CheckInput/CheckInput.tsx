@@ -43,14 +43,12 @@ export default function CheckInput({
         <div className={styles.inputWrapper}>
           <input
             id={name}
-            name={name}
-            ref={register ? undefined : inputRef}
             className={styles.input}
             type={type}
             placeholder={placeholder}
             value={register ? undefined : value}
             disabled={status === 'resolved'}
-            {...((register as any) ?? {})}
+            {...(register ?? { ref: inputRef, name })}
           />
         </div>
         <Button

@@ -6,23 +6,17 @@ import MyPageMeetup from '@/components/MyPageMeetup/MyPageMeetup';
 import MyPageTabs from '@/components/MyPageTab/MyPageTab';
 import UserCard from '@/components/UserCard/UserCard';
 import { useUser } from '@/hooks/useUser';
-import { useState } from 'react';
 import { supabase } from '@/libs/supabase/client';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-export function MyPage(id: string) {
+export function MyPage({ id }: { id: string }) {
   const router = useRouter();
   const [tab, setTab] = useState<'profile' | 'group'>('profile');
 
-  const {
-    name,
-    email,
-    gender,
-    localGrade,
-    nationalGrade,
-    loading,
-    refresh,
-  } = useUser(id);
+  const { name, email, gender, nationalGrade, loading, refresh } = useUser(id);
+
+  console.log(id);
 
   const handleLogout = async () => {
     try {
@@ -63,7 +57,7 @@ export function MyPage(id: string) {
         name={name}
         gender={gender}
         email={email}
-        grade={{ local: localGrade, national: nationalGrade }}
+        grade={{ local: null, national: nationalGrade }}
         onClick={handleLogout}
       />
 

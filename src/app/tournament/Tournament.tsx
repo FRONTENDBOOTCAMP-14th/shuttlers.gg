@@ -12,6 +12,7 @@ import {
   GiftIcon,
   MegaphoneIcon,
 } from '@heroicons/react/24/solid';
+import Image from 'next/image';
 import { useMemo } from 'react';
 
 type Prize = { rank: string; item: string; reward: string };
@@ -75,8 +76,8 @@ export function Tournament(props: TournamentDetailProps) {
           <h2 className={styles.tournamentTitle}>{title}</h2>
           <ul className={styles.tournamentInfoTag}>
             {regionTags.map((tag: string) => (
-              <li>
-                <Badge key={tag} text={tag} variant="outline" color="white" />
+              <li key={tag}>
+                <Badge text={tag} variant="outline" color="white" />
               </li>
             ))}
             <li>
@@ -168,7 +169,7 @@ export function Tournament(props: TournamentDetailProps) {
             대회 포스터
           </h2>
           <figure>
-            <img
+            <Image
               src={posterUrl}
               alt="대회 포스터"
               className={styles.posterImg}

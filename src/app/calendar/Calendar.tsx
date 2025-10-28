@@ -23,7 +23,7 @@ export function Calendar() {
   const [month, setMonth] = useState<number>(10);
   const [date, setDate] = useState<Date | null>(null);
 
-  const { data, events, isLoading, error, getByDate } = useMonthlyTournaments(
+  const { events, isLoading, error, getByDate } = useMonthlyTournaments(
     year,
     month
   );

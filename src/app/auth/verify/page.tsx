@@ -2,6 +2,7 @@
 
 import Button from '@/components/Button/Button';
 import { supabase } from '@/libs/supabase/client';
+import { EmailOtpType } from '@supabase/supabase-js';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -25,7 +26,7 @@ function Verify() {
       try {
         const { data, error } = await supabase.auth.verifyOtp({
           token_hash: tokenHash,
-          type: type as any,
+          type: type as EmailOtpType,
         });
 
         if (error) {
@@ -51,6 +52,7 @@ function Verify() {
         }
       } catch (err) {
         toast.error('인증 오류 발생');
+        console.error(err);
         setIsVerifying(false);
       }
     };
