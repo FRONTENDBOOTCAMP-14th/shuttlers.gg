@@ -121,22 +121,26 @@ export default function NavBar({
             </div>
 
             <div style={{ display: 'flex', columnGap: 16 }}>
-              {id ? (
-                <Link
-                  href={`/mypage/${id}`}
-                  aria-label="마이페이지"
-                  className={styles.menuIcon}
-                >
-                  <UserCircleIcon width={24} />
-                </Link>
-              ) : (
-                <Link
-                  href="/auth/login"
-                  aria-label="로그인"
-                  className={styles.menuIcon}
-                >
-                  <ArrowRightEndOnRectangleIcon width={24} />
-                </Link>
+              {!loading && (
+                <>
+                  {id ? (
+                    <Link
+                      href={`/mypage/${id}`}
+                      aria-label="마이페이지"
+                      className={styles.menuIcon}
+                    >
+                      <UserCircleIcon width={24} />
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/auth/login"
+                      aria-label="로그인"
+                      className={styles.menuIcon}
+                    >
+                      <ArrowRightEndOnRectangleIcon width={24} />
+                    </Link>
+                  )}
+                </>
               )}
               <button
                 onClick={onToggleTheme}

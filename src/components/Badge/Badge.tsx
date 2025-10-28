@@ -24,7 +24,6 @@ export function Badge(props: BadgeProps) {
 
   const { text = '태그', icon, className } = props;
   const isOutline = props.variant === 'outline';
-  const variant = isOutline ? 'outline' : 'filled';
 
   const color = isOutline
     ? (props.color ?? 'primary')

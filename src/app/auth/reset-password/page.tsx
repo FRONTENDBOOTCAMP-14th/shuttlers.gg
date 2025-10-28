@@ -59,7 +59,9 @@ export default function ResetPasswordPage() {
       setTimeout(() => {
         router.push('/auth/login');
       }, 1500);
-    } catch (error: any) {
+    } catch (e) {
+      const error = e as { message?: string; code?: string };
+
       if (error.message?.includes('same as the old password')) {
         return toast.error('이전 비밀번호와 동일합니다.');
       } else if (error.message?.includes('weak password')) {
@@ -76,7 +78,7 @@ export default function ResetPasswordPage() {
     <div className={styles.resetPasswordPage}>
       <div className={styles.resetPasswordHeader}>
         <h2>비밀번호 재설정</h2>
-        <p>'{email}' 계정의 비밀번호를 재설정합니다.</p>
+        <p>{`${email} 계정의 비밀번호를 재설정합니다.`}</p>
       </div>
       <form
         onSubmit={resetMethods.handleSubmit(handleResetPassword)}

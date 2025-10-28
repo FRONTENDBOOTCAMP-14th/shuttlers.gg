@@ -56,13 +56,30 @@ function saveDevUser(data: UserData): void {
 function normalizeId(input: unknown): string | null {
   if (!input) return null;
   if (typeof input === 'string') return input;
+
   // 흔한 케이스: { id: '...' } 또는 { params: { id: '...' } }
   if (typeof input === 'object') {
-    const any = input as any;
-    if (typeof any.id === 'string') return any.id;
-    if (any.params && typeof any.params.id === 'string') return any.params.id;
-    if (Array.isArray(any)) return typeof any[0] === 'string' ? any[0] : null;
+    if (input === null) return null;
+
+    if ('id' in input && typeof input.id === 'string') {
+      return input.id;
+    }
+
+    if (
+      'params' in input &&
+      typeof input.params === 'object' &&
+      input.params !== null &&
+      'id' in input.params &&
+      typeof input.params.id === 'string'
+    ) {
+      return input.params.id;
+    }
+
+    if (Array.isArray(input) && typeof input[0] === 'string') {
+      return input[0];
+    }
   }
+
   return null;
 }
 
@@ -109,10 +126,8 @@ export function useUser(targetId?: unknown) {
         return;
       }
 
-      const {
-        data: sessionData,
-        error: sessionErr,
-      } = await client.auth.getSession();
+      const { data: sessionData, error: sessionErr } =
+        await client.auth.getSession();
       if (sessionErr) throw sessionErr;
 
       const session = sessionData.session ?? null;
@@ -174,8 +189,9 @@ export function useUser(targetId?: unknown) {
 
       setData(mapUserRowToUserData(row, userIdRaw, session?.user?.email ?? ''));
     } catch (e) {
-      console.error('[useUser] fetch error:', e, e?.message, e?.code);
-      setError(e?.message ?? '사용자 정보를 불러오지 못했습니다.');
+      const error = e as { message?: string; code?: string };
+      console.error('[useUser] fetch error:', e, error.message, error.code);
+      setError(error.message ?? '사용자 정보를 불러오지 못했습니다.');
       setData(null);
       setCanEdit(false);
     } finally {
