@@ -108,11 +108,3 @@ export const buttonWrapper = style({
   display: 'flex',
   justifyContent: 'flex-end',
 });
-
-export const datepickerInput = style({
-  cursor: 'pointer',
-});
-
-export const timepickerInput = style({
-  cursor: 'pointer',
-});

@@ -38,8 +38,6 @@ type InputProps = {
   inputMode?: string;
   readOnly?: boolean;
   className?: string;
-  min?: number | string;
-  max?: number | string;
 };
 
 const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
@@ -62,8 +60,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     inputMode,
     readOnly,
     className,
-    min,
-    max,
   },
   ref
 ) {
@@ -187,8 +183,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           required={required}
           inputMode={inputMode}
           readOnly={readOnly}
-          min={min}
-          max={max}
           {...((register as any) ?? {})}
         />
 

@@ -146,8 +146,6 @@ export default function OpenPartyPage() {
           required
           type="text"
           inputMode="numeric"
-          min={1}
-          max={100}
         />
         <Input
           name="date"
@@ -175,7 +173,6 @@ export default function OpenPartyPage() {
           onChange={(e) => setEndTime(e.target.value)}
           required
           type="time"
-          className={styles.datepickerInput}
         />
         <Input
           name="location"
@@ -223,8 +220,6 @@ export default function OpenPartyPage() {
           required
           type="text"
           inputMode="numeric"
-          min={0}
-          max={100000}
         />
         <Input
           name="shuttleCock"
@@ -238,8 +233,6 @@ export default function OpenPartyPage() {
           required
           type="text"
           inputMode="numeric"
-          min={1}
-          max={100}
         />
       </div>
 
