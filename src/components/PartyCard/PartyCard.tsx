@@ -11,18 +11,32 @@ import { Badge } from '../Badge/Badge';
 import Button, { ButtonVariant } from '../Button/Button';
 import * as styles from './PartyCard.css';
 
-type Gender = 'male' | 'female' | 'any';
-type Grade = 'beginner' | 'D' | 'C' | 'B' | 'A' | 'any';
+type Grade = 'beginner' | 'D' | 'C' | 'B' | 'A';
 type PartyStatus = 'joinable' | 'full' | 'joined' | 'readonly';
+
+type User = {
+  id: string;
+  name: string;
+  grade?: Grade | null;
+  gender?: 'male' | 'female';
+};
 
 export type PartyInfo = {
   title: string;
-  schedule?: { dateTime: string; location: string };
+  schedule?: {
+    date: string;
+    start_time: string;
+    end_time: string;
+    location: string;
+  };
   participants: number;
   maxParticipants: number;
-  conditions?: { gender: Gender; grade: Grade };
+  conditions?: { gender: string; grade: string };
   materials?: { amount: number; shuttleCock: number };
   status: PartyStatus;
+  creator_id?: string;
+  participantsList?: User[];
+  notice?: string | null;
 };
 
 type PartyCardProps = {
@@ -33,6 +47,16 @@ type PartyCardProps = {
   onDetail?: () => void;
 };
 
+function formatDate(dateStr: string) {
+  if (!dateStr) return '';
+  return dateStr.replace(/-/g, '.');
+}
+
+function formatTime(timeStr: string) {
+  if (!timeStr) return '';
+  return timeStr.slice(0, 5);
+}
+
 export default function PartyCard({
   party,
   view = 'detailed',
@@ -40,17 +64,10 @@ export default function PartyCard({
   onCancel,
   onDetail,
 }: PartyCardProps) {
-  const {
-    title,
-    schedule,
-    participants,
-    maxParticipants,
-    conditions,
-    materials,
-    status,
-  } = party;
+  const { title, schedule, participants, maxParticipants, materials, status } =
+    party;
 
-  const thumbnailImage = thumbnails[party.title.length % thumbnails.length];
+  const thumbnailImage = thumbnails[title.length % thumbnails.length];
   const buttonVariant: Record<
     PartyInfo['status'],
     { color: ButtonVariant; text: string; action?: () => void }
@@ -96,6 +113,8 @@ export default function PartyCard({
           icon={<UserGroupIcon width={16} aria-hidden />}
           variant="filled"
           color="dark"
+          onClick={undefined}
+          tabIndex={-1}
           aria-label={`최대 인원 ${maxParticipants}명 중 ${participants}명 참가함`}
         />
       </header>
@@ -105,7 +124,11 @@ export default function PartyCard({
           <div className={styles.schedule}>
             <h4 className="sr-only">모임 일시</h4>
             <ClockIcon width={16} aria-hidden />
-            <span>{schedule?.dateTime}</span>
+            <span>
+              {schedule
+                ? `${formatDate(schedule.date)} | ${formatTime(schedule.start_time)} - ${formatTime(schedule.end_time)}`
+                : ''}
+            </span>
           </div>
           <div className={styles.schedule}>
             <h4 className="sr-only">모임 장소</h4>
@@ -121,27 +144,33 @@ export default function PartyCard({
                 <li>
                   <Badge
                     text={
-                      conditions?.gender === 'male'
+                      party.conditions?.gender === 'male'
                         ? '남성'
-                        : conditions?.gender === 'female'
+                        : party.conditions?.gender === 'female'
                           ? '여성'
                           : '성별무관'
                     }
                     variant="outline"
                     color="primary"
+                    onClick={undefined}
+                    tabIndex={-1}
                   />
                 </li>
                 <li>
                   <Badge
                     text={
-                      conditions?.grade === 'any'
+                      party.conditions?.grade === 'any'
                         ? '실력무관'
-                        : conditions?.grade === 'beginner'
+                        : party.conditions?.grade === 'beginner'
                           ? '초심'
-                          : `${conditions?.grade}조 이상`
+                          : party.conditions?.grade
+                            ? `${party.conditions.grade}조 이상`
+                            : '급수무관'
                     }
                     variant="outline"
                     color="primary"
+                    onClick={undefined}
+                    tabIndex={-1}
                   />
                 </li>
               </ul>
@@ -151,9 +180,11 @@ export default function PartyCard({
               <ul style={{ display: 'flex', columnGap: 4 }}>
                 <li>
                   <Badge
-                    text={`￦ ${materials?.amount}`}
+                    text={`￦ ${materials?.amount?.toLocaleString?.() ?? 0}`}
                     variant="outline"
                     color="primary"
+                    onClick={undefined}
+                    tabIndex={-1}
                   />
                 </li>
                 <li>
@@ -161,6 +192,8 @@ export default function PartyCard({
                     text={`콕 ${materials?.shuttleCock}개`}
                     variant="outline"
                     color="primary"
+                    onClick={undefined}
+                    tabIndex={-1}
                   />
                 </li>
               </ul>

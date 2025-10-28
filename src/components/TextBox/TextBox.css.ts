@@ -5,8 +5,7 @@ import { tokens } from '../../styles/tokens.css';
 export const textBox = style([
   textStyle.body.regular,
   {
-    width: '545px',
-    height: '140px',
+    width: '100%',
     background: tokens.color.surface.raised,
     color: tokens.color.text.placeholder,
     padding: '20px',

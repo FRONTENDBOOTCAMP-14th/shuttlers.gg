@@ -4,11 +4,15 @@ import { Badge } from '@/components/Badge/Badge';
 import * as styles from '@/components/UserResultCard/UserResultCard.css';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
+
+export type PersonalGrade = 'beginner' | 'D' | 'C' | 'B' | 'A';
 
 type Grade =
   | { national: string; local?: never }
   | { national?: never; local: string }
-  | { national: string; local: string };
+  | { national: string; local: string }
+  | null;
 
 export type UserResultCardProps = {
   id: string;
@@ -19,24 +23,23 @@ export type UserResultCardProps = {
   onClick?: () => void;
   onRemove?: () => void;
   searchQuery?: string;
+  icon?: ReactNode;
 };
 
 function formatGrade(grade: Grade | null) {
-  if (!grade) return null; 
+  if (!grade) return null;
 
-  const parts = []; 
+  const parts = [];
 
   if (grade.local) {
-    
     parts.push(`지역${grade.local}`);
   }
 
   if (grade.national) {
-   
     parts.push(`전국${grade.national}`);
   }
 
-  return parts.join(' '); 
+  return parts.join(' ');
 }
 
 function escapeRegExp(s: string) {

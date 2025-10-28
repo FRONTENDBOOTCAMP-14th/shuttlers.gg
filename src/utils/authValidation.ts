@@ -18,8 +18,8 @@ export const passwordRules = {
   },
 };
 
-export const passwordCheck = (pw: string, pwChk: string) => ({
-  validate: (value: string) => pw === pwChk || '비밀번호가 일치하지 않습니다.',
+export const passwordCheck = (pw: string) => ({
+  validate: (pwChk: string) => pw === pwChk || '비밀번호가 일치하지 않습니다.',
 });
 
 export const nameRules = {

@@ -14,6 +14,7 @@ export type TextBoxProps = {
   maxHeight?: number;
   className?: string;
   style?: CSSProperties;
+  readOnly?: boolean;
 };
 
 export function TextBox({
@@ -27,6 +28,7 @@ export function TextBox({
   maxHeight,
   className,
   style,
+  readOnly,
 }: TextBoxProps) {
   const isControlled = value !== undefined;
   const [inner, setInner] = useState<string>(value ?? '');
@@ -62,13 +64,15 @@ export function TextBox({
       placeholder={placeholder}
       disabled={disabled}
       maxLength={maxLength}
+      readOnly={readOnly}
       value={isControlled ? value : inner}
       onChange={handleChange}
       className={[styles.textBox, className].filter(Boolean).join(' ')}
-      style={{ minHeight, ...style }}
+      style={{ minHeight, ...style, pointerEvents: readOnly ? 'none' : 'auto' }}
       aria-disabled={disabled || undefined}
       spellCheck={false}
       rows={1}
+      tabIndex={readOnly ? -1 : 0}
     />
   );
 }

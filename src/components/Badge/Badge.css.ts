@@ -17,6 +17,13 @@ export const badgeBase = style([
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+
+    selectors: {
+      '&:focus-visible': {
+        outline: `2px solid ${tokens.color.field.border.focus}`,
+        offset: '2px',
+      },
+    },
   },
 ]);
 
@@ -29,8 +36,8 @@ export const gradientText = style({
 });
 
 export const textSolid = style({
-  color: 'currentColor',
-  WebkitTextFillColor: 'currentColor',
+  color: 'inherit',
+  WebkitTextFillColor: 'inherit',
 });
 
 export const iconStyle = style({

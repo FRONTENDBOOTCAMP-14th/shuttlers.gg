@@ -1,15 +1,15 @@
-export type StatusCode = 'receiving' | 'upcoming' | 'ongoing' | 'closed';
+export const STATUS_LABELS = {
+  receiving: '접수중',
+  upcoming: '접수예정',
+  ongoing: '진행 중',
+  closed: '종료',
+} as const;
 
-export interface TournamentStatus {
+export type StatusCode = keyof typeof STATUS_LABELS;
+
+export type StatusLabel = (typeof STATUS_LABELS)[StatusCode];
+
+export type TournamentStatus = {
   code: StatusCode;
-  label: string;
-}
-
-export interface Tournament {
-  tnmt_id: string;
-  title: string;
-  start_date: string;
-  end_date: string;
-  apply_period?: string | null;
-  region?: string | null;
-}
+  label: StatusLabel;
+};
