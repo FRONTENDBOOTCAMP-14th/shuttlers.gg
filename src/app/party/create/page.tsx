@@ -91,7 +91,7 @@ export default function OpenPartyPage() {
     const { data: userData } = await supabase.auth.getUser();
     const user = userData?.user;
 
-    const { error } = await supabase.from('create_party').insert([
+    const { error } = await supabase.from('parties').insert([
       {
         title,
         participants: Number(participants),

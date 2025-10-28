@@ -113,71 +113,101 @@ export type Database = {
         }
         Relationships: []
       }
-      create_party: {
+      parties: {
         Row: {
           amount: number | null
-          created_at: string
-          creator_id: string | null
-          creator_name: string | null
-          date: string | null
+          created_at: string | null
+          creator_id: string
+          date: string
           end_time: string | null
           gender: string | null
           grade: string | null
-          id: number
-          location: string | null
+          id: string
+          location: string
           max_participants: number | null
           notice: string | null
-          participants: number | null
-          participantsList: string[] | null
-          shuttleCock: number | null
+          participants: Json | null
+          shuttle_cock: number | null
           start_time: string | null
-          status: string | null
-          title: string | null
+          status: string
+          title: string
         }
         Insert: {
           amount?: number | null
-          created_at?: string
-          creator_id?: string | null
-          creator_name?: string | null
-          date?: string | null
+          created_at?: string | null
+          creator_id: string
+          date: string
           end_time?: string | null
           gender?: string | null
           grade?: string | null
-          id?: number
-          location?: string | null
+          id?: string
+          location: string
           max_participants?: number | null
           notice?: string | null
-          participants?: number | null
-          participantsList?: string[] | null
-          shuttleCock?: number | null
+          participants?: Json | null
+          shuttle_cock?: number | null
           start_time?: string | null
-          status?: string | null
-          title?: string | null
+          status?: string
+          title: string
         }
         Update: {
           amount?: number | null
-          created_at?: string
-          creator_id?: string | null
-          creator_name?: string | null
-          date?: string | null
+          created_at?: string | null
+          creator_id?: string
+          date?: string
           end_time?: string | null
           gender?: string | null
           grade?: string | null
-          id?: number
-          location?: string | null
+          id?: string
+          location?: string
           max_participants?: number | null
           notice?: string | null
-          participants?: number | null
-          participantsList?: string[] | null
-          shuttleCock?: number | null
+          participants?: Json | null
+          shuttle_cock?: number | null
           start_time?: string | null
-          status?: string | null
-          title?: string | null
+          status?: string
+          title?: string
         }
         Relationships: [
           {
-            foreignKeyName: "create_party_creator_id_fkey"
+            foreignKeyName: "parties_creator_id_fkey"
             columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      party_participants: {
+        Row: {
+          id: string
+          joined_at: string
+          party_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string
+          party_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string
+          party_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "party_participants_party_id_fkey"
+            columns: ["party_id"]
+            isOneToOne: false
+            referencedRelation: "parties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "party_participants_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]

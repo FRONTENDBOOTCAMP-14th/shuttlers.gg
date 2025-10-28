@@ -44,7 +44,7 @@ const PartyPage = () => {
 
   useEffect(() => {
     const fetchParties = async () => {
-      const { data, error } = await supabase.from('create_party').select('*');
+      const { data, error } = await supabase.from('parties').select('*');
       if (!error && data) {
         data.forEach((party: any) => {
           console.log('party.status:', party.status);
