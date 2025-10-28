@@ -29,7 +29,7 @@ export type PartyInfo = {
     end_time: string;
     location: string;
   };
-  participants: number;
+  participants: User[];
   maxParticipants: number;
   conditions?: { gender: string; grade: string };
   materials?: { amount: number; shuttleCock: number };
@@ -66,7 +66,6 @@ export default function PartyCard({
 }: PartyCardProps) {
   const { title, schedule, participants, maxParticipants, materials, status } =
     party;
-
   const thumbnailImage = thumbnails[title.length % thumbnails.length];
   const buttonVariant: Record<
     PartyInfo['status'],
@@ -77,6 +76,13 @@ export default function PartyCard({
     joined: { color: 'dark', text: '참가 취소', action: onCancel },
     readonly: { color: 'primary', text: '상세보기', action: onDetail },
   };
+
+  const partyStatus: PartyStatus =
+    status && ['joinable', 'full', 'joined', 'readonly'].includes(status)
+      ? status
+      : 'readonly';
+
+  const partyButton = buttonVariant[partyStatus];
 
   return (
     <article className={styles.partyCard({ status, view })} tabIndex={0}>
@@ -109,13 +115,13 @@ export default function PartyCard({
           {title}
         </h3>
         <Badge
-          text={`${participants} / ${maxParticipants}`}
+          text={`${participants?.length || 0} / ${maxParticipants}`}
           icon={<UserGroupIcon width={16} aria-hidden />}
           variant="filled"
           color="dark"
           onClick={undefined}
           tabIndex={-1}
-          aria-label={`최대 인원 ${maxParticipants}명 중 ${participants}명 참가함`}
+          aria-label={`최대 인원 ${maxParticipants}명 중 ${participants?.length || 0}명 참가함`}
         />
       </header>
 
@@ -203,12 +209,12 @@ export default function PartyCard({
       </section>
 
       <Button
-        text={buttonVariant[status].text}
-        variant={buttonVariant[status].color}
+        text={partyButton.text}
+        variant={partyButton.color}
         size="long"
-        onClick={buttonVariant[status].action ?? undefined}
+        onClick={partyButton.action ?? undefined}
         disabled={status === 'full'}
-        aria-label={buttonVariant[status].text}
+        aria-label={partyButton.text}
       />
     </article>
   );
