@@ -51,15 +51,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     error = false,
     disabled = false,
     onSearchClick,
-    onCalendarClick,
-    onTimeClick,
     register,
     variant = 'primary',
     onKeyDown,
-    required,
-    inputMode,
-    readOnly,
-    className,
   },
   ref
 ) {
@@ -134,13 +128,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       callback(e);
     }
   };
-
-  let inputType = type;
-  if (type === 'password') {
-    inputType = showPassword ? 'text' : 'password';
-  } else if (type === 'calendar') {
-    inputType = 'text';
-  }
 
   return (
     <div className={styles.inputField}>

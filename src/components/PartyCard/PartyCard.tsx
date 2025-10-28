@@ -11,7 +11,6 @@ import { Badge } from '../Badge/Badge';
 import Button, { ButtonVariant } from '../Button/Button';
 import * as styles from './PartyCard.css';
 
-type Gender = 'male' | 'female' | 'any';
 type Grade = 'beginner' | 'D' | 'C' | 'B' | 'A';
 type PartyStatus = 'joinable' | 'full' | 'joined' | 'readonly';
 
@@ -65,15 +64,8 @@ export default function PartyCard({
   onCancel,
   onDetail,
 }: PartyCardProps) {
-  const {
-    title,
-    schedule,
-    participants,
-    maxParticipants,
-    conditions,
-    materials,
-    status,
-  } = party;
+  const { title, schedule, participants, maxParticipants, materials, status } =
+    party;
 
   const thumbnailImage = thumbnails[title.length % thumbnails.length];
   const buttonVariant: Record<

@@ -37,7 +37,7 @@ export default function LandingSearch({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const fetchPlayers = async (keyword: string) => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('players')
       .select('id, name, gender, national_grade, local_grade')
       .ilike('name', `%${keyword}%`);

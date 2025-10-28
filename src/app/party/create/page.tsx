@@ -38,13 +38,7 @@ export default function OpenPartyPage() {
   const [agree, setAgree] = useState(false);
   const [gender, setGender] = useState('');
   const [grade, setGrade] = useState('');
-  const [showCalendar, setShowCalendar] = useState(false);
   const [isAddressOpen, setIsAddressOpen] = useState(false);
-
-  const handleDateChange = (value: Date) => {
-    setDate(value.toISOString().slice(0, 10));
-    setShowCalendar(false);
-  };
 
   const handleComplete = (data: Address) => {
     let fullAddr = data.address;

@@ -35,6 +35,8 @@ const gradeOptions = [
   { label: 'A조 이상', value: 'A' },
 ];
 
+type PartyStatus = 'joinable' | 'full' | 'joined' | 'readonly';
+
 const PartyPage = () => {
   const [parties, setParties] = useState<PartyInfo[]>([]);
   const [genderFilter, setGenderFilter] = useState<string>('');
@@ -46,25 +48,34 @@ const PartyPage = () => {
     const fetchParties = async () => {
       const { data, error } = await supabase.from('parties').select('*');
       if (!error && data) {
-        data.forEach((party: any) => {
-          console.log('party.status:', party.status);
-        });
-        const partyList: PartyInfo[] = data.map((party: any) => ({
-          title: party.title,
+        const partyList: PartyInfo[] = data.map((party) => ({
+          title: party.title ?? '',
           schedule: {
-            date: party.date,
-            start_time: party.start_time,
-            end_time: party.end_time,
-            location: party.location,
+            date: party.date ?? '',
+            start_time: party.start_time ?? '',
+            end_time: party.end_time ?? '',
+            location: party.location ?? '',
           },
-          participants: party.participants,
-          maxParticipants: party.max_participants,
-          conditions: { gender: party.gender, grade: party.grade },
-          materials: { amount: party.amount, shuttleCock: party.shuttleCock },
-          status: party.status,
-          creator_id: party.creator_id,
-
-          participantsList: party.participantsList ?? [],
+          participants: party.participants ?? 0,
+          maxParticipants: party.max_participants ?? 0,
+          conditions: {
+            gender: party.gender ?? '',
+            grade: party.grade ?? '',
+          },
+          materials: {
+            amount: party.amount ?? 0,
+            shuttleCock: party.shuttleCock ?? 0,
+          },
+          status: (party.status as PartyStatus) ?? 'readonly',
+          creator_id: party.creator_id ?? '',
+          participantsList: Array.isArray(party.participantsList)
+            ? party.participantsList.map((user) =>
+                typeof user === 'string'
+                  ? { id: user, name: '', grade: null, gender: undefined } // 기본값
+                  : user
+              )
+            : [],
+          notice: party.notice ?? '',
         }));
         setParties(partyList);
       }
@@ -325,6 +336,7 @@ const PartyPage = () => {
             {getSortedParticipants(selectedParty).map((user) => (
               <UserResultCard
                 id={user.id}
+                key={user.id}
                 name={user.name}
                 grade={
                   typeof user.grade === 'string'
