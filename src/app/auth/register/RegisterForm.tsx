@@ -33,7 +33,6 @@ const GENDER_OPTIONS: {
   { value: 'female', label: '여성' },
 ];
 const GRADE_OPTIONS: Profile['national_grade'][] = ['초심', 'D', 'C', 'B', 'A'];
-const VERIFY_TIME = 300;
 
 export default function RegisterForm({
   step,
@@ -42,13 +41,13 @@ export default function RegisterForm({
 }: RegisterFormProps) {
   const { handleSubmit, register, setValue, trigger, watch } =
     useFormContext<RegisterFormValues>();
+  const modal = useModal();
 
   const [gender, setGender] = useState<Profile['gender']>();
   const [grade, setGrade] = useState<Profile['national_grade']>();
   const [status, setStatus] = useState<Status>('idle');
-  const [remainingTime, setRemainingTime] = useState<number>(VERIFY_TIME);
+  const [sendCool, setSendCool] = useState(0);
   const [checked, setChecked] = useState(false);
-  const modal = useModal();
 
   useEffect(() => {
     register('gender', { required: '성별을 선택해주세요.' });
@@ -56,55 +55,53 @@ export default function RegisterForm({
   }, [register]);
 
   useEffect(() => {
-    if (status === 'pending') {
-      const timer = setInterval(() => {
-        setRemainingTime((prevTime) => {
-          if (prevTime <= 0) {
-            clearInterval(timer);
-            setStatus('idle');
-            toast('인증 시간이 만료되었습니다. 다시 인증해 주세요.');
-            return VERIFY_TIME;
-          }
-          return prevTime - 1;
-        });
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+          setStatus('resolved');
+          toast.success('이메일 인증 완료!');
+        }
+      }
+    );
 
-        return () => clearInterval(timer);
-      }, 1000);
-    }
-  }, [status]);
+    return () => authListener.subscription.unsubscribe();
+  }, []);
 
   const handleSendOtp = async () => {
-    const { error } = await supabase.auth.signInWithOtp({
-      email: watch('email'),
-      options: { shouldCreateUser: false },
-    });
+    if (sendCool > 0) return toast(`${sendCool}초 후 다시 시도해주세요.`);
 
-    if (error) {
-      setStatus('idle');
-      return toast.error(
-        `인증 코드 발송 실패\n ${error.status}: ${error.message}`
-      );
-    }
+    const email = watch('email');
+    const password = watch('password');
 
-    toast.success('인증 코드 발송 완료! 이메일을 확인해 주세요.');
+    if (!email) return toast.error('이메일을 입력해주세요.');
+    if (!password) return toast.error('비밀번호를 입력해주세요.');
+
     setStatus('pending');
-  };
 
-  const handleVerifyOtp = async () => {
-    const { data, error } = await supabase.auth.verifyOtp({
-      email: watch('email'),
-      token: watch('verify_code') ?? '',
-      type: 'signup',
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
     });
 
     if (error) {
       setStatus('idle');
-      return toast.error(`인증 실패\n ${error.status}: ${error.message}`);
+      return toast.error(`인증 메일 발송 실패\n${error.message}`);
     }
-    if (!data.user) return;
 
-    toast.success('이메일 인증 성공');
-    setStatus('resolved');
+    setSendCool(30);
+    const timer = setInterval(() => {
+      setSendCool((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    toast.success(
+      `인증 메일 발송 완료!\n수신한 메일에서 링크를 클릭해 주세요.`
+    );
   };
 
   return (
@@ -122,24 +119,11 @@ export default function RegisterForm({
               placeholder="이메일 입력"
               register={register('email', emailRules)}
               status={status}
-              remainingTime={remainingTime}
-              buttonType="send"
               buttonAction={handleSendOtp}
             />
-            {status !== 'idle' && (
-              <CheckInput
-                name="code"
-                type="text"
-                label="인증코드"
-                placeholder="6자리 인증 코드"
-                register={register('verify_code', { required: true })}
-                status={status}
-                buttonType="verify"
-                buttonAction={handleVerifyOtp}
-              />
-            )}
+
             <Input
-              {...(register('password'), passwordRules)}
+              {...register('password', passwordRules)}
               name="password"
               type="password"
               label="비밀번호"
@@ -149,8 +133,7 @@ export default function RegisterForm({
               required
             />
             <Input
-              {...(register('password_check'),
-              passwordCheck(watch('password'), watch('password_check')))}
+              {...register('password_check', passwordCheck(watch('password')))}
               name="password_check"
               type="password"
               label="비밀번호 확인"
@@ -159,6 +142,7 @@ export default function RegisterForm({
               maxLength={12}
               required
             />
+
             <Button
               type="button"
               text="다음으로"
@@ -167,11 +151,17 @@ export default function RegisterForm({
               onClick={async () => {
                 const isValid = await trigger([
                   'email',
-                  'verify_code',
                   'password',
                   'password_check',
                 ]);
-                if (!isValid) return;
+
+                if (!isValid) {
+                  return toast.error('입력값을 확인해주세요.');
+                }
+
+                if (status !== 'resolved') {
+                  return toast.error('이메일 인증을 완료해주세요.');
+                }
 
                 onClickNext();
               }}
@@ -181,7 +171,7 @@ export default function RegisterForm({
         {step === 2 && (
           <>
             <Input
-              {...(register('name'), nameRules)}
+              {...register('name', nameRules)}
               name="name"
               type="text"
               label="이름"
@@ -275,7 +265,11 @@ export default function RegisterForm({
                 onChange={() => setChecked((prev) => !prev)}
                 className={styles.checkBox}
               />
-              <button className={styles.optionLink} onClick={modal.open}>
+              <button
+                type="button"
+                className={styles.optionLink}
+                onClick={modal.open}
+              >
                 개인정보 수집 및 이용 약관
               </button>
               에 동의합니다.
@@ -307,13 +301,14 @@ export default function RegisterForm({
         }}
         visible={modal.isOpen}
       >
+        {/* TODO: 이용 약관 추가 예정 */}
         <p>
           <strong>제 1 장 총칙 제 1 조</strong>
           <br />
-          (목적) 본 약관은 (주)셔틀러스(이하 “회사”라 합니다)가 운영하는
-          웹사이트 ‘셔틀러스’ (www.shuttlers.gg) (이하 “웹사이트”라 합니다)에서
-          제공하는 온라인 서비스(이하 “서비스”라 한다)를 이용함에 있어
-          사이버몰과 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
+          {`(목적) 본 약관은 (주)셔틀러스(이하 "회사"라 합니다)가 운영하는
+          웹사이트 '셔틀러스' (www.shuttlers.gg) (이하 "웹사이트"라 합니다)에서
+          제공하는 온라인 서비스(이하 "서비스"라 한다)를 이용함에 있어
+          사이버몰과 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.`}
         </p>
       </Modal>
     </>

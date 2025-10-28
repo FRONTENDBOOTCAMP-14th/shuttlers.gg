@@ -1,4 +1,5 @@
 import { FlatCompat } from '@eslint/eslintrc';
+import importPlugin from 'eslint-plugin-import';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -21,7 +22,7 @@ const eslintConfig = [
     ],
 
     plugins: {
-      import: require('eslint-plugin-import'),
+      import: importPlugin,
     },
 
     settings: {

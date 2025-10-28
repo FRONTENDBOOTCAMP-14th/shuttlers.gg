@@ -4,9 +4,9 @@ import * as styles from '@/app/calendar/Calendar.css';
 import { CompetitionCard } from '@/components/CompetitionCard/CompetitionCard';
 import { MonthlyCalendar } from '@/components/MonthlyCalendar/MonthlyCalendar';
 import { useMonthlyTournaments } from '@/hooks/useMonthlyTournaments';
+import { extractRegionTags } from '@/utils/regionUtils';
+import { getTournamentStatus } from '@/utils/tournamentStatus';
 import { useMemo, useState } from 'react';
-import { extractRegionTags } from './utils/regionUtils';
-import { getTournamentStatus } from './utils/tournamentStatus';
 
 const titleOf = (date: Date | null, year: number, month: number) =>
   `${
@@ -23,7 +23,7 @@ export function Calendar() {
   const [month, setMonth] = useState<number>(10);
   const [date, setDate] = useState<Date | null>(null);
 
-  const { data, events, isLoading, error, getByDate } = useMonthlyTournaments(
+  const { events, isLoading, error, getByDate } = useMonthlyTournaments(
     year,
     month
   );

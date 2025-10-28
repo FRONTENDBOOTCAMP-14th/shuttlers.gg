@@ -4,11 +4,18 @@ import { textStyle } from '../../styles/typography.css';
 import { Badge } from '../Badge/Badge';
 import * as styles from './UserCard.css';
 
+type Gender = 'male' | 'female' | 'other';
+type GradeValue = '초심' | 'D' | 'C' | 'B' | 'A' | '-';
+type Grade = {
+  local: GradeValue | null;
+  national: GradeValue | null;
+};
+
 type UserCardProps = {
   variant?: 'public' | 'personal';
   name: string;
-  gender: 'male' | 'female';
-  grade?: { local?: string; national: string };
+  gender: Gender | null;
+  grade?: Grade | null;
   email: string;
   role?: 'amateur' | 'pro';
   onClick?: () => void;
@@ -19,14 +26,21 @@ export default function UserCard({
   name = '정보 없음',
   email = '',
   gender = 'male',
-  grade = { local: undefined, national: '-' },
+  grade = { local: null, national: '-' },
   role = 'amateur',
   onClick,
 }: UserCardProps) {
   return (
     <section className={styles.userCard({ variant })}>
       <div>
-        <h3 style={{ ...textStyle.subtitle.bold, marginBottom: 12 }}>{name}</h3>
+        <div
+          style={{
+            ...textStyle.subtitle.bold,
+            marginBottom: 12,
+          }}
+        >
+          {name}
+        </div>
         <div>
           {variant === 'public' && (
             <div
@@ -72,7 +86,7 @@ export default function UserCard({
         </div>
       </div>
       <div className={styles.userCardGrades}>
-        {grade.local && (
+        {grade?.local && (
           <div>
             <span style={{ ...textStyle.body.semibold }}>지역</span>
             <div>
@@ -83,7 +97,7 @@ export default function UserCard({
         <div>
           <span style={{ ...textStyle.body.semibold }}>전국</span>
           <div>
-            <span className={styles.grade({ variant })}>{grade.national}</span>
+            <span className={styles.grade({ variant })}>{grade?.national}</span>
           </div>
         </div>
       </div>
