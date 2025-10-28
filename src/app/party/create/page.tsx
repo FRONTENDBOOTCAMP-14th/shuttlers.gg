@@ -106,7 +106,7 @@ export default function OpenPartyPage() {
       alert('모임 생성 실패: ' + error.message);
     } else {
       if (window.confirm('모임이 성공적으로 생성되었습니다!')) {
-        router.push('/party/findParty');
+        router.push('/party/find');
       }
     }
   };

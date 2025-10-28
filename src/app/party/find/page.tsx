@@ -155,7 +155,7 @@ const PartyPage = () => {
             직접 모임을 만들거나 근처에 있는 일회성 모임에 참여해 보세요!
           </h2>
         </div>
-        <Link href="./createParty" passHref>
+        <Link href="/party/create" passHref>
           <Button
             text="모임 생성"
             type="button"
