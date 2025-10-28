@@ -328,7 +328,7 @@ const PartyPage = () => {
                 name={user.name}
                 grade={
                   typeof user.grade === 'string'
-                    ? { local: user.grade } // 또는 { national: user.grade } 필요에 따라
+                    ? { local: user.grade }
                     : (user.grade ?? null)
                 }
                 gender={user.gender}

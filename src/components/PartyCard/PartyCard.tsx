@@ -18,7 +18,7 @@ type PartyStatus = 'joinable' | 'full' | 'joined' | 'readonly';
 type User = {
   id: string;
   name: string;
-  grade?: Grade | null; // grade 속성 추가
+  grade?: Grade | null;
   gender?: 'male' | 'female';
 };
 

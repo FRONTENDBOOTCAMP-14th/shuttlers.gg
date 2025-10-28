@@ -27,8 +27,8 @@ type InputProps = {
   error?: boolean;
   disabled?: boolean;
   onSearchClick?: () => void;
-  onCalendarClick?: () => void; // date picker 오픈
-  onTimeClick?: () => void; // time picker 오픈
+  onCalendarClick?: () => void;
+  onTimeClick?: () => void;
   register?: UseFormRegisterReturn;
   variant?: 'primary' | 'secondary';
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -37,6 +37,9 @@ type InputProps = {
   required?: boolean;
   inputMode?: string;
   readOnly?: boolean;
+  className?: string;
+  min?: number | string;
+  max?: number | string;
 };
 
 const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
@@ -58,6 +61,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     required,
     inputMode,
     readOnly,
+    className,
+    min,
+    max,
   },
   ref
 ) {
@@ -181,6 +187,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           required={required}
           inputMode={inputMode}
           readOnly={readOnly}
+          min={min}
+          max={max}
           {...((register as any) ?? {})}
         />
 
@@ -219,17 +227,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           >
             <MagnifyingGlassIcon style={{ width: 20, height: 20 }} />
           </button>
-        )}
-
-        {type === 'time' && (
-          <button
-            type="button"
-            onClick={onTimeClick}
-            onFocus={() => setIsInputFocused(false)}
-            aria-label="시간 선택"
-            tabIndex={disabled ? -1 : 0}
-            disabled={disabled}
-          ></button>
         )}
       </div>
     </div>

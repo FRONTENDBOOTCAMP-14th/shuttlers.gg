@@ -26,7 +26,6 @@ const gradeOptions = [
 ];
 
 export default function OpenPartyPage() {
-  // 입력값 상태
   const [title, setTitle] = useState('');
   const [participants, setParticipants] = useState('');
   const [date, setDate] = useState('');
@@ -42,9 +41,8 @@ export default function OpenPartyPage() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [isAddressOpen, setIsAddressOpen] = useState(false);
 
-  // 날짜 선택 핸들러
   const handleDateChange = (value: Date) => {
-    setDate(value.toISOString().slice(0, 10)); // YYYY-MM-DD 형식
+    setDate(value.toISOString().slice(0, 10));
     setShowCalendar(false);
   };
 
@@ -63,7 +61,6 @@ export default function OpenPartyPage() {
     setIsAddressOpen(false);
   };
 
-  // 유효성 검사
   const isTitleValid = title.length >= 2 && title.length <= 20;
   const isParticipantsValid =
     /^\d+$/.test(participants) && participants.length > 0;
@@ -143,11 +140,14 @@ export default function OpenPartyPage() {
           placeholder="본인이 포함된 총 인원"
           value={participants}
           onChange={(e) => {
-            if (/^\d*$/.test(e.target.value)) setParticipants(e.target.value);
+            const raw = e.target.value.replace(/[^0-9]/g, '');
+            if (raw === '' || Number(raw) <= 100) setParticipants(raw);
           }}
           required
           type="text"
           inputMode="numeric"
+          min={1}
+          max={100}
         />
         <Input
           name="date"
@@ -175,17 +175,18 @@ export default function OpenPartyPage() {
           onChange={(e) => setEndTime(e.target.value)}
           required
           type="time"
+          className={styles.datepickerInput}
         />
         <Input
           name="location"
           label="모임 장소"
           placeholder="주소 검색하기"
           value={location}
-          onChange={() => {}} 
+          onChange={() => {}}
           required
           type="search"
           readOnly
-          onSearchClick={() => setIsAddressOpen(true)} 
+          onSearchClick={() => setIsAddressOpen(true)}
         />
         {isAddressOpen && (
           <div
@@ -217,11 +218,13 @@ export default function OpenPartyPage() {
           value={formatFee(fee)}
           onChange={(e) => {
             const raw = e.target.value.replace(/,/g, '');
-            if (/^\d*$/.test(raw)) setFee(raw);
+            if (/^\d*$/.test(raw) && Number(raw) <= 100000) setFee(raw);
           }}
           required
           type="text"
           inputMode="numeric"
+          min={0}
+          max={100000}
         />
         <Input
           name="shuttleCock"
@@ -229,15 +232,17 @@ export default function OpenPartyPage() {
           placeholder="개인당 셔틀콕 개수"
           value={shuttleCock}
           onChange={(e) => {
-            if (/^\d*$/.test(e.target.value)) setShuttleCock(e.target.value);
+            const raw = e.target.value.replace(/[^0-9]/g, '');
+            if (raw === '' || Number(raw) <= 100) setShuttleCock(raw);
           }}
           required
           type="text"
           inputMode="numeric"
+          min={1}
+          max={100}
         />
       </div>
 
-      
       <div className={styles.filterRow}>
         <span className={styles.filterLabel}>참가 가능 성별</span>
         <div className={styles.buttonGroup}>
@@ -254,7 +259,6 @@ export default function OpenPartyPage() {
         </div>
       </div>
 
-     
       <div className={styles.filterRow}>
         <span className={styles.filterLabel}>참가 최소 조건</span>
         <div className={styles.buttonGroup}>
@@ -271,7 +275,6 @@ export default function OpenPartyPage() {
         </div>
       </div>
 
-      {/* 기타 안내사항 */}
       <div className={styles.textboxSection}>
         <span className={styles.textboxLabel}>기타 안내 사항</span>
         <TextBox
@@ -282,7 +285,6 @@ export default function OpenPartyPage() {
         />
       </div>
 
-      {/* 체크박스 */}
       <div className={styles.checkboxRow}>
         <input
           type="checkbox"
@@ -296,7 +298,6 @@ export default function OpenPartyPage() {
         </label>
       </div>
 
-      {/* 모임 생성 버튼 */}
       <div className={styles.buttonWrapper}>
         <Button
           text="모임 생성"

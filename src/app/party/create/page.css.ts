@@ -34,7 +34,7 @@ export const gridForm = style({
       gap: '60px',
     },
     'screen and (min-width: 1024px)': {
-      gridTemplateColumns: '1fr 1fr', // 3~4 columns, 필요에 따라 조정
+      gridTemplateColumns: '1fr 1fr',
       gap: '40px',
     },
   },
@@ -107,4 +107,12 @@ export const createButton = style({
 export const buttonWrapper = style({
   display: 'flex',
   justifyContent: 'flex-end',
+});
+
+export const datepickerInput = style({
+  cursor: 'pointer',
+});
+
+export const timepickerInput = style({
+  cursor: 'pointer',
 });
