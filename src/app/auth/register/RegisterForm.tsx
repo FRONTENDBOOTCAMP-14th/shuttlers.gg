@@ -111,23 +111,23 @@ export default function RegisterForm({
             );
           }
         }
+      }
 
-        const tempPassword = crypto.randomUUID();
+      const tempPassword = crypto.randomUUID();
 
-        const { error } = await supabase.auth.signUp({
-          email,
-          password: tempPassword,
-        });
+      const { error } = await supabase.auth.signUp({
+        email,
+        password: tempPassword,
+      });
 
+      if (error) {
         if (formState.errors.email) {
           return toast.error('이메일 유형을 확인해주세요.');
         }
-
-        return toast.error(`인증 메일 발송 실패\n${error?.message}`);
+        return toast.error(`인증 메일 발송 실패\n${error.message}`);
       }
 
       setStatus('pending');
-
       setSendCool(30);
       const timer = setInterval(() => {
         setSendCool((prev) => {
