@@ -1,10 +1,5 @@
 import { createBrowserClient } from '@supabase/ssr';
-import {
-  Database,
-  Tables,
-  TablesInsert,
-  TablesUpdate,
-} from '../database.types';
+import { Database, Tables } from '../database.types';
 
 export const createClient = () => {
   return createBrowserClient<Database>(
@@ -23,5 +18,5 @@ export const createClient = () => {
 export const supabase = createClient();
 
 export type Users = Tables<'users'>;
-export type UsersInsert = TablesInsert<'users'>;
-export type UsersUpdate = TablesUpdate<'users'>;
+export type Tournaments = Tables<'bk_tournaments'>;
+export type Players = Tables<'players'>;
