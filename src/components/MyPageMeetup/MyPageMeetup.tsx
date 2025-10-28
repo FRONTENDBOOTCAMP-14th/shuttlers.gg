@@ -33,6 +33,7 @@ function MeetupSection({ title, meetups, emptyMessage }: MeetupSectionProps) {
         ) : (
           meetups.map((meetup, i) => (
             <div key={`${meetup.title}-${i}`} className={styles.meetupItem}>
+              {/* @ts-expect-error TODO: 타입 수정 필요*/}
               <PartyCard party={meetup} view="compact" />
             </div>
           ))

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { Badge } from '@/components/Badge/Badge';
@@ -48,7 +49,7 @@ const PartyPage = () => {
     const fetchParties = async () => {
       const { data, error } = await supabase.from('parties').select('*');
       if (!error && data) {
-        const partyList: PartyInfo[] = data.map((party) => ({
+        const partyList: PartyInfo[] = data.map((party: any) => ({
           title: party.title ?? '',
           schedule: {
             date: party.date ?? '',
@@ -69,7 +70,7 @@ const PartyPage = () => {
           status: (party.status as PartyStatus) ?? 'readonly',
           creator_id: party.creator_id ?? '',
           participantsList: Array.isArray(party.participantsList)
-            ? party.participantsList.map((user) =>
+            ? party.participantsList.map((user: any) =>
                 typeof user === 'string'
                   ? { id: user, name: '', grade: null, gender: undefined } // 기본값
                   : user

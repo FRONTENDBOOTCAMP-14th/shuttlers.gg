@@ -116,163 +116,6 @@ export type Database = {
       parties: {
         Row: {
           amount: number | null;
-          created_at: string;
-          creator_id: string | null;
-          creator_name: string | null;
-          date: string | null;
-          end_time: string | null;
-          gender: string | null;
-          grade: string | null;
-          id: number;
-          location: string | null;
-          max_participants: number | null;
-          notice: string | null;
-          participants: number | null;
-          participantsList: string[] | null;
-          shuttleCock: number | null;
-          start_time: string | null;
-          status: string | null;
-          title: string | null;
-        };
-        Insert: {
-          amount?: number | null;
-          created_at?: string;
-          creator_id?: string | null;
-          creator_name?: string | null;
-          date?: string | null;
-          end_time?: string | null;
-          gender?: string | null;
-          grade?: string | null;
-          id?: number;
-          location?: string | null;
-          max_participants?: number | null;
-          notice?: string | null;
-          participants?: number | null;
-          participantsList?: string[] | null;
-          shuttleCock?: number | null;
-          start_time?: string | null;
-          status?: string | null;
-          title?: string | null;
-        };
-        Update: {
-          amount?: number | null;
-          created_at?: string;
-          creator_id?: string | null;
-          creator_name?: string | null;
-          date?: string | null;
-          end_time?: string | null;
-          gender?: string | null;
-          grade?: string | null;
-          id?: number;
-          location?: string | null;
-          max_participants?: number | null;
-          notice?: string | null;
-          participants?: number | null;
-          participantsList?: string[] | null;
-          shuttleCock?: number | null;
-          start_time?: string | null;
-          status?: string | null;
-          title?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'create_party_creator_id_fkey';
-            columns: ['creator_id'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      player_stats: {
-        Row: {
-          competition_type:
-            | Database['public']['Enums']['competition_enum']
-            | null;
-          created_at: string;
-          event_type: Database['public']['Enums']['event_enum'] | null;
-          grade: Database['public']['Enums']['grade_enum'] | null;
-          id: string;
-          losses: number | null;
-          player_id: string | null;
-          rank: number | null;
-          updated_at: string;
-          wins: number | null;
-        };
-        Insert: {
-          competition_type?:
-            | Database['public']['Enums']['competition_enum']
-            | null;
-          created_at?: string;
-          event_type?: Database['public']['Enums']['event_enum'] | null;
-          grade?: Database['public']['Enums']['grade_enum'] | null;
-          id?: string;
-          losses?: number | null;
-          player_id?: string | null;
-          rank?: number | null;
-          updated_at?: string;
-          wins?: number | null;
-        };
-        Update: {
-          competition_type?:
-            | Database['public']['Enums']['competition_enum']
-            | null;
-          created_at?: string;
-          event_type?: Database['public']['Enums']['event_enum'] | null;
-          grade?: Database['public']['Enums']['grade_enum'] | null;
-          id?: string;
-          losses?: number | null;
-          player_id?: string | null;
-          rank?: number | null;
-          updated_at?: string;
-          wins?: number | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'player_stats_player_id_fkey';
-            columns: ['player_id'];
-            isOneToOne: false;
-            referencedRelation: 'players';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      players: {
-        Row: {
-          created_at: string;
-          gender: Database['public']['Enums']['gender_enum'];
-          id: string;
-          local_grade: Database['public']['Enums']['grade_enum'];
-          name: string;
-          national_grade: Database['public']['Enums']['grade_enum'];
-          role: Database['public']['Enums']['role_enum'];
-          updated_at: string;
-        };
-        Insert: {
-          created_at?: string;
-          gender: Database['public']['Enums']['gender_enum'];
-          id?: string;
-          local_grade: Database['public']['Enums']['grade_enum'];
-          name: string;
-          national_grade: Database['public']['Enums']['grade_enum'];
-          role: Database['public']['Enums']['role_enum'];
-          updated_at?: string;
-        };
-        Update: {
-          created_at?: string;
-          gender?: Database['public']['Enums']['gender_enum'];
-          id?: string;
-          local_grade?: Database['public']['Enums']['grade_enum'];
-          name?: string;
-          national_grade?: Database['public']['Enums']['grade_enum'];
-          role?: Database['public']['Enums']['role_enum'];
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
-      users: {
-        Row: {
-          amount: number | null;
           created_at: string | null;
           creator_id: string;
           date: string;
@@ -370,6 +213,119 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      player_stats: {
+        Row: {
+          best_rank: number | null;
+          competition_type: Database['public']['Enums']['competition_enum'];
+          event_type: Database['public']['Enums']['event_enum'];
+          grade: Database['public']['Enums']['grade_enum'];
+          histories: Json;
+          id: string;
+          losses: number;
+          partners: Json;
+          player_id: string;
+          updated_at: string;
+          wins: number;
+        };
+        Insert: {
+          best_rank?: number | null;
+          competition_type: Database['public']['Enums']['competition_enum'];
+          event_type: Database['public']['Enums']['event_enum'];
+          grade: Database['public']['Enums']['grade_enum'];
+          histories?: Json;
+          id?: string;
+          losses?: number;
+          partners?: Json;
+          player_id: string;
+          updated_at?: string;
+          wins?: number;
+        };
+        Update: {
+          best_rank?: number | null;
+          competition_type?: Database['public']['Enums']['competition_enum'];
+          event_type?: Database['public']['Enums']['event_enum'];
+          grade?: Database['public']['Enums']['grade_enum'];
+          histories?: Json;
+          id?: string;
+          losses?: number;
+          partners?: Json;
+          player_id?: string;
+          updated_at?: string;
+          wins?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'player_stats_player_id_fkey';
+            columns: ['player_id'];
+            isOneToOne: false;
+            referencedRelation: 'players';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      players: {
+        Row: {
+          created_at: string;
+          gender: Database['public']['Enums']['gender_enum'];
+          id: string;
+          local_grade: Database['public']['Enums']['grade_enum'];
+          name: string;
+          national_grade: Database['public']['Enums']['grade_enum'];
+          role: Database['public']['Enums']['role_enum'];
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          gender: Database['public']['Enums']['gender_enum'];
+          id?: string;
+          local_grade: Database['public']['Enums']['grade_enum'];
+          name: string;
+          national_grade: Database['public']['Enums']['grade_enum'];
+          role?: Database['public']['Enums']['role_enum'];
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          gender?: Database['public']['Enums']['gender_enum'];
+          id?: string;
+          local_grade?: Database['public']['Enums']['grade_enum'];
+          name?: string;
+          national_grade?: Database['public']['Enums']['grade_enum'];
+          role?: Database['public']['Enums']['role_enum'];
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      users: {
+        Row: {
+          created_at: string;
+          email: string | null;
+          gender: string | null;
+          id: string;
+          name: string | null;
+          national_grade: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          email?: string | null;
+          gender?: string | null;
+          id?: string;
+          name?: string | null;
+          national_grade?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          email?: string | null;
+          gender?: string | null;
+          id?: string;
+          name?: string | null;
+          national_grade?: string | null;
+          updated_at?: string | null;
+        };
+        Relationships: [];
       };
     };
     Views: {
