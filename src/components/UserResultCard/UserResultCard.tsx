@@ -84,7 +84,7 @@ export function UserResultCard({
 
   return (
     <Link
-      href={`/player/${encodeURIComponent(id)}`}
+      href={`/user-stats/${encodeURIComponent(id)}`}
       className={styles.userResultCard}
       onClick={onClick}
       aria-label={onClick ? `${name} 전적 보기` : undefined}

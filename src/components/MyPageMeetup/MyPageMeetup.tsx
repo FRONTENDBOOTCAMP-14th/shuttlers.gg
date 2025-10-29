@@ -1,23 +1,16 @@
+'use client';
+
 import * as styles from '@/components/MyPageMeetup/MyPageMeetup.css';
 import PartyCard from '@/components/PartyCard/PartyCard';
+import type { PartyInfo } from '@/components/PartyCard/PartyCard';
+import { useParty } from '@/hooks/useParty';
+import { useMemo } from 'react';
 
-type Gender = 'male' | 'female' | 'any';
-type Grade = 'beginner' | 'D' | 'C' | 'B' | 'A' | 'any';
 type PartyStatus = 'joinable' | 'full' | 'joined' | 'readonly';
-
-type Meetup = {
-  title: string;
-  schedule?: { dateTime: string; location: string };
-  participants: number;
-  maxParticipants: number;
-  conditions?: { gender: Gender; grade: Grade };
-  materials?: { amount: number; shuttleCock: number };
-  status: PartyStatus;
-};
 
 type MeetupSectionProps = {
   title: string;
-  meetups: Meetup[];
+  meetups: PartyInfo[];
   emptyMessage: string;
 };
 
@@ -31,10 +24,9 @@ function MeetupSection({ title, meetups, emptyMessage }: MeetupSectionProps) {
         {isEmpty ? (
           <div className={styles.meetupListNull}>{emptyMessage}</div>
         ) : (
-          meetups.map((meetup, i) => (
-            <div key={`${meetup.title}-${i}`} className={styles.meetupItem}>
-              {/* @ts-expect-error TODO: 타입 수정 필요*/}
-              <PartyCard party={meetup} view="compact" />
+          meetups.map((party) => (
+            <div key={party.id} className={styles.meetupItem}>
+              <PartyCard party={party} view="detailed" />
             </div>
           ))
         )}
@@ -44,8 +36,24 @@ function MeetupSection({ title, meetups, emptyMessage }: MeetupSectionProps) {
 }
 
 export default function MyPageMeetup() {
-  const hostingMeetups: Meetup[] = [];
-  const joinedMeetups: Meetup[] = [];
+  const { userId, parties, loading, error, refresh } = useParty();
+
+  const hostingMeetups = useMemo(
+    () => parties.filter((p) => p.creator_id === userId),
+    [parties, userId]
+  );
+
+  const joinedMeetups = useMemo(
+    () => parties.filter((p) => p.creator_id !== userId),
+    [parties, userId]
+  );
+
+  if (loading) {
+    return <div className={styles.meetup}>불러오는 중…</div>;
+  }
+  if (error) {
+    return <div className={styles.meetup}>오류: {error}</div>;
+  }
 
   return (
     <div className={styles.meetup}>

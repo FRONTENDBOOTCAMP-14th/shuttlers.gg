@@ -1,3 +1,5 @@
+'use client'
+
 import type {
   StatusCode,
   TournamentStatus,
@@ -168,13 +170,13 @@ export function Tournament(props: TournamentDetailProps) {
             </span>
             대회 포스터
           </h2>
-          <figure>
+          <figure className={styles.poster}>
             <Image
               src={posterUrl}
               alt="대회 포스터"
+              fill
               className={styles.posterImg}
             />
-            <figcaption className="sr-only">대회 포스터 이미지</figcaption>
           </figure>
         </section>
       )}

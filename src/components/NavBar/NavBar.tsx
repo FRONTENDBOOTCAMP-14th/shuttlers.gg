@@ -1,4 +1,3 @@
-import Input from '@/components/Input/Input';
 import Logo from '@/components/Logo/Logo';
 import { useUser } from '@/hooks/useUser';
 import {
@@ -114,14 +113,14 @@ export default function NavBar({
                 </ul>
               )}
 
-              {showSearch && (
+              {/* {showSearch && (
                 <Input
                   type="search"
                   name="search-player"
                   placeholder="전적 검색"
                   variant="secondary"
                 />
-              )}
+              )} */}
             </div>
 
             <div style={{ display: 'flex', columnGap: 16 }}>
