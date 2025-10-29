@@ -118,6 +118,9 @@ export default function RegisterForm({
       const { error } = await supabase.auth.signUp({
         email,
         password: tempPassword,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/verify?next=/auth/register`,
+        },
       });
 
       if (error) {

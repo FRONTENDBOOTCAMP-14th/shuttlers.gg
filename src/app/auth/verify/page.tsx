@@ -17,6 +17,7 @@ function Verify() {
     const handleVerify = async () => {
       const tokenHash = params.get('token_hash');
       const type = params.get('type');
+      const next = params.get('next');
 
       if (!tokenHash || !type) {
         setIsVerifying(false);
@@ -40,15 +41,25 @@ function Verify() {
             refresh_token: data.session.refresh_token,
           });
 
-          toast.success('이메일 인증 성공!');
-
-          setTimeout(() => {
-            window.close();
-
+          if (type === 'signup') {
+            toast.success('이메일 인증 성공!');
             setTimeout(() => {
-              router.push('/auth/register');
-            }, 500);
-          }, 1500);
+              window.close();
+              setTimeout(() => {
+                router.push(next || '/auth/register');
+              }, 500);
+            }, 1500);
+          } else if (type === 'recovery') {
+            toast.success('비밀번호 재설정 링크 확인 완료!');
+            setTimeout(() => {
+              router.push(next || '/auth/reset-password');
+            }, 1500);
+          } else {
+            toast.success('인증 완료!');
+            setTimeout(() => {
+              router.push(next || '/');
+            }, 1500);
+          }
         }
       } catch (err) {
         toast.error('인증 오류 발생');
