@@ -3,23 +3,20 @@
 import { Badge } from '@/components/Badge/Badge';
 import Button from '@/components/Button/Button';
 import Modal from '@/components/Modal/Modal';
-import type { PartyInfo } from '@/components/PartyCard/PartyCard';
+import type { PartyInfo, User } from '@/components/PartyCard/PartyCard';
 import PartyCard from '@/components/PartyCard/PartyCard';
 import { TextBox } from '@/components/TextBox/TextBox';
-import { UserResultCard } from '@/components/UserResultCard/UserResultCard';
 import { supabase } from '@/libs/supabase/client';
 import {
   ClockIcon,
   MapPinIcon,
   UserGroupIcon,
 } from '@heroicons/react/16/solid';
-import { StarIcon } from '@heroicons/react/20/solid';
-import { PlusIcon } from '@heroicons/react/24/solid';
-import Link from 'next/link';
+import { PlusIcon, StarIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import * as styles from './page.css';
 
-// 필터 옵션
 const genderOptions = [
   { label: '모두 가능', value: 'all' },
   { label: '남성', value: 'male' },
@@ -43,12 +40,25 @@ const PartyPage = () => {
   const [gradeFilter, setGradeFilter] = useState<string>('');
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedParty, setSelectedParty] = useState<PartyInfo | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string>('');
+  const [currentUserName, setCurrentUserName] = useState('');
+  const [currentUserGrade, setCurrentUserGrade] = useState('');
+  const [currentUserGender, setCurrentUserGender] = useState('');
+  const newParticipant = {
+    id: currentUserId,
+    name: currentUserName,
+    grade: currentUserGrade,
+    gender: currentUserGender,
+  };
 
-  useEffect(() => {
-    const fetchParties = async () => {
-      const { data, error } = await supabase.from('parties').select('*');
-      if (!error && data) {
-        const partyList: PartyInfo[] = data.map((party) => ({
+  const fetchParties = async () => {
+    const { data, error } = await supabase.from('parties').select('*');
+    console.log('Supabase parties data:', data);
+    if (!error && data) {
+      const partyList: PartyInfo[] = data.map((party) => {
+        const partyInfo: PartyInfo = {
+          id: party.id ?? '',
           title: party.title ?? '',
           schedule: {
             date: party.date ?? '',
@@ -56,7 +66,12 @@ const PartyPage = () => {
             end_time: party.end_time ?? '',
             location: party.location ?? '',
           },
-          participants: party.participants ?? 0,
+          participants: Array.isArray(party.participants)
+            ? party.participants.filter(
+                (user): user is User =>
+                  !!user && typeof user === 'object' && 'id' in user
+              )
+            : [],
           maxParticipants: party.max_participants ?? 0,
           conditions: {
             gender: party.gender ?? '',
@@ -64,24 +79,75 @@ const PartyPage = () => {
           },
           materials: {
             amount: party.amount ?? 0,
-            shuttleCock: party.shuttleCock ?? 0,
+            shuttle_cock: party.shuttle_cock ?? 0,
           },
-          status: (party.status as PartyStatus) ?? 'readonly',
           creator_id: party.creator_id ?? '',
-          participantsList: Array.isArray(party.participantsList)
-            ? party.participantsList.map((user) =>
-                typeof user === 'string'
-                  ? { id: user, name: '', grade: null, gender: undefined } // 기본값
-                  : user
+          participantsList: Array.isArray(party.participants)
+            ? party.participants.filter(
+                (user): user is User =>
+                  !!user && typeof user === 'object' && 'id' in user
               )
             : [],
           notice: party.notice ?? '',
-        }));
-        setParties(partyList);
+          status: 'joinable',
+        };
+
+        partyInfo.status = getPartyStatus(partyInfo, currentUserId);
+
+        return partyInfo;
+      });
+      setParties(partyList);
+    }
+  };
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      if (!currentUserId) return;
+      const { data, error } = await supabase
+        .from('users')
+        .select('name, national_grade, gender')
+        .eq('id', currentUserId)
+        .single();
+
+      if (data) {
+        setCurrentUserName(data.name ?? '');
+        setCurrentUserGrade(data.national_grade ?? '');
+        setCurrentUserGender(data.gender ?? '');
       }
     };
-    fetchParties();
+    fetchUserInfo();
+  }, [currentUserId]);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setCurrentUserId(data?.user?.id ?? '');
+      setIsLoggedIn(!!data?.user);
+    });
   }, []);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setIsLoggedIn(!!data.session);
+    });
+  }, []);
+
+  useEffect(() => {
+    fetchParties();
+  }, [currentUserId]);
+
+  const getPartyStatus = (
+    party: PartyInfo,
+    currentUserId: string
+  ): PartyStatus => {
+    const now = new Date();
+    const partyStart = new Date(
+      `${party.schedule?.date ?? ''}T${party.schedule?.start_time ?? ''}`
+    );
+    if (now > partyStart) return 'readonly';
+    if (party.participants.some((u) => u.id === currentUserId)) return 'joined';
+    if (party.participants.length >= party.maxParticipants) return 'full';
+    return 'joinable';
+  };
 
   const handleGenderBadgeClick = (value: string) => {
     setGenderFilter((prev) => (prev === value ? '' : value));
@@ -144,6 +210,68 @@ const PartyPage = () => {
     return timeStr.slice(0, 5);
   }
 
+  const handleCreatePartyClick = () => {
+    if (!isLoggedIn) {
+      toast('✅ 로그인이 필요합니다.', { duration: 2000 });
+      return;
+    }
+    window.location.href = './create';
+  };
+
+  const handleJoinParty = async () => {
+    if (!selectedParty || !currentUserId) return;
+
+    const partyId = selectedParty.id ?? '';
+    if (!partyId) {
+      setModalOpen(false);
+      await fetchParties();
+      toast('❌ 파티 정보가 올바르지 않습니다.', { duration: 2000 });
+      return;
+    }
+
+    const { error: participantError } = await supabase
+      .from('party_participants')
+      .insert([
+        {
+          party_id: partyId,
+          user_id: currentUserId,
+        },
+      ]);
+
+    const newParticipant = {
+      id: currentUserId,
+      name: currentUserName,
+      grade: currentUserGrade,
+      gender: currentUserGender,
+    };
+
+    const partyRes = await supabase
+      .from('parties')
+      .select('participants')
+      .eq('id', partyId)
+      .single();
+
+    const prevParticipants = Array.isArray(partyRes.data?.participants)
+      ? partyRes.data.participants
+      : [];
+
+    const updatedParticipants = [...prevParticipants, newParticipant];
+
+    const { error: updateError } = await supabase
+      .from('parties')
+      .update({ participants: updatedParticipants })
+      .eq('id', partyId);
+
+    setModalOpen(false);
+    await fetchParties();
+
+    if (!participantError && !updateError) {
+      toast('✅ 모임 참여가 완료되었습니다.', { duration: 2000 });
+    } else {
+      toast('❌ 참여에 실패했습니다.', { duration: 2000 });
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.topSection}>
@@ -154,18 +282,18 @@ const PartyPage = () => {
             직접 모임을 만들거나 근처에 있는 일회성 모임에 참여해 보세요!
           </h2>
         </div>
-        <Link href="./createParty" passHref>
-          <Button
-            text="모임 생성"
-            type="button"
-            iconPosition="left"
-            rounded={false}
-            icon={<PlusIcon />}
-            variant="primary"
-            size="short"
-            className={styles.createButton}
-          />
-        </Link>
+
+        <Button
+          onClick={handleCreatePartyClick}
+          text="모임 생성"
+          type="button"
+          iconPosition="left"
+          rounded={false}
+          icon={<PlusIcon />}
+          variant="primary"
+          size="short"
+          className={styles.createButton}
+        />
         <hr className={styles.divider} />
       </div>
 
@@ -227,24 +355,25 @@ const PartyPage = () => {
           visible={modalOpen}
           onCancel={() => setModalOpen(false)}
           confirmText="참가하기"
+          onConfirm={handleJoinParty}
         >
           <header className={styles.modalHeader}>
             <h3 className={styles.modalTitle}>{selectedParty.title}</h3>
             <Badge
-              text={`${selectedParty.participants} / ${selectedParty.maxParticipants}`}
-              icon={<UserGroupIcon width={16} aria-hidden />}
+              text={`${selectedParty.participants.length} / ${selectedParty.maxParticipants}`}
+              icon={<UserGroupIcon width={16} height={16} aria-hidden />}
               variant="filled"
               color="dark"
               onClick={undefined}
               tabIndex={-1}
-              aria-label={`최대 인원 ${selectedParty.maxParticipants}명 중 ${selectedParty.participants}명 참가함`}
+              aria-label={`최대 인원 ${selectedParty.maxParticipants}명 중 ${selectedParty.participants.length}명 참가함`}
             />
           </header>
 
           <section className={styles.modalPartyContent}>
             <div>
               <div className={styles.modalSchedule}>
-                <ClockIcon width={16} aria-hidden />
+                <ClockIcon width={16} height={16} aria-hidden />
                 <span className={styles.scheduleDatetime}>
                   {selectedParty.schedule
                     ? `${formatDate(selectedParty.schedule.date)} | ${formatTime(selectedParty.schedule.start_time)} - ${formatTime(selectedParty.schedule.end_time)}`
@@ -252,7 +381,7 @@ const PartyPage = () => {
                 </span>
               </div>
               <div className={styles.modalSchedule}>
-                <MapPinIcon width={16} aria-hidden />
+                <MapPinIcon width={16} height={16} aria-hidden />
                 <span className={styles.scheduleDatetime}>
                   {selectedParty.schedule?.location}
                 </span>
@@ -310,7 +439,7 @@ const PartyPage = () => {
                   </li>
                   <li>
                     <Badge
-                      text={`콕 ${selectedParty.materials?.shuttleCock}개`}
+                      text={`콕 ${selectedParty.materials?.shuttle_cock}개`}
                       variant="outline"
                       color="primary"
                       onClick={undefined}
@@ -331,23 +460,48 @@ const PartyPage = () => {
             </div>
           </section>
 
-          <div style={{ height: 200, overflowY: 'auto', marginTop: 16 }}>
+          <div className={styles.participantsList}>
             <h3>참가자 명단</h3>
-            {getSortedParticipants(selectedParty).map((user) => (
-              <UserResultCard
-                id={user.id}
-                key={user.id}
-                name={user.name}
-                grade={
-                  typeof user.grade === 'string'
-                    ? { local: user.grade }
-                    : (user.grade ?? null)
-                }
-                gender={user.gender}
-                variant="result"
-                icon={<StarIcon />}
-              />
-            ))}
+            <ul className={styles.participantsWrapper}>
+              {selectedParty.participants.map((user: User) => (
+                <li className={styles.participantsItem} key={user.id}>
+                  <div className={styles.nameContainer}>
+                    {user.id === selectedParty.creator_id && (
+                      <StarIcon
+                        width={20}
+                        height={20}
+                        style={{ color: '#3377ff' }}
+                      />
+                    )}
+                    <span
+                      style={{
+                        alignContent: 'center',
+                      }}
+                    >
+                      {user.name}
+                    </span>
+                  </div>
+                  <div className={styles.badgeWrapper}>
+                    <Badge
+                      text={user.grade ?? ''}
+                      variant="filled"
+                      color="primary"
+                    />
+                    <Badge
+                      text={
+                        user.gender === 'male'
+                          ? '남자'
+                          : user.gender === 'female'
+                            ? '여자'
+                            : ''
+                      }
+                      variant="outline"
+                      color="primary"
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
         </Modal>
       )}

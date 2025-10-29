@@ -38,6 +38,8 @@ type InputProps = {
   inputMode?: string;
   readOnly?: boolean;
   className?: string;
+  min?: string | number;
+  max?: string | number;
 };
 
 const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
@@ -54,6 +56,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     register,
     variant = 'primary',
     onKeyDown,
+    min,
   },
   ref
 ) {
@@ -141,6 +144,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       >
         <input
           id={name}
+          min={min}
           className={clsx(
             type === 'search'
               ? variant === 'secondary'
