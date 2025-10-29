@@ -18,15 +18,20 @@ export const container = style({
     },
   },
 });
-
 export const titleContainer = style({
   display: 'flex',
   flexDirection: 'column',
   gap: '20px',
 });
+
 export const title = style({
   ...textStyle.title.bold,
   color: tokens.color.text.title,
+});
+
+export const subtitle = style({
+  ...textStyle.subtitle.semibold,
+  color: tokens.color.text.body,
 });
 
 export const topSection = style({
