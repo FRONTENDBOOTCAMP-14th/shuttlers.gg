@@ -1,7 +1,7 @@
 import * as styles from './PartnersSection.css';
 
 type Partner = {
-  grade: string;
+  name: string;
   wins: number;
   losses: number;
 };
@@ -28,8 +28,8 @@ export function PartnersSection({ partners }: PartnersSectionProps) {
         const percentage = maxGames > 0 ? (totalGames / maxGames) * 100 : 0;
 
         return (
-          <li key={partner.grade} className={styles.partnerItem}>
-            <span className={styles.partnerGrade}>{partner.grade}</span>
+          <li key={partner.name} className={styles.partnerItem}>
+            <span className={styles.partnerGrade}>{partner.name}</span>
 
             <div
               className={styles.partnerBar}
@@ -37,7 +37,7 @@ export function PartnersSection({ partners }: PartnersSectionProps) {
               aria-valuenow={percentage}
               aria-valuemin={0}
               aria-valuemax={100}
-              aria-label={`${partner.grade} 파트너 전적`}
+              aria-label={`${partner.name} 파트너 전적`}
             >
               <div
                 className={styles.partnerBarFill}

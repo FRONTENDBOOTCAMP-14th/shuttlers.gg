@@ -2,12 +2,13 @@ import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
 import * as styles from './WinRateChart.css';
 
 type WinRateChartProps = {
-  winRate: number;
   wins: number;
   losses: number;
 };
 
-export function WinRateChart({ winRate, wins, losses }: WinRateChartProps) {
+export function WinRateChart({ wins, losses }: WinRateChartProps) {
+  const winRate =
+    losses === 0 ? 100 : Math.round((wins / (wins + losses)) * 100);
   const data = [
     { name: '승', value: wins },
     { name: '패', value: losses },

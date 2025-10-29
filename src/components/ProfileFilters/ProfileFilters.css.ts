@@ -1,69 +1,53 @@
-import { colors } from '@/styles/colorPalette.css';
-import { tokens } from '@/styles/tokens.css';
-import { textStyle } from '@/styles/typography.css';
-import { style } from '@vanilla-extract/css';
-import { recipe } from '@vanilla-extract/recipes';
+import { style, styleVariants } from '@vanilla-extract/css';
 
-export const filtersContainer = style({
+export const container = style({
   display: 'flex',
   gap: 12,
-  justifyContent: 'flex-end',
   flexWrap: 'wrap',
 });
 
-export const filterButton = recipe({
-  base: [
-    textStyle.body.semibold,
-    {
-      padding: '10px 20px',
-      borderRadius: 24,
-      border: '2px solid',
-      background: 'transparent',
-      cursor: 'pointer',
-      transition: 'all 0.2s ease',
-      display: 'flex',
-      alignItems: 'center',
-      gap: 6,
-
-      ':hover': {
-        transform: 'translateY(-1px)',
-      },
-
-      ':focus-visible': {
-        outline: `2px solid ${tokens.color.field.border.focus}`,
-        outlineOffset: 2,
-      },
-
-      ':disabled': {
-        cursor: 'not-allowed',
-        opacity: 0.5,
-      },
-    },
-  ],
-  variants: {
-    active: {
-      true: {
-        borderColor: colors.brand.main,
-        background: colors.brand.main,
-        color: tokens.color.text.inverse,
-      },
-      false: {
-        borderColor: tokens.color.field.border.base,
-        color: tokens.color.text.body,
-
-        ':hover': {
-          borderColor: colors.brand.main,
-          color: colors.brand.main,
-        },
-      },
-    },
-  },
-  defaultVariants: {
-    active: false,
-  },
+export const filterItem = style({
+  position: 'relative',
+  display: 'inline-block',
 });
 
-export const filterIcon = style({
-  width: 16,
-  height: 16,
+export const trigger = style({
+  all: 'unset',
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 6,
+  cursor: 'pointer',
+});
+
+export const chevron = style({
+  display: 'inline-block',
+  transition: 'transform 0.2s ease',
+});
+
+export const dropdown = style({
+  position: 'absolute',
+  top: '100%',
+  left: 0,
+  zIndex: 10,
+  minWidth: 140,
+  marginTop: 8,
+  padding: 8,
+  borderRadius: 8,
+  background: 'var(--surface, #fff)',
+  boxShadow: '0 6px 24px rgba(0,0,0,.12)',
+  listStyle: 'none',
+});
+
+export const option = styleVariants({
+  default: {
+    padding: '6px 8px',
+    cursor: 'pointer',
+    selectors: {
+      '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
+    },
+  },
+  selected: {
+    fontWeight: 700,
+    backgroundColor: 'rgba(0,0,0,0.08)',
+  },
 });

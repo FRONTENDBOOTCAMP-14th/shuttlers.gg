@@ -1,14 +1,12 @@
 'use client';
 
+import * as styles from '@/app/user-stats/[id]/UserStats.css';
 import { MatchHistorySection } from '@/components/MatchHistorySection/MatchHistorySection';
 import { PartnersSection } from '@/components/PartnersSection/PartnersSection';
-import { ProfileFilters } from '@/components/ProfileFilters/ProfileFilters';
-import { ProfileHeader } from '@/components/ProfileHeader/ProfileHeader';
 import { StatsCard } from '@/components/StatsCard/StatsCard';
+import UserCard from '@/components/UserCard/UserCard';
 import { WinRateChart } from '@/components/WinRateChart/WinRateChart';
-import type { CompetitionType, EventType, Grade } from '@/hooks/usePlayerStats';
 import { usePlayerStats } from '@/hooks/usePlayerStats';
-import * as styles from '@/UserStats.css';
 import {
   ChartBarIcon,
   ClockIcon,
@@ -21,17 +19,18 @@ import { useState } from 'react';
 export default function UserStatsPage() {
   const params = useParams();
   const playerId = params.id as string;
-
-  const [competition, setCompetition] = useState<CompetitionType | undefined>();
-  const [event, setEvent] = useState<EventType | undefined>();
-  const [grade, setGrade] = useState<Grade | undefined>();
-
-  const { summary, isLoading, isError } = usePlayerStats({
-    playerId,
-    competition,
-    event,
-    grade,
+  const [competition, setCompetition] = useState<string[]>([]);
+  const [event, setEvent] = useState<string[]>([]);
+  const [grade, setGrade] = useState<string[]>([]);
+  const { isLoading, isError, summary, rows, refetch } = usePlayerStats({
+    playerId: params.id as string,
   });
+  const user = {
+    playerName: '김민수',
+    tags: ['남자', '아마추어'],
+    localGrade: 'C',
+    nationalGrade: 'D',
+  };
 
   if (isLoading) {
     return (
@@ -55,12 +54,16 @@ export default function UserStatsPage() {
 
   return (
     <article className={styles.profile}>
-      <ProfileHeader
-        playerName="김민턴"
-        tags={['남자', '아마추어']}
-        localGrade="C"
-        nationalGrade="D"
-      />
+      <section className={styles.section()}>
+        <UserCard
+          variant="public"
+          name={user.playerName}
+          gender={user.tags.includes('남자') ? 'male' : 'female'}
+          grade={{ local: user.localGrade, national: user.nationalGrade }}
+          email="kimminsu@example.com"
+          role={user.tags.includes('아마추어') ? 'amateur' : 'pro'}
+        />
+      </section>
 
       <section className={styles.section()}>
         <header className={styles.sectionHeader}>
@@ -71,14 +74,6 @@ export default function UserStatsPage() {
             />
             출전 기록
           </h2>
-          <ProfileFilters
-            competition={competition}
-            event={event}
-            grade={grade}
-            onCompetitionChange={setCompetition}
-            onEventChange={setEvent}
-            onGradeChange={setGrade}
-          />
         </header>
         <StatsCard summary={summary} />
       </section>
@@ -88,11 +83,7 @@ export default function UserStatsPage() {
           <TrophyIcon className={styles.sectionTitleIcon} aria-hidden="true" />
           승률
         </h2>
-        <WinRateChart
-          winRate={summary.winRate}
-          wins={summary.wins}
-          losses={summary.losses}
-        />
+        <WinRateChart wins={summary.wins} losses={summary.losses} />
       </section>
 
       <section className={styles.section()}>

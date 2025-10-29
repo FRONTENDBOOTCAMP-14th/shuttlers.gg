@@ -1,59 +1,100 @@
-import type { CompetitionType, EventType, Grade } from '@/hooks/usePlayerStats';
-import { ChevronDownIcon } from '@heroicons/react/24/solid';
-import * as styles from './ProfileFilters.css';
+'use client';
 
-type ProfileFiltersProps = {
-  competition: CompetitionType | undefined;
-  event: EventType | undefined;
-  grade: Grade | undefined;
-  onCompetitionChange: (value: CompetitionType | undefined) => void;
-  onEventChange: (value: EventType | undefined) => void;
-  onGradeChange: (value: Grade | undefined) => void;
-};
+import { Badge } from '@/components/Badge/Badge';
+import { useEffect, useId, useRef, useState } from 'react';
+import * as styles from './ProfileFilters.css.ts';
 
-export function ProfileFilters({
-  competition,
-  event,
-  grade,
-}: ProfileFiltersProps) {
-  const competitionLabel =
-    competition === 'local'
-      ? '지역'
-      : competition === 'national'
-        ? '전국'
-        : '대회';
-  const eventLabel =
-    event === 'single' ? '단식' : event === 'double' ? '복식' : '종목';
-  const gradeLabel = grade || '급수';
+type Option<T extends string> = { value: T; label: string };
+
+function FilterBadge<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+  disabled,
+}: {
+  label: string;
+  value: T | undefined;
+  options: Option<T>[];
+  onChange: (v: T | undefined) => void;
+  disabled?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const listId = useId();
+
+  useEffect(() => {
+    if (!open) return;
+    const onDocClick = (e: MouseEvent) => {
+      if (!btnRef.current?.parentElement?.contains(e.target as Node))
+        setOpen(false);
+    };
+    document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+  }, [open]);
+
+  const current = options.find((o) => o.value === value);
+  const text = current ? `${label}: ${current.label}` : `${label} 전체`;
+
+  const handleSelect = (v: T | undefined) => {
+    onChange(v);
+    setOpen(false);
+    btnRef.current?.focus();
+  };
 
   return (
-    <div className={styles.filtersContainer} role="group" aria-label="필터">
+    <div className={styles.filterItem}>
       <button
+        ref={btnRef}
         type="button"
-        className={styles.filterButton({ active: !!competition })}
-        aria-label={`대회 필터: ${competitionLabel}`}
+        className={styles.trigger}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={listId}
+        onClick={() => setOpen((v) => !v)}
+        disabled={disabled}
       >
-        {competitionLabel}
-        <ChevronDownIcon className={styles.filterIcon} aria-hidden="true" />
+        <Badge variant={current ? 'filled' : 'outline'} text={text} />
+        <span className={styles.chevron} aria-hidden="true">
+          ▾
+        </span>
       </button>
 
-      <button
-        type="button"
-        className={styles.filterButton({ active: !!event })}
-        aria-label={`종목 필터: ${eventLabel}`}
-      >
-        {eventLabel}
-        <ChevronDownIcon className={styles.filterIcon} aria-hidden="true" />
-      </button>
-
-      <button
-        type="button"
-        className={styles.filterButton({ active: !!grade })}
-        aria-label={`급수 필터: ${gradeLabel}`}
-      >
-        {gradeLabel}
-        <ChevronDownIcon className={styles.filterIcon} aria-hidden="true" />
-      </button>
+      {open && (
+        <ul
+          id={listId}
+          role="listbox"
+          aria-label={`${label} 선택`}
+          className={styles.dropdown}
+        >
+          <li
+            role="option"
+            aria-selected={value === undefined}
+            tabIndex={0}
+            className={
+              styles.option[value === undefined ? 'selected' : 'default']
+            }
+            onClick={() => handleSelect(undefined)}
+          >
+            전체
+          </li>
+          {options.map((opt) => {
+            const selected = opt.value === value;
+            return (
+              <li
+                key={opt.value}
+                role="option"
+                aria-selected={selected}
+                tabIndex={0}
+                className={styles.option[selected ? 'selected' : 'default']}
+                onClick={() => handleSelect(opt.value)}
+              >
+                {opt.label}
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 }

@@ -6,7 +6,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 export type CompetitionType = 'local' | 'national';
 export type EventType = 'single' | 'double';
 export type Grade = 'A' | 'B' | 'C' | 'D' | '초심' | '준자강' | '자강';
-
 export type PlayerStatsRow = {
   player_id: string;
   competition_type: CompetitionType;
@@ -101,24 +100,24 @@ export function usePlayerStats(
     event?: EventType;
     grade?: Grade;
   },
-  options?: {
-    keepPreviousData?: boolean;
-  }
+  options?: { keepPreviousData?: boolean }
 ) {
   const { playerId, competition, event, grade } = params;
   const keepPreviousData = options?.keepPreviousData ?? true;
 
   const [state, setState] = useState<State>({ status: 'idle' });
-
   const abortRef = useRef<AbortController | null>(null);
   const reqIdRef = useRef(0);
 
+  const UUID_RE =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
   const fetchOnce = useCallback(async () => {
     if (!playerId) return;
+
     abortRef.current?.abort();
     const ac = new AbortController();
     abortRef.current = ac;
-
     const myReqId = ++reqIdRef.current;
 
     setState((prev) =>
@@ -128,31 +127,38 @@ export function usePlayerStats(
     );
 
     try {
-      let q = supabase
+      if (!UUID_RE.test(playerId)) {
+        const msg = '잘못된 플레이어 ID 형식입니다. (UUID 필요)';
+        setState((prev) =>
+          keepPreviousData &&
+          (prev.status === 'success' || prev.status === 'error')
+            ? { ...prev, status: 'error', error: msg }
+            : { status: 'error', error: msg }
+        );
+        return;
+      }
+
+      let query = supabase
         .from('player_stats_summary')
         .select(STATS_COLUMNS)
         .eq('player_id', playerId);
 
-      if (competition) q = q.eq('competition_type', competition);
-      if (event) q = q.eq('event_type', event);
-      if (grade) q = q.eq('grade', grade);
+      if (competition) query = query.eq('competition_type', competition);
+      if (event) query = query.eq('event_type', event);
+      if (grade) query = query.eq('grade', grade);
 
-      const { data, error } = await q.returns<PlayerStatsRow[]>();
-
+      const { data, error } = await query.returns<PlayerStatsRow[]>();
       if (error) throw error;
       if (myReqId !== reqIdRef.current) return;
 
       const rows = (data ?? []).map(mapRow);
       const summary = aggregate(rows);
-
       setState({ status: 'success', rows, summary });
     } catch (e: any) {
       if (e?.name === 'AbortError') return;
       if (myReqId !== reqIdRef.current) return;
 
       const err = normalizeSupabaseError(e);
-      // HACK : 차후 배포 시 console.error 삭제
-      console.error('[usePlayerStats]', err);
       setState((prev) =>
         keepPreviousData &&
         (prev.status === 'success' || prev.status === 'error')
