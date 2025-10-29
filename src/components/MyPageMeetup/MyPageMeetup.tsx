@@ -26,7 +26,7 @@ function MeetupSection({ title, meetups, emptyMessage }: MeetupSectionProps) {
         ) : (
           meetups.map((party) => (
             <div key={party.id} className={styles.meetupItem}>
-              <PartyCard party={party} view="compact" />
+              <PartyCard party={party} view="detailed" />
             </div>
           ))
         )}

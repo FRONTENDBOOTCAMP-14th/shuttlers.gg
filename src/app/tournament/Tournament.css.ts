@@ -46,6 +46,12 @@ export const tournamentInfoDate = style(textStyle.body.semibold);
 
 export const tournamentInfoPlace = style(textStyle.body.regular);
 
+export const poster = style({
+  position: 'relative',
+  width: '100%',
+  aspectRatio: '3 / 4',
+});
+
 export const posterImg = style({ width: '100%', marginTop: 40 });
 
 export const infoSection = recipe({
