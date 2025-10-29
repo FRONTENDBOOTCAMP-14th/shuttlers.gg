@@ -98,3 +98,7 @@ function FilterBadge<T extends string>({
     </div>
   );
 }
+
+export default function ProfileFilters() {
+  return <></>;
+}
