@@ -1,6 +1,6 @@
 'use client';
 
-import { supabase } from '@/libs/supabase';
+import { supabase } from '@/libs/supabase/client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export type CompetitionType = 'local' | 'national';
