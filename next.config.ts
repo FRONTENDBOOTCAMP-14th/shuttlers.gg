@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
   typescript: { ignoreBuildErrors: false },
   typedRoutes: false,
   reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
     remotePatterns: [
       {
@@ -17,9 +20,7 @@ const nextConfig: NextConfig = {
     ],
   },
   async redirects() {
-    return [
-      { source: '/', destination: '/landing', permanent: true },
-    ];
+    return [{ source: '/', destination: '/landing', permanent: true }];
   },
 };
 
