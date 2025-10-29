@@ -76,3 +76,10 @@ export const condition = style({
 globalStyle(`${condition} > span`, {
   ...textStyle.body.semibold,
 });
+
+globalStyle(`${schedule} > span`, {
+  maxWidth: 250,
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+});

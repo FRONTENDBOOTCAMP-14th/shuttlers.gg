@@ -118,7 +118,7 @@ export function MonthlyCalendar({
             aria-label="이전 달"
             onClick={handlePrevMonth}
           >
-            <ChevronLeftIcon />
+            <ChevronLeftIcon height={24} width={24} />
           </button>
           <button
             type="button"
@@ -126,7 +126,7 @@ export function MonthlyCalendar({
             aria-label="다음 달"
             onClick={handleNextMonth}
           >
-            <ChevronRightIcon />
+            <ChevronRightIcon height={24} width={24} />
           </button>
         </div>
       </div>

@@ -14,14 +14,16 @@ import * as styles from './PartyCard.css';
 type Grade = 'beginner' | 'D' | 'C' | 'B' | 'A';
 type PartyStatus = 'joinable' | 'full' | 'joined' | 'readonly';
 
-type User = {
+export type User = {
   id: string;
   name: string;
   grade?: Grade | null;
+  national_grade?: string;
   gender?: 'male' | 'female';
 };
 
 export type PartyInfo = {
+  id: string;
   title: string;
   schedule?: {
     date: string;
@@ -32,7 +34,7 @@ export type PartyInfo = {
   participants: User[];
   maxParticipants: number;
   conditions?: { gender: string; grade: string };
-  materials?: { amount: number; shuttleCock: number };
+  materials?: { amount: number; shuttle_cock: number };
   status: PartyStatus;
   creator_id?: string;
   participantsList?: User[];
@@ -72,17 +74,12 @@ export default function PartyCard({
     { color: ButtonVariant; text: string; action?: () => void }
   > = {
     joinable: { color: 'primary', text: '참가하기', action: onJoin },
-    full: { color: 'primary', text: '참여 불가' },
+    full: { color: 'secondary', text: '참여 불가' },
     joined: { color: 'dark', text: '참가 취소', action: onCancel },
-    readonly: { color: 'primary', text: '상세보기', action: onDetail },
+    readonly: { color: 'secondary', text: '상세보기', action: onDetail },
   };
 
-  const partyStatus: PartyStatus =
-    status && ['joinable', 'full', 'joined', 'readonly'].includes(status)
-      ? status
-      : 'readonly';
-
-  const partyButton = buttonVariant[partyStatus];
+  const btn = buttonVariant[status] ?? { color: 'primary', text: '상세보기' };
 
   return (
     <article className={styles.partyCard({ status, view })} tabIndex={0}>
@@ -115,8 +112,8 @@ export default function PartyCard({
           {title}
         </h3>
         <Badge
-          text={`${participants?.length || 0} / ${maxParticipants}`}
-          icon={<UserGroupIcon width={16} aria-hidden />}
+          text={`${participants?.length ?? 0} / ${maxParticipants}`}
+          icon={<UserGroupIcon width={16} height={16} aria-hidden />}
           variant="filled"
           color="dark"
           onClick={undefined}
@@ -129,7 +126,7 @@ export default function PartyCard({
         <div style={{ display: 'flex', flexDirection: 'column', rowGap: 8 }}>
           <div className={styles.schedule}>
             <h4 className="sr-only">모임 일시</h4>
-            <ClockIcon width={16} aria-hidden />
+            <ClockIcon width={16} height={16} aria-hidden />
             <span>
               {schedule
                 ? `${formatDate(schedule.date)} | ${formatTime(schedule.start_time)} - ${formatTime(schedule.end_time)}`
@@ -138,7 +135,7 @@ export default function PartyCard({
           </div>
           <div className={styles.schedule}>
             <h4 className="sr-only">모임 장소</h4>
-            <MapPinIcon width={16} aria-hidden />
+            <MapPinIcon width={16} height={16} aria-hidden />
             <span>{schedule?.location}</span>
           </div>
         </div>
@@ -195,7 +192,7 @@ export default function PartyCard({
                 </li>
                 <li>
                   <Badge
-                    text={`콕 ${materials?.shuttleCock}개`}
+                    text={`콕 ${materials?.shuttle_cock}개`}
                     variant="outline"
                     color="primary"
                     onClick={undefined}
@@ -209,12 +206,12 @@ export default function PartyCard({
       </section>
 
       <Button
-        text={partyButton.text}
-        variant={partyButton.color}
+        text={btn.text}
+        variant={btn.color}
         size="long"
-        onClick={partyButton.action ?? undefined}
+        onClick={btn.action ?? undefined}
         disabled={status === 'full'}
-        aria-label={partyButton.text}
+        aria-label={btn.text}
       />
     </article>
   );
