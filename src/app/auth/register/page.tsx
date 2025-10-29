@@ -12,7 +12,7 @@ import * as styles from './page.css';
 export default function RegisterPage() {
   const router = useRouter();
   const methods = useForm<RegisterFormValues>({ mode: 'onChange' });
-  const [step, setStep] = useState<1 | 2>(1);
+  const [step, setStep] = useState<1 | 2>(2);
 
   const handleRegister = async (formData: RegisterFormValues) => {
     try {
