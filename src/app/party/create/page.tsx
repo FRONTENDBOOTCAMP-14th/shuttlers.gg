@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { Address } from 'react-daum-postcode';
 import DaumPostcode from 'react-daum-postcode';
+import toast from 'react-hot-toast';
 import * as styles from './page.css';
 
 const genderOptions = [
@@ -40,6 +41,14 @@ export default function OpenPartyPage() {
   const [grade, setGrade] = useState('');
   const [isAddressOpen, setIsAddressOpen] = useState(false);
 
+  const router = useRouter();
+
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  const localToday = `${yyyy}-${mm}-${dd}`;
+
   const handleComplete = (data: Address) => {
     let fullAddr = data.address;
     let extraAddr = '';
@@ -55,7 +64,7 @@ export default function OpenPartyPage() {
     setIsAddressOpen(false);
   };
 
-  const isTitleValid = title.length >= 2 && title.length <= 20;
+  const isTitleValid = title.length >= 2 && title.length <= 8;
   const isParticipantsValid =
     /^\d+$/.test(participants) && participants.length > 0;
   const isDateValid = /^\d{4}-\d{2}-\d{2}$/.test(date);
@@ -79,36 +88,69 @@ export default function OpenPartyPage() {
   const formatFee = (value: string) =>
     value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-  const router = useRouter();
-
   const handleCreateParty = async () => {
     const { data: userData } = await supabase.auth.getUser();
-    const user = userData?.user;
+    const creator_id = userData?.user?.id ?? '';
 
-    const { error } = await supabase.from('parties').insert([
-      {
-        title,
-        participants: Number(participants),
-        date,
-        start_time: startTime,
-        end_time: endTime,
-        location,
-        amount: Number(fee),
-        shuttleCock: Number(shuttleCock),
-        notice,
-        gender,
-        grade,
-        creator_id: user?.id ?? '',
-      },
-    ]);
+    const creator = {
+      id: creator_id,
+      name: userData?.user?.user_metadata?.name ?? '',
+      grade,
+      gender,
+    };
 
-    if (error) {
-      alert('모임 생성 실패: ' + error.message);
-    } else {
-      if (window.confirm('모임이 성공적으로 생성되었습니다!')) {
-        router.push('/party/find');
-      }
+    const { data, error } = await supabase
+      .from('parties')
+      .insert([
+        {
+          creator_id,
+          title,
+          max_participants: Number(participants),
+          date,
+          start_time: startTime,
+          end_time: endTime,
+          location,
+          amount: Number(fee),
+          shuttle_cock: Number(shuttleCock),
+          gender,
+          grade,
+          notice,
+          participants: [creator],
+        },
+      ])
+      .select();
+
+    if (error || !data || !data[0]?.id) {
+      toast('모임 생성 실패', { duration: 2000 });
+      setTimeout(() => {
+        router.push('./find');
+      }, 2000);
+      return;
     }
+
+    const partyId = data[0].id;
+
+    const { error: participantError } = await supabase
+      .from('party_participants')
+      .insert([
+        {
+          party_id: partyId,
+          user_id: creator_id,
+        },
+      ]);
+
+    if (participantError) {
+      toast('모임 생성 실패', { duration: 2000 });
+      setTimeout(() => {
+        router.push('./find');
+      }, 2000);
+      return;
+    }
+
+    toast('✅ 모임 생성 완료', { duration: 2000 });
+    setTimeout(() => {
+      router.push('./find');
+    }, 2000);
   };
 
   return (
@@ -122,7 +164,10 @@ export default function OpenPartyPage() {
           label="모임명"
           placeholder="2자 이상 8자 이하"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value.length <= 8) setTitle(value);
+          }}
           minLength={2}
           maxLength={8}
           required
@@ -149,6 +194,7 @@ export default function OpenPartyPage() {
           onChange={(e) => setDate(e.target.value)}
           required
           type="date"
+          min={localToday}
         />
 
         <Input

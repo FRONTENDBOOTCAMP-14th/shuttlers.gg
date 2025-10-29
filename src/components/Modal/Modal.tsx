@@ -78,7 +78,7 @@ export default function Modal({
           onClick={onCancel}
           aria-label="모달창 닫기"
         >
-          <XMarkIcon width={24} />
+          <XMarkIcon width={24} height={24} />
         </button>
 
         <section className={styles.modalContent}>
