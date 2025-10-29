@@ -39,7 +39,7 @@ export default function RegisterForm({
   onClickNext,
   onSubmitAction,
 }: RegisterFormProps) {
-  const { handleSubmit, register, setValue, trigger, watch } =
+  const { handleSubmit, register, setValue, trigger, watch, formState } =
     useFormContext<RegisterFormValues>();
   const modal = useModal();
 
@@ -68,40 +68,103 @@ export default function RegisterForm({
   }, []);
 
   const handleSendOtp = async () => {
-    if (sendCool > 0) return toast(`${sendCool}초 후 다시 시도해주세요.`);
+    try {
+      if (sendCool > 0) return toast(`${sendCool}초 후 다시 시도해주세요.`);
 
-    const email = watch('email');
-    const password = watch('password');
+      const email = watch('email');
+      if (!email) return toast.error('이메일을 입력해주세요.');
 
-    if (!email) return toast.error('이메일을 입력해주세요.');
-    if (!password) return toast.error('비밀번호를 입력해주세요.');
+      const { data: exstingUser } = await supabase
+        .from('users')
+        .select('name, gender, national_grade')
+        .eq('email', email)
+        .maybeSingle();
 
-    setStatus('pending');
+      if (exstingUser) {
+        const isCompleted =
+          exstingUser?.name &&
+          exstingUser?.gender &&
+          exstingUser?.national_grade;
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+        if (isCompleted) {
+          return toast.error('이미 가입된 이메일입니다.');
+        } else {
+          const { error: resendError } = await supabase.auth.resend({
+            type: 'signup',
+            email,
+          });
 
-    if (error) {
-      setStatus('idle');
-      return toast.error(`인증 메일 발송 실패\n${error.message}`);
+          if (!resendError) {
+            setSendCool(30);
+            const timer = setInterval(() => {
+              setSendCool((prev) => {
+                if (prev <= 1) {
+                  clearInterval(timer);
+                  return 0;
+                }
+                return prev - 1;
+              });
+            }, 1000);
+
+            return toast.success(
+              `인증 메일 발송 완료!\n수신한 메일에서 링크를 클릭해 주세요.`
+            );
+          }
+        }
+      }
+
+      const tempPassword = crypto.randomUUID();
+
+      const { error } = await supabase.auth.signUp({
+        email,
+        password: tempPassword,
+      });
+
+      if (error) {
+        if (formState.errors.email) {
+          return toast.error('이메일 유형을 확인해주세요.');
+        }
+        return toast.error(`인증 메일 발송 실패\n${error.message}`);
+      }
+
+      setStatus('pending');
+      setSendCool(30);
+      const timer = setInterval(() => {
+        setSendCool((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return toast.success(
+        `인증 메일 발송 완료!\n수신한 메일에서 링크를 클릭해 주세요.`
+      );
+    } catch (e) {
+      console.error(e);
+      toast.error(`인증 메일 발송 실패\n${e}`);
+    }
+  };
+
+  const handleStepNext = async () => {
+    const isValid = await trigger(['email', 'password', 'password_check']);
+
+    if (!isValid) {
+      const firstError = Object.values(formState.errors)[0];
+      return toast.error(firstError?.message || '입력값을 확인해주세요.');
     }
 
-    setSendCool(30);
-    const timer = setInterval(() => {
-      setSendCool((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    if (status !== 'resolved') {
+      return toast.error('이메일 인증을 완료해주세요.');
+    }
 
-    toast.success(
-      `인증 메일 발송 완료!\n수신한 메일에서 링크를 클릭해 주세요.`
-    );
+    await supabase.auth.updateUser({
+      password: watch('password'),
+    });
+
+    onClickNext();
   };
 
   return (
@@ -148,23 +211,7 @@ export default function RegisterForm({
               text="다음으로"
               variant="primary"
               size="long"
-              onClick={async () => {
-                const isValid = await trigger([
-                  'email',
-                  'password',
-                  'password_check',
-                ]);
-
-                if (!isValid) {
-                  return toast.error('입력값을 확인해주세요.');
-                }
-
-                if (status !== 'resolved') {
-                  return toast.error('이메일 인증을 완료해주세요.');
-                }
-
-                onClickNext();
-              }}
+              onClick={handleStepNext}
             />
           </>
         )}
@@ -280,7 +327,7 @@ export default function RegisterForm({
               text="가입 완료"
               variant="primary"
               size="long"
-              disabled={!checked}
+              disabled={!checked || !gender || !grade}
             />
           </>
         )}

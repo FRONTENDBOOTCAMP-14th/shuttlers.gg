@@ -68,7 +68,6 @@ export default function PartyCard({
 }: PartyCardProps) {
   const { title, schedule, participants, maxParticipants, materials, status } =
     party;
-
   const thumbnailImage = thumbnails[title.length % thumbnails.length];
   const buttonVariant: Record<
     PartyInfo['status'],
@@ -119,7 +118,7 @@ export default function PartyCard({
           color="dark"
           onClick={undefined}
           tabIndex={-1}
-          aria-label={`최대 인원 ${maxParticipants}명 중 ${participants}명 참가함`}
+          aria-label={`최대 인원 ${maxParticipants}명 중 ${participants?.length || 0}명 참가함`}
         />
       </header>
 
