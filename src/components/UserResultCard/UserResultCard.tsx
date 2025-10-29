@@ -105,7 +105,12 @@ export function UserResultCard({
             aria-label={`${name} 검색 이력 삭제`}
             title="삭제"
           >
-            <XMarkIcon className={styles.icon} aria-hidden />
+            <XMarkIcon
+              height={24}
+              width={24}
+              className={styles.icon}
+              aria-hidden
+            />
           </button>
         ) : (
           <>

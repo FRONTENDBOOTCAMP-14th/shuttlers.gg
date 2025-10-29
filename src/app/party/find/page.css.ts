@@ -187,3 +187,34 @@ export const modalLabel = style({
   ...textStyle.body.semibold,
   color: tokens.color.text.body,
 });
+
+export const participantsList = style({
+  marginTop: '20px',
+  marginBottom: '4px',
+});
+export const participantsWrapper = style({
+  display: 'flex',
+  flexDirection: 'column',
+  height: '200px',
+});
+
+export const badgeWrapper = style({
+  display: 'flex',
+  flexDirection: 'row',
+  gap: '10px',
+});
+
+export const participantsItem = style({
+  display: 'flex',
+  justifyContent: 'space-between',
+  width: '100%',
+  height: 'auto',
+  alignContent: 'center',
+  padding: '19px 0',
+  borderBottom: `1px solid ${tokens.color.surface.brand}`,
+});
+export const nameContainer = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '4px',
+});

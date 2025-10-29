@@ -1,7 +1,7 @@
 'use client';
 
 import { Database } from '@/libs/database.types';
-import { supabase } from '@/libs/supabase/index';
+import { supabase } from '@/libs/supabase/client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export type Prize = { rank: string; item: string; reward: string };

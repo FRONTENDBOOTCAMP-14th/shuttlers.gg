@@ -72,7 +72,7 @@ export function MyPage({ id }: { id: string }) {
         {tab === 'profile' ? (
           <MyPageForm userId={id} onSaveSuccess={refresh} />
         ) : (
-          <MyPageMeetup />
+          <MyPageMeetup userId={id} />
         )}
       </MyPageTabs>
     </div>

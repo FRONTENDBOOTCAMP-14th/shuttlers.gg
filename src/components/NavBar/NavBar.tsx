@@ -71,7 +71,7 @@ export default function NavBar({
                   lineHeight: 1,
                 }}
               >
-                <ArrowLeftIcon width={24} aria-hidden />
+                <ArrowLeftIcon width={24} height={24} aria-hidden />
                 이전으로
               </div>
             </button>
@@ -83,7 +83,11 @@ export default function NavBar({
               aria-label={isOpen ? '메뉴 닫기' : '메뉴 펼치기'}
               className={styles.hamburger}
             >
-              {isOpen ? <XMarkIcon width={24} /> : <Bars3Icon width={24} />}
+              {isOpen ? (
+                <XMarkIcon width={24} height={24} />
+              ) : (
+                <Bars3Icon width={24} height={24} />
+              )}
             </button>
 
             <div className={styles.navMenu({ isOpen })}>
@@ -128,7 +132,7 @@ export default function NavBar({
                       aria-label="마이페이지"
                       className={styles.menuIcon}
                     >
-                      <UserCircleIcon width={24} />
+                      <UserCircleIcon width={24} height={24} />
                     </Link>
                   ) : (
                     <Link
@@ -136,7 +140,7 @@ export default function NavBar({
                       aria-label="로그인"
                       className={styles.menuIcon}
                     >
-                      <ArrowRightEndOnRectangleIcon width={24} />
+                      <ArrowRightEndOnRectangleIcon width={24} height={24} />
                     </Link>
                   )}
                 </>
@@ -147,9 +151,9 @@ export default function NavBar({
                 className={styles.menuIcon}
               >
                 {theme === 'dark' ? (
-                  <SunIcon width={24} aria-hidden />
+                  <SunIcon width={24} height={24} aria-hidden />
                 ) : (
-                  <MoonIcon width={24} aria-hidden />
+                  <MoonIcon width={24} height={24} aria-hidden />
                 )}
               </button>
             </div>

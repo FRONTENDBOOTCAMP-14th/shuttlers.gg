@@ -85,7 +85,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.resetPasswordForEmail(
         formData.email,
         {
-          redirectTo: `${window.location.origin}/auth/reset-password`,
+          redirectTo: `${window.location.origin}/auth/verify?next=/auth/reset-password`,
         }
       );
 
@@ -139,7 +139,7 @@ export default function LoginPage() {
       <form onSubmit={sendMethods.handleSubmit(handleSendLink)}>
         <Modal
           title={
-            step === 1 ? '비밀번호를 잊으셨나요? 🥲' : '이메일 전송 완료 ✅'
+            step === 1 ? '비밀번호를 잊으셨나요? 😢' : '이메일 전송 완료 ✅'
           }
           visible={modal.isOpen}
           variant="alert"

@@ -78,6 +78,7 @@ export default function UserCard({
               >
                 <ArrowRightStartOnRectangleIcon
                   width={24}
+                  height={24}
                   color={tokens.color.text.inverse}
                 />
               </button>
