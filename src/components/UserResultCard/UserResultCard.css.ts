@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { tokens } from '../../styles/tokens.css';
 
 export const userResultCard = style({
-  width: '710px',
+  maxWidth: '710px',
   height: '70px',
   background: tokens.color.surface.base,
   padding: '20px 40px',
@@ -17,6 +17,14 @@ export const userResultCard = style({
       outline: 'none',
     },
   },
+  '@media': {
+    'screen and (max-width: 767px)': {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      height: 'auto',
+      gap: '10px',
+    },
+  },
 });
 
 export const userResultCardUserName = style(textStyle.heading.medium);
@@ -26,6 +34,13 @@ export const badgeGroup = style({
   display: 'flex',
   gap: '10px',
   alignItems: 'center',
+
+  '@media': {
+    'screen and (max-width: 767px)': {
+      justifyContent: 'start',
+      marginLeft: 0,
+    },
+  },
 });
 
 export const highlight = style({
@@ -33,3 +48,9 @@ export const highlight = style({
 });
 
 export const icon = style({ width: 20, height: 20 });
+
+export const iconWrapper = style({
+  display: 'inline-flex',
+  alignItems: 'center',
+  marginRight: '4px',
+});

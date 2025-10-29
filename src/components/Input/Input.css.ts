@@ -83,7 +83,10 @@ export const input = style({
 export const inputSecondary = style([
   input,
   {
-    padding: '12px 30px',
+    fontSize: 20,
+    paddingBlock: 6,
+    paddingInline: 30,
+    maxWidth: 300,
     background: tokens.color.surface.raised,
     color: 'tokens.color.text.body',
     borderRadius: '50px',

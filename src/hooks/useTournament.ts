@@ -1,9 +1,11 @@
 'use client';
 
+import { Database } from '@/libs/database.types';
 import { supabase } from '@/libs/supabase/index';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export type Prize = { rank: string; item: string; reward: string };
+type TournamentRow = Database['public']['Tables']['bk_tournaments']['Row'];
 
 export type TournamentData = {
   id: string;
@@ -32,20 +34,22 @@ type State =
   | { status: 'success'; data: TournamentData }
   | { status: 'error'; error: string };
 
-function mapRowToData(row: any): TournamentData {
+function mapRowToData(row: TournamentRow): TournamentData {
   return {
-    id: row.tnmt_id ?? row.id,
-    title: row.title ?? '',
-    tags: Array.isArray(row.tags) ? row.tags : [],
-    startDate: (row.start_date ?? row.startDate ?? '').slice(0, 10),
-    endDate: (row.end_date ?? row.endDate ?? '').slice(0, 10),
-    location: row.region ?? row.location ?? '',
+    id: row.tnmt_id,
+    title: row.title,
+    tags: Array.isArray(row.category) ? [row.category] : [],
+    startDate: (row.start_date ?? '').slice(0, 10),
+    endDate: (row.end_date ?? '').slice(0, 10),
+    location: row.region ?? '',
     host: row.host ?? undefined,
     sponsor: row.sponsor ?? undefined,
     detailUrl: row.detail_url ?? undefined,
-    prizes: row.prizes ?? [],
+    prizes: [],
     posterUrl: row.poster_url ?? undefined,
-    details: row.detail_kv,
+    details: row.detail_kv as
+      | { apply_period?: string | null; fee: string | null }
+      | undefined,
   };
 }
 
@@ -75,10 +79,17 @@ export function useTournament(id?: string) {
         .single();
 
       if (error) throw error;
-      setState({ status: 'success', data: mapRowToData(data) });
-    } catch (e: any) {
-      if (e?.name === 'AbortError') return;
-      setState({ status: 'error', error: e?.message ?? 'Unknown error' });
+
+      if (data) {
+        setState({
+          status: 'success',
+          data: mapRowToData(data as TournamentRow),
+        });
+      }
+    } catch (e) {
+      const error = e as Error;
+      if (error?.name === 'AbortError') return;
+      setState({ status: 'error', error: error?.message ?? 'Unknown error' });
     }
   }, [id]);
 

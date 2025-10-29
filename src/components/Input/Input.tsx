@@ -12,7 +12,14 @@ import * as styles from './Input.css';
 
 type InputProps = {
   name: string;
-  type?: 'text' | 'email' | 'password' | 'search';
+  type?:
+    | 'text'
+    | 'search'
+    | 'email'
+    | 'password'
+    | 'calendar'
+    | 'time'
+    | 'date';
   label?: string;
   placeholder?: string;
   value?: string;
@@ -20,9 +27,17 @@ type InputProps = {
   error?: boolean;
   disabled?: boolean;
   onSearchClick?: () => void;
+  onCalendarClick?: () => void;
+  onTimeClick?: () => void;
   register?: UseFormRegisterReturn;
   variant?: 'primary' | 'secondary';
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  minLength?: number;
+  maxLength?: number;
+  required?: boolean;
+  inputMode?: string;
+  readOnly?: boolean;
+  className?: string;
 };
 
 const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
@@ -126,8 +141,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       >
         <input
           id={name}
-          name={name}
-          ref={register ? undefined : ref}
           className={clsx(
             type === 'search'
               ? variant === 'secondary'
@@ -136,17 +149,26 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               : styles.input
           )}
           type={
-            type === 'password' ? (showPassword ? 'text' : 'password') : type
+            type === 'password'
+              ? showPassword
+                ? 'text'
+                : 'password'
+              : type === 'calendar'
+                ? 'text'
+                : type
           }
           placeholder={placeholder}
           value={register ? undefined : value}
-          onChange={register ? undefined : onChange}
           onFocus={() => setIsInputFocused(true)}
-          onBlur={() => setIsInputFocused(false)}
           aria-invalid={error}
           disabled={disabled}
           onKeyDown={onKeyDown}
-          {...((register as any) ?? {})}
+          {...(register ?? {
+            ref,
+            name,
+            onChange,
+            onBlur: () => setIsInputFocused(false),
+          })}
         />
 
         {type === 'password' && (
@@ -174,7 +196,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           <button
             type="button"
             className={styles.searchIcon}
-            onClick={handleSearchClick}
+            onClick={onSearchClick}
             onFocus={() => setIsInputFocused(false)}
             onKeyDown={(e) => handleKeyDown(e, handleSearchClick)}
             onMouseDown={handleMouseDown}

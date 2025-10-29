@@ -1,15 +1,18 @@
-// UserResultCard.tsx 수정
 'use client';
 
 import { Badge } from '@/components/Badge/Badge';
 import * as styles from '@/components/UserResultCard/UserResultCard.css';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
+
+export type PersonalGrade = 'beginner' | 'D' | 'C' | 'B' | 'A';
 
 type Grade =
   | { national: string; local?: never }
   | { national?: never; local: string }
-  | { national: string; local: string };
+  | { national: string; local: string }
+  | null;
 
 export type UserResultCardProps = {
   id: string;
@@ -20,9 +23,9 @@ export type UserResultCardProps = {
   onClick?: () => void;
   onRemove?: () => void;
   searchQuery?: string;
+  icon?: ReactNode;
 };
 
-// ✅ formatGrade 함수 수정
 function formatGrade(grade: Grade | null) {
   if (!grade) return null;
 

@@ -13,5 +13,4 @@ export type LoginFormValues = {
 export type RegisterFormValues = Profile & {
   password: string;
   password_check: string;
-  verify_code?: string;
 };
