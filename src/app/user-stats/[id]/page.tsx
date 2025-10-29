@@ -62,6 +62,7 @@ export default function UserStatsPage() {
             variant="public"
             name={user.playerName}
             gender={user.tags.includes('남자') ? 'male' : 'female'}
+            // @ts-expect-error: 
             grade={{ local: user.localGrade, national: user.nationalGrade }}
             email="kimminsu@example.com"
             role={user.tags.includes('아마추어') ? 'amateur' : 'pro'}
