@@ -3,7 +3,6 @@
 import * as styles from '@/app/user-stats/[id]/UserStats.css';
 import { MatchHistorySection } from '@/components/MatchHistorySection/MatchHistorySection';
 import { PartnersSection } from '@/components/PartnersSection/PartnersSection';
-import { ProfileFilters } from '@/components/ProfileFilters/ProfileFilters';
 import { StatsCard } from '@/components/StatsCard/StatsCard';
 import { WinRateChart } from '@/components/WinRateChart/WinRateChart';
 import type { CompetitionType, EventType, Grade } from '@/hooks/usePlayerStats';
@@ -63,14 +62,14 @@ export default function UserStatsPage() {
             />
             출전 기록
           </h2>
-          <ProfileFilters
+          {/* <ProfileFilters
             competition={competition}
             event={event}
             grade={grade}
             onCompetitionChange={setCompetition}
             onEventChange={setEvent}
             onGradeChange={setGrade}
-          />
+          /> */}
         </header>
         <StatsCard summary={summary} />
       </section>
@@ -81,7 +80,7 @@ export default function UserStatsPage() {
           승률
         </h2>
         <WinRateChart
-          winRate={summary.winRate}
+          // winRate={summary.winRate}
           wins={summary.wins}
           losses={summary.losses}
         />
