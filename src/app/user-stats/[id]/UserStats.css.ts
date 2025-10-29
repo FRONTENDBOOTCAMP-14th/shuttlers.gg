@@ -18,6 +18,7 @@ export const profile = style({
 
 export const section = recipe({
   base: {
+    flex: 1,
     marginTop: 40,
     padding: 40,
     borderRadius: 20,
@@ -77,3 +78,28 @@ export const errorMessage = style([
     padding: 40,
   },
 ]);
+
+export const titleContainer = style({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '20px',
+});
+
+export const title = style({
+  ...textStyle.title.bold,
+  color: tokens.color.text.title,
+});
+
+export const subtitle = style({
+  ...textStyle.subtitle.semibold,
+  color: tokens.color.text.body,
+});
+
+export const topSection = style({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignSelf: 'center',
+  gap: '50px',
+});

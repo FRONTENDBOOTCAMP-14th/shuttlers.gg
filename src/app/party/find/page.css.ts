@@ -29,11 +29,6 @@ export const title = style({
   color: tokens.color.text.title,
 });
 
-export const subtitle = style({
-  ...textStyle.subtitle.semibold,
-  color: tokens.color.text.body,
-});
-
 export const topSection = style({
   width: '100%',
   display: 'flex',
