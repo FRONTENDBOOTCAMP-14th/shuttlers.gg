@@ -61,34 +61,52 @@
 
 ## 🛠️ 기술 스택
 
-| 분류         | 기술 스택                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 언어         | <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=TypeScript&logoColor=black"/> <img src="https://img.shields.io/badge/Vanilla Extract-06B6D4?style=flat-square&logo=vanillaextract&logoColor=#F786AD"/> <img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=black"/> <img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=Next.js&logoColor=white"/> |
-| 개발환경     | <img src="https://img.shields.io/badge/Visual Studio Code-00B2E3?style=flat-square&logo=vscode&logoColor=white"/> <img src="https://img.shields.io/badge/Bun-000000?style=flat-square&logo=Bun&logoColor=white"/>                                                                                                                                                                                                                                  |
-| 디자인       | <img src="https://img.shields.io/badge/Figma-F24E1E?style=flat-square&logo=figma&logoColor=white"/>                                                                                                                                                                                                                                                                                                                                                |
-| 버전관리     | <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/> <img src="https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white"/>                                                                                                                                                                                                                                              |
-| 데이터베이스 | <img src="https://img.shields.io/badge/Supabase-3FCF8E?style=flat-square&logo=Supabase&logoColor=white"/>                                                                                                                                                                                                                                                                                                                                          |
-| 배포         | <img src="https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=Vercel&logoColor=white"/>                                                                                                                                                                                                                                                                                                                                              |
+| 분류                      | 기술 스택                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **언어/런타임**           | <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white"/> <img src="https://img.shields.io/badge/Bun-000000?style=flat-square&logo=bun&logoColor=white"/>                                                                                                                                                                                                                                                                                                                                          |
+| **프레임워크/라이브러리** | <img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white"/> <img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=000000"/> <img src="https://img.shields.io/badge/Zustand-2E2E2E?style=flat-square"/> <img src="https://img.shields.io/badge/React%20Hook%20Form-EC5990?style=flat-square&logo=reacthookform&logoColor=white"/> <img src="https://img.shields.io/badge/Zod-3E67B1?style=flat-square"/>                                                             |
+| **스타일링**              | <img src="https://img.shields.io/badge/vanilla--extract-0A7EA4?style=flat-square"/> <img src="https://img.shields.io/badge/@heroicons/react-0EA5E9?style=flat-square"/> <img src="https://img.shields.io/badge/next--themes-2E2E2E?style=flat-square"/>                                                                                                                                                                                                                                                                                                |
+| **데이터**                | <img src="https://img.shields.io/badge/Supabase-3FCF8E?style=flat-square&logo=supabase&logoColor=white"/>                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **개발/협업**             | <img src="https://img.shields.io/badge/Visual%20Studio%20Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white"/> <img src="https://img.shields.io/badge/ESLint-4B32C3?style=flat-square&logo=eslint&logoColor=white"/> <img src="https://img.shields.io/badge/Prettier-F7B93E?style=flat-square&logo=prettier&logoColor=000000"/> <img src="https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white"/> <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white"/> |
+| **배포/디자인**           | <img src="https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white"/> <img src="https://img.shields.io/badge/Figma-F24E1E?style=flat-square&logo=figma&logoColor=white"/>                                                                                                                                                                                                                                                                                                                                              |
 
 ## 📂 프로젝트 폴더 구조
 
 ```md
-├── 📄 README.md
-├── 📄 bun.lock
-├── 📄 eslint.config.mjs
-├── 📄 next.config.ts
-├── 📄 package.json
-├── 📂 public
-│ └── 🎨 favicon.ico
-├── 📂 src
-│ ├── 📂 api
-│ ├── 📂 app
-│ ├── 📂 components
-│ ├── 📂 fonts
-│ ├── 📂 store
-│ ├── 📂 styles
-│ └── 📂 utils
-└── 📄 tsconfig.json
+SHUTTLERS.GG
+├── .github/
+├── .next/
+├── .vscode/
+├── node_modules/
+├── public/
+│ ├── terms/
+│ │ └── privacy.md
+│ └── favicon.svg
+├── src/
+│ ├── @types/
+│ ├── app/
+│ ├── assets/
+│ │ └── images/
+│ ├── components/
+│ ├── data/
+│ ├── fonts/
+│ ├── hooks/
+│ ├── libs/
+│ ├── store/
+│ ├── styles/
+│ └── utils/
+├── supabase/
+├── .gitignore
+├── .prettierrc
+├── bun.lock
+├── config.toml
+├── eslint.config.mjs
+├── next-env.d.ts
+├── next.config.ts
+├── package.json
+├── README.md
+├── tsconfig.json
+└── .env.local
 ```
 
 ## 🔍더보기
