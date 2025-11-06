@@ -42,7 +42,7 @@ export default function CheckInput({
       <div className={styles.checkInput}>
         <div className={styles.inputWrapper}>
           <input
-            id={name}
+            id="register-email"
             className={styles.input}
             type={type}
             placeholder={placeholder}

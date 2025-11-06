@@ -60,6 +60,13 @@ export const schedule = style({
   columnGap: 4,
 });
 
+globalStyle(`${schedule} > span`, {
+  maxWidth: 250,
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+});
+
 export const condition = style({
   display: 'flex',
   flexDirection: 'column',

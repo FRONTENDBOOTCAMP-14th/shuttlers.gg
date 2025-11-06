@@ -16,9 +16,6 @@ export default function RegisterPage() {
 
   const handleRegister = async (formData: RegisterFormValues) => {
     try {
-      console.log('=== Register Submit Start ===');
-      console.log('Form Data:', formData);
-
       const {
         data: { user },
         error: userError,
@@ -47,7 +44,7 @@ export default function RegisterPage() {
           `회원가입 요청에 실패했습니다.\n${upsertError.message}`
         );
 
-      toast.success('회원가입 성공! 🎉\n로그인 화면으로 이동합니다.');
+      toast.success('회원가입 성공! \n로그인 화면으로 이동합니다.');
       await supabase.auth.signOut();
 
       setTimeout(() => {

@@ -48,6 +48,7 @@ export default function LoginPage() {
         } else if (error.message.includes('Email not confirmed')) {
           return toast.error('로그인 실패!\n확인되지 않은 사용자입니다.');
         }
+        return toast.error(`로그인 실패!\n${error.message}`);
       }
 
       if (!data.user) {
@@ -56,11 +57,22 @@ export default function LoginPage() {
 
       const { data: userData } = await supabase
         .from('users')
-        .select('name')
+        .select('name, gender, national_grade')
         .eq('id', data.user.id)
-        .single();
+        .maybeSingle();
 
-      toast.success(`어서 오세요, ${userData?.name || '회원'}님!`);
+      if (
+        !userData ||
+        !userData.name ||
+        !userData.gender ||
+        !userData.national_grade
+      ) {
+        return toast.error(
+          '로그인 실패!\n아이디 또는 비밀번호가 올바르지 않습니다.'
+        );
+      }
+
+      toast.success(`어서 오세요, ${userData.name}님!`);
       router.push('/');
     } catch (err) {
       console.error(err);

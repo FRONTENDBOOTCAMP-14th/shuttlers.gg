@@ -21,7 +21,7 @@ export default function ThemeToggler({ children }: PropsWithChildren) {
 
   const menus = [
     { label: '대회일정', path: '/calendar' },
-    { label: '모임찾기', path: '/party' },
+    { label: '모임찾기', path: '/party/find' },
   ];
 
   return (
