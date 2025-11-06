@@ -35,10 +35,10 @@ export default function Button({
       aria-label={icon && !text ? '버튼' : undefined}
       className={styles.button({ variant, size, rounded, disabled })}
     >
-      <div className={styles.buttonContent({ icon: !!icon, iconPosition })}>
+      <span className={styles.buttonContent({ icon: !!icon, iconPosition })}>
         {icon && <div className={styles.iconWrapper}>{icon}</div>}
         {text && <span>{text}</span>}
-      </div>
+      </span>
     </button>
   );
 }
