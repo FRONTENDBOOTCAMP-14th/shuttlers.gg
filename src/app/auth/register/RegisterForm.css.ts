@@ -24,7 +24,7 @@ export const optionLink = style({
   flexDirection: 'row',
   alignItems: 'center',
   columnGap: 6,
-  
+
   ':hover': {
     color: tokens.color.action.hover.secondary,
   },

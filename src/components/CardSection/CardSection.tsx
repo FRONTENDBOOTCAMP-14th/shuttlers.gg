@@ -23,8 +23,8 @@ export default function CardSection({
       })}
     >
       <header className={styles.header}>
-      {icon && <span className={styles.icon}>{icon}</span>} 
-        <h3 className={styles.title}>{title}</h3>              
+        {icon && <span className={styles.icon}>{icon}</span>}
+        <h3 className={styles.title}>{title}</h3>
       </header>
       <div className={styles.content}>{children}</div>
     </section>

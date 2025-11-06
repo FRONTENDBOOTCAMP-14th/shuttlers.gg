@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import clsx from 'clsx';
 import { ReactNode, useCallback, useRef } from 'react';
@@ -25,11 +25,14 @@ export default function TabSection({
   const currentActiveTab = activeTab ?? tabs[0]?.value;
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  const handleTabClick = useCallback((value: string) => {
-    if (value !== currentActiveTab && onTabChange) {
-      onTabChange(value);
-    }
-  }, [currentActiveTab, onTabChange]);
+  const handleTabClick = useCallback(
+    (value: string) => {
+      if (value !== currentActiveTab && onTabChange) {
+        onTabChange(value);
+      }
+    },
+    [currentActiveTab, onTabChange]
+  );
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLButtonElement>, currentIndex: number) => {
@@ -41,7 +44,7 @@ export default function TabSection({
           event.preventDefault();
           newIndex = currentIndex === tabs.length - 1 ? 0 : currentIndex + 1;
           break;
- 
+
         case 'ArrowLeft':
           event.preventDefault();
           newIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
@@ -99,9 +102,9 @@ export default function TabSection({
               type="button"
               role="tab"
               aria-selected={isActive}
-              aria-controls={`tabpanel-${tab.value}`} 
+              aria-controls={`tabpanel-${tab.value}`}
               id={`tab-${tab.value}`}
-              tabIndex={isActive ? 0 : -1} 
+              tabIndex={isActive ? 0 : -1}
               className={clsx(
                 styles.tabButton,
                 isActive ? styles.tabActive : styles.tabInactive
@@ -119,10 +122,10 @@ export default function TabSection({
           styles.tabContent,
           !isFirstTab && styles.contentAllRounded
         )}
-        role="tabpanel" 
+        role="tabpanel"
         aria-labelledby={`tab-${currentActiveTab}`}
-        id={`tabpanel-${currentActiveTab}`} 
-        tabIndex={0} 
+        id={`tabpanel-${currentActiveTab}`}
+        tabIndex={0}
       >
         {children}
       </div>

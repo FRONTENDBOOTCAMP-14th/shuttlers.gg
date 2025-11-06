@@ -148,7 +148,6 @@ export const cardBackgroundVariants = styleVariants({
   },
 });
 
-
 export const matchTitle = style({
   color: tokens.color.text.body,
   ...textStyle.heading.semibold,
