@@ -54,7 +54,6 @@ const PartyPage = () => {
 
   const fetchParties = async () => {
     const { data, error } = await supabase.from('parties').select('*');
-    console.log('Supabase parties data:', data);
     if (!error && data) {
       const partyList: PartyInfo[] = data.map((party) => {
         const partyInfo: PartyInfo = {
@@ -229,6 +228,7 @@ const PartyPage = () => {
       return;
     }
 
+    // 1. party_participants에 insert
     const { error: participantError } = await supabase
       .from('party_participants')
       .insert([
@@ -238,22 +238,36 @@ const PartyPage = () => {
         },
       ]);
 
-    const newParticipant = {
-      id: currentUserId,
-      name: currentUserName,
-      grade: currentUserGrade,
-      gender: currentUserGender,
-    };
+    if (participantError) {
+      setModalOpen(false);
+      await fetchParties();
+      toast('❌ 참여에 실패했습니다.', { duration: 2000 });
+      return;
+    }
 
+    // 2. parties 테이블의 participants 컬럼 업데이트
+    // 기존 participants 배열 가져오기
     const partyRes = await supabase
       .from('parties')
       .select('participants')
       .eq('id', partyId)
       .single();
 
-    const prevParticipants = Array.isArray(partyRes.data?.participants)
+    let prevParticipants = Array.isArray(partyRes.data?.participants)
       ? partyRes.data.participants
       : [];
+
+    // 중복 참가자 방지
+    prevParticipants = prevParticipants.filter(
+      (p: any) => p.id !== currentUserId
+    );
+
+    const newParticipant = {
+      id: currentUserId,
+      name: currentUserName,
+      grade: currentUserGrade,
+      gender: currentUserGender,
+    };
 
     const updatedParticipants = [...prevParticipants, newParticipant];
 
@@ -265,10 +279,10 @@ const PartyPage = () => {
     setModalOpen(false);
     await fetchParties();
 
-    if (!participantError && !updateError) {
+    if (!updateError) {
       toast('✅ 모임 참여가 완료되었습니다.', { duration: 2000 });
     } else {
-      toast('❌ 참여에 실패했습니다.', { duration: 2000 });
+      toast('❌ 참가자 정보 업데이트에 실패했습니다.', { duration: 2000 });
     }
   };
 
@@ -483,7 +497,7 @@ const PartyPage = () => {
                   </div>
                   <div className={styles.badgeWrapper}>
                     <Badge
-                      text={user.grade ?? ''}
+                      text={user.grade ? `${user.grade}조` : ''}
                       variant="filled"
                       color="primary"
                     />
