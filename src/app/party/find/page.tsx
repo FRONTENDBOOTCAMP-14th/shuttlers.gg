@@ -46,12 +46,6 @@ const PartyPage = () => {
   const [currentUserName, setCurrentUserName] = useState('');
   const [currentUserGrade, setCurrentUserGrade] = useState('');
   const [currentUserGender, setCurrentUserGender] = useState('');
-  const newParticipant = {
-    id: currentUserId,
-    name: currentUserName,
-    grade: currentUserGrade,
-    gender: currentUserGender,
-  };
 
   const fetchParties = async () => {
     const { data, error } = await supabase.from('parties').select('*');
@@ -103,7 +97,7 @@ const PartyPage = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       if (!currentUserId) return;
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('users')
         .select('name, national_grade, gender')
         .eq('id', currentUserId)
@@ -229,7 +223,11 @@ const PartyPage = () => {
       return;
     }
 
-    // 1. party_participants에 insert
+    if (selectedParty.participants.some((p) => p.id === currentUserId)) {
+      toast('이미 참가한 유저입니다.', { duration: 2000 });
+      return;
+    }
+
     const { error: participantError } = await supabase
       .from('party_participants')
       .insert([
@@ -240,14 +238,19 @@ const PartyPage = () => {
       ]);
 
     if (participantError) {
+      if (
+        participantError.code === '23505' ||
+        participantError.message?.includes('duplicate')
+      ) {
+        toast('이미 참가한 유저입니다.', { duration: 2000 });
+      } else {
+        toast('❌ 참여에 실패했습니다.', { duration: 2000 });
+      }
       setModalOpen(false);
       await fetchParties();
-      toast('❌ 참여에 실패했습니다.', { duration: 2000 });
       return;
     }
 
-    // 2. parties 테이블의 participants 컬럼 업데이트
-    // 기존 participants 배열 가져오기
     const partyRes = await supabase
       .from('parties')
       .select('participants')
@@ -258,7 +261,6 @@ const PartyPage = () => {
       ? partyRes.data.participants
       : [];
 
-    // 중복 참가자 방지
     prevParticipants = prevParticipants.filter(
       (p: any) => p.id !== currentUserId
     );
