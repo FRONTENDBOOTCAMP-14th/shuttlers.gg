@@ -29,8 +29,8 @@ export const tabButton = style({
   selectors: {
     '&:focus': {
       outline: `2px solid ${tokens.color.field.border.focus}`,
-      outlineOffset: '2px', 
-      zIndex: 10, 
+      outlineOffset: '2px',
+      zIndex: 10,
     },
   },
 });
@@ -68,7 +68,7 @@ export const tabContent = style({
   padding: '80px',
   background: tokens.color.surface.raised,
   borderRadius: '0 20px 20px 20px',
-  marginTop: '-1px', 
+  marginTop: '-1px',
   selectors: {
     '&:focus': {
       outline: `2px solid ${tokens.color.field.border.focus}`,

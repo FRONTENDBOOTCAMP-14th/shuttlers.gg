@@ -22,7 +22,7 @@ export default function ScoreResultCard({
   result = 'win',
 }: ScoreResultCardProps) {
   return (
-    <article 
+    <article
       className={`${styles.scoreResultCard} ${styles.cardBackgroundVariants[result]}`}
       role="listitem"
     >
@@ -30,7 +30,7 @@ export default function ScoreResultCard({
         <h3 className={styles.matchTitle}>{title}</h3>
         <div className={styles.titleRightSection}>
           <span className={styles.matchType}>{matchType}</span>
-          <span 
+          <span
             className={styles.resultBadgeVariants[result]}
             aria-label={`경기 결과: ${result === 'win' ? '승리' : '패배'}`}
           >
@@ -47,10 +47,14 @@ export default function ScoreResultCard({
             </div>
           )}
 
-          <div className={styles.scoreMainContainer} role="group" aria-label="경기 점수">
+          <div
+            className={styles.scoreMainContainer}
+            role="group"
+            aria-label="경기 점수"
+          >
             <div className={styles.leftTeamArea}>
               <h4 className={styles.teamNameLeft}>{teamA}</h4>
-              <span 
+              <span
                 className={styles.scoreText}
                 aria-label={`${teamA} 점수: ${scoreA}점`}
               >
@@ -58,10 +62,12 @@ export default function ScoreResultCard({
               </span>
             </div>
 
-            <span className={styles.vsText} aria-hidden="true">VS</span>
+            <span className={styles.vsText} aria-hidden="true">
+              VS
+            </span>
 
             <div className={styles.rightTeamArea}>
-              <span 
+              <span
                 className={styles.scoreText}
                 aria-label={`${teamB} 점수: ${scoreB}점`}
               >

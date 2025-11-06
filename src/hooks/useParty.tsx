@@ -1,24 +1,27 @@
 'use client';
 
-import { useEffect, useMemo, useState, useCallback } from 'react';
-import { supabase } from '@/libs/supabase/client';
 import type { PartyInfo, User } from '@/components/PartyCard/PartyCard';
+import { supabase } from '@/libs/supabase/client';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 type PartyStatus = 'joinable' | 'full' | 'joined' | 'readonly';
 function getPartyStatus(party: PartyInfo, uid: string): PartyStatus {
-  const startStr = party.schedule?.date && party.schedule?.start_time
-    ? `${party.schedule.date}T${(party.schedule.start_time || '').slice(0,5)}`
-    : '';
-  const endStr = party.schedule?.date && party.schedule?.end_time
-    ? `${party.schedule.date}T${(party.schedule.end_time || '').slice(0,5)}`
-    : '';
+  const startStr =
+    party.schedule?.date && party.schedule?.start_time
+      ? `${party.schedule.date}T${(party.schedule.start_time || '').slice(0, 5)}`
+      : '';
+  const endStr =
+    party.schedule?.date && party.schedule?.end_time
+      ? `${party.schedule.date}T${(party.schedule.end_time || '').slice(0, 5)}`
+      : '';
 
   const now = new Date();
   const end = endStr ? new Date(endStr) : undefined;
 
   if (end && now > end) return 'readonly';
   if (party.participants.some((u) => u.id === uid)) return 'joined';
-  if ((party.participants?.length ?? 0) >= (party.maxParticipants ?? 0)) return 'full';
+  if ((party.participants?.length ?? 0) >= (party.maxParticipants ?? 0))
+    return 'full';
   return 'joinable';
 }
 
@@ -45,7 +48,8 @@ export function useParty() {
 
       const { data, error } = await supabase
         .from('party_participants')
-        .select(`
+        .select(
+          `
           party_id,
           parties (
             id, title, date, start_time, end_time, location,
@@ -54,7 +58,8 @@ export function useParty() {
               users!inner ( id, name, gender, national_grade )
             )
           )
-        `)
+        `
+        )
         .eq('user_id', currentUid);
 
       if (error) throw error;
@@ -102,7 +107,9 @@ export function useParty() {
           return party;
         })
 
-        .sort((a, b) => (a.schedule?.date || '').localeCompare(b.schedule?.date || ''));
+        .sort((a, b) =>
+          (a.schedule?.date || '').localeCompare(b.schedule?.date || '')
+        );
 
       setParties(mapped);
       setLoading(false);
