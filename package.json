@@ -7,8 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
     "gentypes": "bunx supabase gen types typescript --project-id vxelpakibetxfdwitsjs > src/libs/database.types.ts"
   },
   "dependencies": {
