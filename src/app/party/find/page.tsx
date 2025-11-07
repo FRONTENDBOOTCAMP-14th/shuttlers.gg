@@ -46,16 +46,9 @@ const PartyPage = () => {
   const [currentUserName, setCurrentUserName] = useState('');
   const [currentUserGrade, setCurrentUserGrade] = useState('');
   const [currentUserGender, setCurrentUserGender] = useState('');
-  const newParticipant = {
-    id: currentUserId,
-    name: currentUserName,
-    grade: currentUserGrade,
-    gender: currentUserGender,
-  };
 
   const fetchParties = async () => {
     const { data, error } = await supabase.from('parties').select('*');
-    console.log('Supabase parties data:', data);
     if (!error && data) {
       const partyList: PartyInfo[] = data.map((party) => {
         const partyInfo: PartyInfo = {
@@ -104,7 +97,7 @@ const PartyPage = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       if (!currentUserId) return;
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('users')
         .select('name, national_grade, gender')
         .eq('id', currentUserId)
@@ -230,6 +223,11 @@ const PartyPage = () => {
       return;
     }
 
+    if (selectedParty.participants.some((p) => p.id === currentUserId)) {
+      toast('이미 참가한 유저입니다.', { duration: 2000 });
+      return;
+    }
+
     const { error: participantError } = await supabase
       .from('party_participants')
       .insert([
@@ -239,12 +237,19 @@ const PartyPage = () => {
         },
       ]);
 
-    const newParticipant = {
-      id: currentUserId,
-      name: currentUserName,
-      grade: currentUserGrade,
-      gender: currentUserGender,
-    };
+    if (participantError) {
+      if (
+        participantError.code === '23505' ||
+        participantError.message?.includes('duplicate')
+      ) {
+        toast('이미 참가한 유저입니다.', { duration: 2000 });
+      } else {
+        toast('❌ 참여에 실패했습니다.', { duration: 2000 });
+      }
+      setModalOpen(false);
+      await fetchParties();
+      return;
+    }
 
     const partyRes = await supabase
       .from('parties')
@@ -252,9 +257,20 @@ const PartyPage = () => {
       .eq('id', partyId)
       .single();
 
-    const prevParticipants = Array.isArray(partyRes.data?.participants)
+    let prevParticipants = Array.isArray(partyRes.data?.participants)
       ? partyRes.data.participants
       : [];
+
+    prevParticipants = prevParticipants.filter(
+      (p: any) => p.id !== currentUserId
+    );
+
+    const newParticipant = {
+      id: currentUserId,
+      name: currentUserName,
+      grade: currentUserGrade,
+      gender: currentUserGender,
+    };
 
     const updatedParticipants = [...prevParticipants, newParticipant];
 
@@ -266,10 +282,10 @@ const PartyPage = () => {
     setModalOpen(false);
     await fetchParties();
 
-    if (!participantError && !updateError) {
+    if (!updateError) {
       toast('✅ 모임 참여가 완료되었습니다.', { duration: 2000 });
     } else {
-      toast('❌ 참여에 실패했습니다.', { duration: 2000 });
+      toast('❌ 참가자 정보 업데이트에 실패했습니다.', { duration: 2000 });
     }
   };
 
@@ -484,7 +500,7 @@ const PartyPage = () => {
                   </div>
                   <div className={styles.badgeWrapper}>
                     <Badge
-                      text={user.grade ?? ''}
+                      text={user.grade ? `${user.grade}조` : ''}
                       variant="filled"
                       color="primary"
                     />

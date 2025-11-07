@@ -327,7 +327,7 @@ export default function OpenPartyPage() {
           required
         />
         <label htmlFor="agree" className={styles.checkboxLabel}>
-          원활한 시스템 운영을 위하여 생성한 모든 모임은 수정/삭제가 불가합니다
+          생성된 모임은 기타 안내사항 이외에는 수정 및 삭제가 불가합니다
         </label>
       </div>
 
