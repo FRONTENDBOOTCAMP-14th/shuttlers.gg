@@ -105,6 +105,14 @@ export function MonthlyCalendar({
     [selectedDate]
   );
 
+  const handleDateToggle = (date: Date, isSelected: boolean) => {
+    if (isSelected) {
+      setDate(null);
+    } else {
+      setDate(date);
+    }
+  };
+
   return (
     <div className={styles.calendarCard}>
       <div className={styles.header}>
@@ -155,21 +163,11 @@ export function MonthlyCalendar({
                 tabIndex={0}
                 aria-selected={isSelected}
                 role="button"
-                onClick={() => {
-                  if (isSelected) {
-                    setDate(null);
-                  } else {
-                    setDate(date);
-                  }
-                }}
+                onClick={() => handleDateToggle(date, isSelected)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    if (isSelected) {
-                      setDate(null);
-                    } else {
-                      setDate(date);
-                    }
+                    handleDateToggle(date, isSelected);
                   }
                 }}
                 data-selected={isSelected || undefined}
