@@ -99,9 +99,6 @@ export const cell = style({
   selectors: {
     '&[data-selected]': { background: tokens.color.action.bg.disabled },
     '&:hover': { background: tokens.color.action.bg.disabled },
-    '&:focus': {
-      outline: 'none',
-    },
     '&:focus-visible': {
       outline: `2px solid ${tokens.color.field.border.focus}`,
       outlineOffset: '-2px',
