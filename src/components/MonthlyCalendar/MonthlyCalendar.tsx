@@ -105,6 +105,14 @@ export function MonthlyCalendar({
     [selectedDate]
   );
 
+  const handleDateToggle = (date: Date, isSelected: boolean) => {
+    if (isSelected) {
+      setDate(null);
+    } else {
+      setDate(date);
+    }
+  };
+
   return (
     <div className={styles.calendarCard}>
       <div className={styles.header}>
@@ -144,24 +152,33 @@ export function MonthlyCalendar({
             const hasEvent = date ? isInRanges(date, events) : false;
             const isSelected = !!date && selectedKey === key;
 
+            if (!date) {
+              return <div key={key} className={styles.cell} />;
+            }
+
             return (
               <div
                 key={key}
                 className={styles.cell}
-                onClick={() => setDate(date)}
+                tabIndex={0}
+                aria-selected={isSelected}
+                role="button"
+                onClick={() => handleDateToggle(date, isSelected)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleDateToggle(date, isSelected);
+                  }
+                }}
                 data-selected={isSelected || undefined}
               >
-                {date && (
-                  <>
-                    <div
-                      className={styles.dayNumber}
-                      data-today={isToday || undefined}
-                    >
-                      {date.getDate()}
-                    </div>
-                    {hasEvent && <div className={styles.eventBar} />}
-                  </>
-                )}
+                <div
+                  className={styles.dayNumber}
+                  data-today={isToday || undefined}
+                >
+                  {date.getDate()}
+                </div>
+                {hasEvent && <div className={styles.eventBar} />}
               </div>
             );
           })}

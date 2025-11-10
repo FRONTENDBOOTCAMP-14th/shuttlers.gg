@@ -52,7 +52,14 @@ export function Calendar() {
             setYear(y);
             setDate(null);
           }}
-          setDate={setDate}
+          setDate={(d) => {
+            if (typeof d === 'function') return setDate(d);
+            if (date && d && date.getTime() === d.getTime()) {
+              setDate(null);
+            } else {
+              setDate(d);
+            }
+          }}
           events={events}
         />
       </div>

@@ -95,9 +95,14 @@ export const cell = style({
   justifyContent: 'center',
   paddingTop: 8,
   cursor: 'pointer',
+  userSelect: 'none',
   selectors: {
     '&[data-selected]': { background: tokens.color.action.bg.disabled },
     '&:hover': { background: tokens.color.action.bg.disabled },
+    '&:focus-visible': {
+      outlineOffset: '-2px',
+      zIndex: 1,
+    },
   },
   '@media': {
     '(max-width: 1024px)': {
